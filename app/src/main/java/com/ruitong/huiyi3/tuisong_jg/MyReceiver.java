@@ -733,6 +733,7 @@ public class MyReceiver extends BroadcastReceiver {
 		});
 	}
 
+
 	//创建人员
 	private void link_addRenYuan(final OkHttpClient okHttpClient, final Context contex, final ZhuJiBeanH zhuJiBeanH, final RenYuanInFo renYuanInFo, int i){
 
