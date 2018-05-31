@@ -2,40 +2,17 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:background="@drawable/m1_1"
+    android:id="@+id/root_rl"
     android:layout_height="wrap_content">
 
     <ImageView
         android:layout_width="150dp"
         android:id="@+id/touxiang"
-        android:padding="20dp"
+        android:layout_marginLeft="40dp"
+        android:layout_marginStart="40dp"
         android:scaleType="fitXY"
         android:layout_centerVertical="true"
         android:layout_height="200dp" />
-
-
-    <LinearLayout
-        android:orientation="vertical"
-        android:layout_toRightOf="@+id/touxiang"
-        android:layout_centerVertical="true"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
-
-        <TextView
-            android:textSize="26sp"
-            android:textColor="@color/colorBar_bg2"
-            android:id="@+id/name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-
-        <TextView
-            android:textSize="26sp"
-            android:textColor="@color/colorBar_bg2"
-            android:id="@+id/huanyinyu"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-
-    </LinearLayout>
-
 
     <TextView
         android:id="@+id/zhiwei"
@@ -44,8 +21,38 @@
         android:layout_marginRight="40dp"
         android:layout_marginTop="50dp"
         android:textColor="@color/write"
+        android:minWidth="100dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_toLeftOf="@+id/zhiwei"
+        android:layout_toRightOf="@+id/touxiang"
+        android:gravity="center"
+        android:layout_centerVertical="true"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:textSize="36sp"
+            android:textColor="@color/colorBar_bg"
+            android:id="@+id/name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:textSize="36sp"
+            android:layout_marginTop="6dp"
+            android:textColor="@color/colorBar_bg2"
+            android:id="@+id/huanyinyu"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
+
+
+
 
 
 
