@@ -5,18 +5,22 @@ import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.app.Activity;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.SystemClock;
 import android.util.Log;
+import android.util.Xml;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.Target;
@@ -30,9 +34,11 @@ import com.ruitong.huiyi3.beans.BenDiQianDaoDao;
 import com.ruitong.huiyi3.beans.RenShu;
 import com.ruitong.huiyi3.beans.RenYuanInFo;
 import com.ruitong.huiyi3.beans.SheBeiInFoBean;
+import com.ruitong.huiyi3.beans.Subject;
 import com.ruitong.huiyi3.beans.ZhuJiBeanH;
 import com.ruitong.huiyi3.beans.ZhuJiBeanHDao;
 import com.ruitong.huiyi3.cookies.CookiesManager;
+import com.ruitong.huiyi3.dialog.DuQuDialog;
 import com.ruitong.huiyi3.dialog.HuanYingYuDialog;
 import com.ruitong.huiyi3.dialog.MoBanDialog;
 import com.ruitong.huiyi3.dialog.XiuGaiHouTaiDialog;
@@ -40,14 +46,22 @@ import com.ruitong.huiyi3.dialog.XiuGaiWenZiDialog;
 import com.ruitong.huiyi3.dialog.XiuGaiXinXiDialog;
 import com.ruitong.huiyi3.dialog.YuLanDialog;
 import com.ruitong.huiyi3.dialog.YuYingDialog;
+import com.ruitong.huiyi3.utils.FileUtil;
 import com.ruitong.huiyi3.utils.GsonUtil;
 import com.ruitong.huiyi3.utils.Utils;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.sdsmdg.tastytoast.TastyToast;
 
+import org.xmlpull.v1.XmlPullParser;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
@@ -73,6 +87,8 @@ public class SheZhiActivity extends Activity implements View.OnClickListener, Vi
     private ZhuJiBeanHDao zhuJiBeanHDao=null;
     public  OkHttpClient okHttpClient=null;
     private ZhuJiBeanH zhuJiBeanH=null;
+    private DuQuDialog duQuDialog=null;
+    private static String usbPath=null;
 
 
     @Override
@@ -679,6 +695,7 @@ public class SheZhiActivity extends Activity implements View.OnClickListener, Vi
 
                 break;
             case R.id.bt12:
+                bt12.setEnabled(false);
                 ChongsZHI();
                 bt12.requestFocus();
                 bt12.setTextColor(Color.WHITE);
@@ -694,81 +711,221 @@ public class SheZhiActivity extends Activity implements View.OnClickListener, Vi
                 animatorSet12.addListener(new AnimatorListenerAdapter(){
                     @Override public void onAnimationEnd(Animator animation) {
                         //弹窗
-//                      BenDiRenShuBeanDao benDiRenShuBeanDao=MyApplication.myApplication.getDaoSession().getBenDiRenShuBeanDao();
-//                        QianDaoIdDao qianDaoIdDao=MyApplication.myApplication.getDaoSession().getQianDaoIdDao();
-//                        qianDaoIdDao.deleteAll();
-//                       BenDiRenShuBean benDiRenShuBean=benDiRenShuBeanDao.load(123456L);
-//                       if (benDiRenShuBean!=null){
-//                           BenDiRenShuBean ddd=new BenDiRenShuBean();
-//                           ddd.setId(123456L);
-//                           ddd.setN1(0);
-//                           ddd.setNShen(0);
-//                           ddd.setNShi(0);
-//                           ddd.setNTeyao(0);
-//                           ddd.setY1(0);
-//                           ddd.setYShen(0);
-//                           ddd.setYShi(0);
-//                           ddd.setYTeyao(0);
-//                           benDiRenShuBeanDao.update(ddd);
-//                           TastyToast.makeText(SheZhiActivity.this,"清除成功",TastyToast.LENGTH_SHORT,TastyToast.INFO).show();
-//                       }else {
-//                           TastyToast.makeText(SheZhiActivity.this,"清除失败",TastyToast.LENGTH_SHORT,TastyToast.INFO).show();
-//
-//                       }
 
-                      //  bt12.setEnabled(false);
-                        new Thread(new Runnable() {
-                            @Override
-                            public void run() {
-                                final BenDiQianDaoDao dao= MyApplication.myApplication.getDaoSession().getBenDiQianDaoDao();
-                                List<BenDiQianDao> diQianDaoList=dao.loadAll();
-                                int size=diQianDaoList.size();
-                                StringBuilder buffer=new StringBuilder();
-                                for (int i=0;i<size;i++){
-                                    buffer.append(diQianDaoList.get(i).getId())
-                                            .append(",").
-                                            append(diQianDaoList.get(i).getName())
-                                            .append(",").
-                                            append(diQianDaoList.get(i).getPhone())
-                                            .append("\n");
-                                }
-                                try {
-                                    savaFileToSD("huiyishuju.txt", buffer.toString());
-                                } catch (Exception e) {
-                                    runOnUiThread(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            bt12.setEnabled(true);
-                                            TastyToast.makeText(SheZhiActivity.this,"写入失败",TastyToast.LENGTH_SHORT,TastyToast.INFO).show();
-
-                                        }
-                                    });
-
-                                    e.printStackTrace();
-                                }
-                                runOnUiThread(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        bt12.setEnabled(true);
-                                        TastyToast.makeText(SheZhiActivity.this,"写入成功",TastyToast.LENGTH_SHORT,TastyToast.INFO).show();
-                                        dao.deleteAll();
-                                    }
-                                });
-
+                            duQuDialog=new DuQuDialog(SheZhiActivity.this);
+                            duQuDialog.setCanceledOnTouchOutside(false);
+                            duQuDialog.show();
+                            bt12.setEnabled(true);
+                            if (usbPath==null){
+                                duQuDialog.setTiShi("     读取U盘数据失败");
+                                TastyToast.makeText(SheZhiActivity.this,"请插拔一下USB",TastyToast.LENGTH_SHORT,TastyToast.INFO).show();
+                                return;
                             }
-                        }).start();
+
+                        List<String> zips=new ArrayList<>();
+                        List<String> zipList= FileUtil.getAllFiles(usbPath,zips);
+                        if (zipList==null || zipList.size()==0){
+                            return;
+                        }
+                        //获取文件名
+                        String zipName=null;
+                        String zz=zipList.get(0);
+                        zipName=zz.substring(zz.lastIndexOf("/")+1,zz.length());
+                        String trg=zz.substring(0, zz.length() - 4);
+                        Log.d("SheZhiActivity", trg);
+                        File file = new File(trg);
+                        if (!file.exists()) {
+                            file.mkdirs();
+                        }
+                        //解压zip
+                        FileUtil.Unzip(zz,trg);
+                        //拿到XML
+                        List<String> xmls=new ArrayList<>();
+                        List<String> xmlList= FileUtil.getAllFileXml(trg,xmls);
+                            if (xmlList==null || xmlList.size()==0){
+                                return;
+                            }
+                        //解析XML
+                        try {
+                            Log.d("SheZhiActivity", xmlList.get(0));
+                            FileInputStream fin=new FileInputStream(xmlList.get(0));
+                          List<Subject> subjectList=  pull2xml(fin);
+                         for (Subject s :subjectList){
+                             Log.d("SheZhiActivity", s.toString());
+                         }
+
+                        } catch (Exception e) {
+                            Log.d("SheZhiActivity", e.getMessage()+"解析XML异常");
+                        }
+
+
+
+
+
+
+//                            new Thread(new Runnable() {
+//                                @Override
+//                                public void run() {
+//                                    try {
+//                                        runOnUiThread(new Runnable() {
+//                                            @Override
+//                                            public void run() {
+//                                                duQuDialog.setTiShi("     寻找压缩文件中...(注意:只会解压找到的第一个压缩文件)");
+//                                            }
+//                                        });
+//                                        List<String> zips=new ArrayList<>();
+//                                        List<String> zipList= FileUtil.getAllFiles(usbPath,zips);
+//                                        if (zipList==null || zipList.size()==0){
+//                                            return;
+//                                        }
+//                                        //获取文件名
+//                                        String zipName=null;
+//                                        String zz=zipList.get(0);
+//                                        zipName=zz.substring(zz.lastIndexOf("/")+1,zz.length());
+//
+//                                        FileUtil.Unzip(zz,zz.substring(0,zz.lastIndexOf("/")));
+//                                        Log.d("SheZhiActivity", zz);
+//                                        Log.d("SheZhiActivity", zz.substring(0, zz.lastIndexOf("/")));
+//                                        Log.d("SheZhiActivity", zipName+"订单"+zipList.size());
+//
+//
+//                                        List<String> strings=new ArrayList<>();
+//                                        final StringBuilder stringBuffer=new StringBuilder();
+//
+//                                        final List<String> jsonArray= FileUtil.getAllFiles(usbPath,strings);
+//
+//                                        if (jsonArray!=null){
+//                                            final int size= jsonArray.size();
+//                                            Log.d("ffffff", "size:" + size);
+//
+//                                            for (int i=0;i<size;i++){
+//                                                final String pSte=jsonArray.get(i);
+//
+//                                                synchronized (lock) {
+//
+//                                                    final int finalI = i;
+//                                                    new Thread(new Runnable() {
+//                                                        @Override
+//                                                        public void run() {
+//                                                            try {
+//
+//                                                                Bitmap bitmap = BitmapFactory.decodeFile(pSte);
+//                                                                if (bitmap!=null) {
+//                                                                    FacePassAddFaceResult result=null;
+//                                                                    try {
+//                                                                        result = mFacePassHandler.addFace(bitmap);
+//
+//                                                                    }catch (Exception e){
+//                                                                        synchronized (lock) {
+//                                                                            lock.notify();
+//                                                                        }
+//                                                                        return;
+//                                                                    }
+//
+//                                                                    if (result != null) {
+//                                                                        runOnUiThread(new Runnable() {
+//                                                                            @Override
+//                                                                            public void run() {
+//                                                                                if (duQuDialog!=null)
+//                                                                                    duQuDialog.setProgressBar(((finalI / (float) size) * 100));
+//
+//                                                                            }
+//                                                                        });
+//
+//                                                                        if (result.result != 0) {
+//                                                                            //失败的记录起来
+//                                                                            stringBuffer.append(jsonArray.get(finalI)).append("\n");
+//                                                                            si++;
+//                                                                        } else {
+//
+//                                                                            //一些后续操作...
+//
+//                                                                        }
+//                                                                    }
+//                                                                }
+//                                                                synchronized (lock) {
+//                                                                    lock.notify();
+//                                                                }
+//
+//
+//                                                            } catch (FacePassException e) {
+//                                                                e.printStackTrace();
+//
+//                                                                synchronized (lock) {
+//                                                                    lock.notify();
+//                                                                }
+//                                                            }
+//                                                        }
+//                                                    }).start();
+//
+//                                                    lock.wait();
+//
+//                                                }
+//
+//                                            }
+//                                            if (stringBuffer.length()>0){
+//                                                runOnUiThread(new Runnable() {
+//                                                    @Override
+//                                                    public void run() {
+//                                                        String ss=stringBuffer.toString();
+//                                                        duQuDialog.setTiShi("以下数据导入失败:\n共"+si+"条,已保存到本地根目录\n"+ss);
+//                                                        try {
+//                                                            FileUtil.savaFileToSD("失败记录"+System.currentTimeMillis(),ss);
+//                                                        } catch (Exception e) {
+//                                                            e.printStackTrace();
+//                                                        }
+//
+//                                                        si=0;
+//                                                    }
+//                                                });
+//
+//                                            }else {
+//                                                runOnUiThread(new Runnable() {
+//                                                    @Override
+//                                                    public void run() {
+//                                                        duQuDialog.setTiShi("全部入库成功");
+//                                                    }
+//                                                });
+//
+//                                            }
+//
+//                                            isRuku=false;
+//                                            //循环完了
+//
+//
+//                                        }else {
+//
+//                                            dialog.setTiShi("    读取数据失败");
+//                                        }
+//
+////                                File file = new File(FileUtil.createTmpDir(YiDongNianHuiActivity.this) + "dgx.jpg");
+////                                FileOutputStream out = new FileOutputStream(file);
+////                                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, out);
+////                                out.flush();
+////                                out.close();
+//
+//                                    } catch (Exception e) {
+//                                        Log.d("ffffff", e.getMessage() + "");
+//
+//                                    }
+//
+//                                }
+//                            }).start();
 
 
                     }
                 });
                 animatorSet12.start();
-                bt12.setEnabled(false);
+
 
                 break;
 
         }
 
     }
+
+
+
 
     private void  ChongsZHI(){
         if (sheZhiBeanList!=null){
@@ -1322,5 +1479,170 @@ public class SheZhiActivity extends Activity implements View.OnClickListener, Vi
             }
         });
     }
+
+    public List<Subject> pull2xml(InputStream is) throws Exception {
+        List<Subject> list  = new ArrayList<>();;
+        Subject student = new Subject();
+        //创建xmlPull解析器
+        XmlPullParser parser = Xml.newPullParser();
+        ///初始化xmlPull解析器
+        parser.setInput(is, "utf-8");
+        //读取文件的类型
+        int type = parser.getEventType();
+        //无限判断文件类型进行读取
+        while (type != XmlPullParser.END_DOCUMENT) {
+            switch (type) {
+                //开始标签
+                case XmlPullParser.START_TAG:
+                    if ("Root".equals(parser.getName())) {
+                        String	id=parser.getAttributeValue(0);
+                       if (baoCunBean.getZhanghuId()==null || !baoCunBean.getZhanghuId().equals(id)){
+                           if (duQuDialog!=null)
+                           runOnUiThread(new Runnable() {
+                               @Override
+                               public void run() {
+                                   duQuDialog.setTiShi("           还没设置账户ID 或者账户id不一致");
+                               }
+                           });
+
+                           return null;
+                       }
+
+                    } else if ("Subject".equals(parser.getName())) {
+
+                        student.setId(parser.getAttributeValue(0));
+
+                    } else if ("name".equals(parser.getName())) {
+                        //获取name值
+                        String name = parser.nextText();
+                        if (name!=null){
+                            student.setName(URLDecoder.decode(name, "UTF-8"));
+                        }
+
+                    } else if ("phone".equals(parser.getName())) {
+                        //获取nickName值
+                        String nickName = parser.nextText();
+                        student.setPhone(nickName);
+                    }else if ("comeFrom".equals(parser.getName())) {
+                        //获取nickName值
+                        String nickName = parser.nextText();
+                        if (nickName!=null){
+                            student.setComeFrom(URLDecoder.decode(nickName, "UTF-8"));
+                        }
+                    }
+                    else if ("interviewee".equals(parser.getName())) {
+                        //获取nickName值
+                        String nickName = parser.nextText();
+                        if (nickName!=null){
+                            student.setInterviewee(URLDecoder.decode(nickName, "UTF-8"));
+                        }
+                    }
+                    else if ("city".equals(parser.getName())) {
+                        //获取nickName值
+                        String nickName = parser.nextText();
+                        if (nickName!=null){
+                            student.setCity(URLDecoder.decode(nickName, "UTF-8"));
+                        }
+                    }
+                    else if ("department".equals(parser.getName())) {
+                        //获取nickName值
+                        String nickName = parser.nextText();
+                        if (nickName!=null){
+                            student.setDepartment(URLDecoder.decode(nickName, "UTF-8"));
+                        }
+                    }
+                    else if ("email".equals(parser.getName())) {
+                        //获取nickName值
+                        String nickName = parser.nextText();
+                        if (nickName!=null){
+                            student.setEmail(URLDecoder.decode(nickName, "UTF-8"));
+                        }
+                    }
+                    else if ("title".equals(parser.getName())) {
+                        //获取nickName值
+                        String nickName = parser.nextText();
+                        if (nickName!=null){
+                            student.setTitle(URLDecoder.decode(nickName, "UTF-8"));
+                        }
+                    }
+                    else if ("location".equals(parser.getName())) {
+                        //获取nickName值
+                        String nickName = parser.nextText();
+                        if (nickName!=null){
+                            student.setLocation(URLDecoder.decode(nickName, "UTF-8"));
+                        }
+                    }
+                    else if ("assemblyId".equals(parser.getName())) {
+                        //获取nickName值
+                        String nickName = parser.nextText();
+                        if (nickName!=null){
+                            student.setAssemblyId(URLDecoder.decode(nickName, "UTF-8"));
+                        }
+                    }
+                    else if ("sourceMeeting".equals(parser.getName())) {
+                        //获取nickName值
+                        String nickName = parser.nextText();
+                        if (nickName!=null){
+                            student.setSourceMeeting(URLDecoder.decode(nickName, "UTF-8"));
+                        }
+                    }
+                    else if ("remark".equals(parser.getName())) {
+                        //获取nickName值
+                        String nickName = parser.nextText();
+                        if (nickName!=null){
+                            student.setRemark(URLDecoder.decode(nickName, "UTF-8"));
+                        }
+                    }
+                    else if ("photo".equals(parser.getName())) {
+                        //获取nickName值
+                        String nickName = parser.nextText();
+                        if (nickName!=null){
+                            student.setPhoto(URLDecoder.decode(nickName, "UTF-8"));
+                        }
+                    }
+
+                    break;
+                //结束标签
+                case XmlPullParser.END_TAG:
+                    if ("Subject".equals(parser.getName())) {
+                        list.add(student);
+                    }
+                    break;
+            }
+            //继续往下读取标签类型
+            type = parser.next();
+        }
+        return list;
+    }
+
+
+
+    public static class  UsbBroadCastReceiver extends BroadcastReceiver {
+
+        public UsbBroadCastReceiver() {
+        }
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+
+            if (intent.getAction()!=null && intent.getAction().equals("android.intent.action.MEDIA_MOUNTED")){
+                usbPath = intent.getData().getPath();
+                List<String> sss=  FileUtil.getMountPathList();
+                int size=sss.size();
+                for (int i=0;i<size;i++){
+
+                    if (sss.get(i).contains(usbPath)){
+                        usbPath=sss.get(i);
+                    }
+
+                }
+
+                Log.d("UsbBroadCastReceiver", usbPath);
+            }
+
+
+        }
+    }
+
 
 }

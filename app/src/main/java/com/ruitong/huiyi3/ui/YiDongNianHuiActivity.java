@@ -19,6 +19,7 @@ import android.os.SystemClock;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.util.Xml;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -60,8 +61,7 @@ import com.ruitong.huiyi3.beans.BenDiRenShuBeanDao;
 import com.ruitong.huiyi3.beans.HuanYinYuBeanDao;
 import com.ruitong.huiyi3.beans.HuiYiInFoBean;
 
-import com.ruitong.huiyi3.beans.MBLeiXingBean;
-import com.ruitong.huiyi3.beans.MBLeiXingBeanDao;
+
 import com.ruitong.huiyi3.beans.MoShengRenBean;
 import com.ruitong.huiyi3.beans.MoShengRenBeanDao;
 import com.ruitong.huiyi3.beans.QianDaoId;
@@ -69,6 +69,7 @@ import com.ruitong.huiyi3.beans.QianDaoIdDao;
 import com.ruitong.huiyi3.beans.RenShu;
 import com.ruitong.huiyi3.beans.ShiBieBean;
 import com.ruitong.huiyi3.beans.ShiShiRenShuBean;
+import com.ruitong.huiyi3.beans.Subject;
 import com.ruitong.huiyi3.beans.TanChuangBean;
 import com.ruitong.huiyi3.beans.WBBean;
 import com.ruitong.huiyi3.beans.WeiShiBieBean;
@@ -91,10 +92,16 @@ import com.google.gson.JsonObject;
 import com.sdsmdg.tastytoast.TastyToast;
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.handshake.ServerHandshake;
+import org.xml.sax.Attributes;
+import org.xml.sax.SAXException;
+import org.xml.sax.helpers.DefaultHandler;
+import org.xmlpull.v1.XmlPullParser;
+
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -106,6 +113,10 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Random;
 import java.util.Vector;
+
+import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.SAXParserFactory;
+
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.FormBody;
@@ -2280,6 +2291,8 @@ public class YiDongNianHuiActivity extends Activity implements RecytviewCash {
 
 	@Override
 	protected void onResume() {
+
+
 		final List<String> av=new ArrayList<>();
 		av.add("http://imgsrc.baidu.com/imgad/pic/item/738b4710b912c8fcab9694ebf6039245d68821aa.jpg");
 		av.add("http://imgsrc.baidu.com/imgad/pic/item/0eb30f2442a7d933258223eea74bd11373f00101.jpg");
@@ -3553,5 +3566,7 @@ public class YiDongNianHuiActivity extends Activity implements RecytviewCash {
 //
 //
 //	}
+
+
 
 }

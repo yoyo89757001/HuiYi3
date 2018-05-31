@@ -75,7 +75,7 @@ public class MyReceiver extends BroadcastReceiver {
 	private ZhuJiBeanH zhuJiBeanH=null;
 	private ZhuJiBeanHDao zhuJiBeanHDao=null;
 	private SheBeiInFoBeanDao sheBeiInFoBeanDao=null;
-	private SheBeiInFoBean sheBeiInFoBean=null;
+	//private SheBeiInFoBean sheBeiInFoBean=null;
 	private RenYuanInFoDao renYuanInFoDao=null;
 	private boolean isA=true;
 	private BenDiMBbeanDao benDiMBbeanDao=null;
