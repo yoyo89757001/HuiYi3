@@ -1408,7 +1408,7 @@ public class SheZhiActivity extends Activity implements View.OnClickListener, Vi
                         //循环
                         for (int j=0;j<size;j++) {
 
-                            Log.d("SheZhiActivity", "循环到"+subjectList.get(j).getId());
+                            Log.d("SheZhiActivity", "循环到"+j);
                             final int finalJ = j;
                             runOnUiThread(new Runnable() {
                                 @Override
@@ -1437,8 +1437,8 @@ public class SheZhiActivity extends Activity implements View.OnClickListener, Vi
 
                         try {
                             String ss=stringBuilder.toString();
-                            FileUtil.savaFileToSD("失败记录"+DateUtils.time(System.currentTimeMillis()+"")+".txt",ss);
-                            stringBuilder.delete(0, stringBuilder.length());
+                            FileUtil.savaFileToSD("失败记录"+DateUtils.timesOne(System.currentTimeMillis()+"")+".txt",ss);
+
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -1448,13 +1448,12 @@ public class SheZhiActivity extends Activity implements View.OnClickListener, Vi
 
                                 if (duQuDialog!=null){
                                     if (stringBuilder.length()>0){
-                                        duQuDialog.setTiShi("有失败的记录，已经保存到根目录");
+                                        duQuDialog.setTiShi("            有失败的记录，已经保存到根目录");
                                     }else {
-                                        duQuDialog.setTiShi("全部导入成功");
+                                        duQuDialog.setTiShi("            全部导入成功");
                                     }
                                 }
-
-
+                                stringBuilder.delete(0, stringBuilder.length());
                             }
                         });
 
@@ -1486,7 +1485,7 @@ public class SheZhiActivity extends Activity implements View.OnClickListener, Vi
     }
 
     public static final int TIMEOUT2 = 1000 * 150;
-    private void link_P1(final ZhuJiBeanH zhuJiBeanH, String filePath, final Subject subject, final int i, final Long id) {
+    private void link_P1(final ZhuJiBeanH zhuJiBeanH, String filePath, final Subject subject, final Long id) {
 
         OkHttpClient okHttpClient = new OkHttpClient.Builder()
                 .writeTimeout(TIMEOUT2, TimeUnit.MILLISECONDS)
@@ -1518,32 +1517,41 @@ public class SheZhiActivity extends Activity implements View.OnClickListener, Vi
         call.enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
+
                 stringBuilder.append("上传图片失败记录:").append("ID").append(subject.getId()).append("姓名:")
                         .append(subject.getName()).append("时间:").append(DateUtils.time(System.currentTimeMillis()+"")).append("\n");
-                link_addPiLiangRenYuan(MyApplication.okHttpClient,subject, 0);
 
-                Log.d("AllConnects", "请求识别失败" + e.getMessage());
+                if (id==-1){
+                    //新增
+                    link_addPiLiangRenYuan(MyApplication.okHttpClient,subject,0);
+                } else {
+                    //更新
+                    link_XiuGaiRenYuan(MyApplication.okHttpClient,subject,0,id);
+                }
+
+                Log.d("AllConnects图片上传", "请求识别失败" + e.getMessage());
             }
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
 
-                Log.d("AllConnects", "请求识别成功" + call.request().toString());
+            //    Log.d("AllConnects", "请求识别成功" + call.request().toString());
                 //获得返回体
                 try {
                     ResponseBody body = response.body();
                     String ss = body.string();
-                    Log.d("AllConnects", "传照片" + ss);
+                    Log.d("AllConnects图片上传", "传照片" + ss);
                     int ii=0;
                     JsonObject jsonObject = GsonUtil.parse(ss).getAsJsonObject();
                     JsonObject jo=jsonObject.get("data").getAsJsonObject();
                     ii=jo.get("id").getAsInt();
                     if (ii!=0){
                         // ii 照片id
-                        if (i==1){
+                        if (id==-1){
                             //新增
                             link_addPiLiangRenYuan(MyApplication.okHttpClient,subject,ii);
-                        }else {
+                        }
+                        else {
                             //更新
                             link_XiuGaiRenYuan(MyApplication.okHttpClient,subject,ii,id);
                         }
@@ -1552,13 +1560,25 @@ public class SheZhiActivity extends Activity implements View.OnClickListener, Vi
                         stringBuilder.append("上传图片失败记录:").append("ID").append(subject.getId()).append("姓名:")
                                 .append(subject.getName()).append("时间:").append(DateUtils.time(System.currentTimeMillis()+"")).append("\n");
 
-                        link_addPiLiangRenYuan(MyApplication.okHttpClient,subject, 0);
+                        if (id==-1){
+                            //新增
+                            link_addPiLiangRenYuan(MyApplication.okHttpClient,subject,0);
+                        } else {
+                            //更新
+                            link_XiuGaiRenYuan(MyApplication.okHttpClient,subject,0,id);
+                        }
                     }
                 } catch (Exception e) {
                     stringBuilder.append("上传图片失败记录:").append("ID").append(subject.getId()).append("姓名:")
                             .append(subject.getName()).append("时间:").append(DateUtils.time(System.currentTimeMillis()+"")).append("\n");
-                    link_addPiLiangRenYuan(MyApplication.okHttpClient,subject, 0);
-                    Log.d("WebsocketPushMsg2", e.getMessage());
+                    if (id==-1){
+                        //新增
+                        link_addPiLiangRenYuan(MyApplication.okHttpClient,subject,0);
+                    } else {
+                        //更新
+                        link_XiuGaiRenYuan(MyApplication.okHttpClient,subject,0,id);
+                    }
+                    Log.d("AllConnects图片上传异常", e.getMessage());
                 }
             }
         });
@@ -1603,12 +1623,12 @@ public class SheZhiActivity extends Activity implements View.OnClickListener, Vi
                 synchronized (subject){
                     subject.notify();
                 }
-                Log.d("AllConnects", "请求失败"+e.getMessage());
+                Log.d("AllConnects查询旷视", "请求失败"+e.getMessage());
             }
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
-                Log.d("MyReceivereee", "请求成功"+call.request().toString());
+              //  Log.d("AllConnects查询旷视", "请求成功"+call.request().toString());
                 //获得返回体
                 try{
 
@@ -1623,33 +1643,43 @@ public class SheZhiActivity extends Activity implements View.OnClickListener, Vi
                         if (size==0){
                             //先传图片
                             link_P1(zhuJiBeanH,trg+File.separator+subject.getId()+(subject.getPhoto().
-                                    substring(subject.getPhoto().length()-4,subject.getPhoto().length())),subject,1, -1L);
-
+                                    substring(subject.getPhoto().length()-4,subject.getPhoto().length())),subject, -1L);
                         }
+                        int pp=-1;
                         for (int i=0;i<size;i++){
                             //相同就更新
                             if (!zhaoPianBean.getData().get(i).getJob_number().equals(subject.getId()+"")){
-                                //先传图片
-                                link_P1(zhuJiBeanH,trg+File.separator+subject.getId()+(subject.getPhoto().
-                                        substring(subject.getPhoto().length()-4,subject.getPhoto().length())),subject,1, -1L);
+                                //跟所有人都不同， 再新增
+                                pp=0;
                                 Log.d("MyReceiver", "222");
-                            }else {
+                            }
+                            else {
+                                //相同就不需要再往下比对了，跳出当前循环
+                                pp=1;
                                 //更新旷视人员信息//先传图片
                                 link_P1(zhuJiBeanH,trg+File.separator+subject.getId()+(subject.getPhoto().
-                                        substring(subject.getPhoto().length()-4,subject.getPhoto().length())),subject,2,zhaoPianBean.getData().get(i).getId());
+                                        substring(subject.getPhoto().length()-4,subject.getPhoto().length())),subject,zhaoPianBean.getData().get(i).getId());
                                 Log.d("MyReceiver", "333");
+                                break;
                             }
                         }
+                        if (pp==0){
+                            //跟所有人都不同， 再新增
+                            //先传图片
+                            link_P1(zhuJiBeanH,trg+File.separator+subject.getId()+(subject.getPhoto().
+                                    substring(subject.getPhoto().length()-4,subject.getPhoto().length())),subject, -1L);
+                        }
+
                     }else {
                         //	Log.d("MyReceiver", "444");
                         //先传图片
                         link_P1(zhuJiBeanH,trg+File.separator+subject.getId()+(subject.getPhoto().
-                                substring(subject.getPhoto().length()-4,subject.getPhoto().length())),subject,1, -1L);
+                                substring(subject.getPhoto().length()-4,subject.getPhoto().length())),subject, -1L);
                     }
 
 
                 }catch (Exception e){
-                    Log.d("MyReceivereee", e.getMessage()+"gggg");
+                    Log.d("AllConnects查询旷视异常", e.getMessage()+"gggg");
                     stringBuilder.append("查询旷视失败记录:").append("ID:")
                             .append(subject.getId()).append("姓名:")
                             .append(subject.getName()).append("时间:")
@@ -1717,7 +1747,7 @@ public class SheZhiActivity extends Activity implements View.OnClickListener, Vi
                 synchronized (renYuanInFo){
                     renYuanInFo.notify();
                 }
-                Log.d("AllConnects", "请求失败"+e.getMessage());
+                Log.d("AllConnects修改失败", "请求失败"+e.getMessage());
             }
 
             @Override
@@ -1727,7 +1757,7 @@ public class SheZhiActivity extends Activity implements View.OnClickListener, Vi
                 try{
                     ResponseBody body = response.body();
                     String ss=body.string().trim();
-                    Log.d("AllConnects", "修该人员"+ss);
+                    Log.d("AllConnects修改", "修该人员"+ss);
 //					JsonObject jsonObject= GsonUtil.parse(ss).getAsJsonObject();
 //					if (jsonObject.get("code").getAsInt()==0){
 //						JsonObject jo=jsonObject.get("data").getAsJsonObject();
@@ -1742,7 +1772,7 @@ public class SheZhiActivity extends Activity implements View.OnClickListener, Vi
                     synchronized (renYuanInFo){
                         renYuanInFo.notify();
                     }
-                    Log.d("WebsocketPushMsg", e.getMessage()+"gggg");
+                    Log.d("AllConnects修改异常", e.getMessage()+"gggg");
                 }finally {
                     synchronized (renYuanInFo){
                         renYuanInFo.notify();
@@ -1805,7 +1835,7 @@ public class SheZhiActivity extends Activity implements View.OnClickListener, Vi
                 synchronized (subject){
                     subject.notify();
                 }
-                Log.d("AllConnects", "请求失败"+e.getMessage());
+                Log.d("AllConnects批量新增", "请求失败"+e.getMessage());
             }
 
             @Override
@@ -1816,7 +1846,7 @@ public class SheZhiActivity extends Activity implements View.OnClickListener, Vi
 
                     ResponseBody body = response.body();
                     String ss=body.string().trim();
-                    //	Log.d("MyReceiver", "批量创建人员"+ss);
+                    	Log.d("AllConnects批量新增", "批量创建人员"+ss);
                     JsonObject jsonObject= GsonUtil.parse(ss).getAsJsonObject();
                     if (jsonObject.get("code").getAsInt()!=0){
                         stringBuilder.append("创建人员失败记录:").append("ID").append(subject.getId()).append("姓名:")
@@ -1825,7 +1855,7 @@ public class SheZhiActivity extends Activity implements View.OnClickListener, Vi
                 }catch (Exception e){
                     stringBuilder.append("创建人员失败记录:").append("ID").append(subject.getId()).append("姓名:")
                             .append(subject.getName()).append("时间:").append(DateUtils.time(System.currentTimeMillis()+"")).append("\n");
-                    Log.d("MyReceiver", e.getMessage()+"gggg");
+                    Log.d("AllConnects批量新增异常", e.getMessage()+"gggg");
                 }finally {
                     synchronized (subject){
                         subject.notify();

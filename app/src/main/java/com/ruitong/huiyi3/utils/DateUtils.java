@@ -262,12 +262,12 @@ public class DateUtils {
      * @param time
      * @return
      */
-    public String timesOne(String time) {
-        SimpleDateFormat sdr = new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss",Locale.CHINA);
+    public static String timesOne(String time) {
+        SimpleDateFormat sdr = new SimpleDateFormat("yyyy年MM月dd日HH时mm分ss秒",Locale.CHINA);
         @SuppressWarnings("unused")
         long lcc = Long.valueOf(time);
-        int i = Integer.parseInt(time);
-        String times = sdr.format(new Date(i * 1000L));
+       // int i = Integer.parseInt(time);
+        String times = sdr.format(lcc);
         return times;
 
     }
