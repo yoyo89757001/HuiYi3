@@ -813,7 +813,7 @@ public class SheZhiActivity extends Activity implements View.OnClickListener, Vi
                                             runOnUiThread(new Runnable() {
                                                 @Override
                                                 public void run() {
-                                                    duQuDialog.setTiShi("        解析Xml "+ xmlList.get(0) +" 失败...");
+                                                    duQuDialog.setTiShi("        解析Xml "+ xmlList.get(0) +" 失败...,请确认账户id跟zip包id是否一致");
                                                 }
                                             });
                                             Log.d("SheZhiActivity", e.getMessage()+"解析XML异常");
@@ -823,7 +823,12 @@ public class SheZhiActivity extends Activity implements View.OnClickListener, Vi
 
                                     } catch (Exception e) {
                                         Log.d("ffffff", e.getMessage() + "");
-
+                                        runOnUiThread(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                duQuDialog.setTiShi("         出现异常");
+                                            }
+                                        });
                                     }
 
                                 }
@@ -1448,7 +1453,7 @@ public class SheZhiActivity extends Activity implements View.OnClickListener, Vi
 
                                 if (duQuDialog!=null){
                                     if (stringBuilder.length()>0){
-                                        duQuDialog.setTiShi("            有失败的记录，已经保存到根目录");
+                                        duQuDialog.setTiShi("            有失败的记录，已经保存到根目录 6");
                                     }else {
                                         duQuDialog.setTiShi("            全部导入成功");
                                     }
@@ -1518,8 +1523,12 @@ public class SheZhiActivity extends Activity implements View.OnClickListener, Vi
             @Override
             public void onFailure(Call call, IOException e) {
 
-                stringBuilder.append("上传图片失败记录:").append("ID").append(subject.getId()).append("姓名:")
-                        .append(subject.getName()).append("时间:").append(DateUtils.time(System.currentTimeMillis()+"")).append("\n");
+                stringBuilder.append("上传图片失败记录:")
+                        .append("ID").append(subject.getId()).append("姓名:")
+                        .append(subject.getName())
+                        .append("时间:")
+                        .append(DateUtils.time(System.currentTimeMillis()+""))
+                        .append("\n");
 
                 if (id==-1){
                     //新增

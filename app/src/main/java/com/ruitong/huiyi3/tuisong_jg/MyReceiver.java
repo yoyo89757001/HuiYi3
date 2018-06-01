@@ -28,6 +28,8 @@ import com.ruitong.huiyi3.beans.ZhuJiBeanH;
 import com.ruitong.huiyi3.beans.ZhuJiBeanHDao;
 import com.ruitong.huiyi3.cookies.CookiesManager;
 import com.ruitong.huiyi3.dialog.GaiNiMaBi;
+import com.ruitong.huiyi3.utils.DateUtils;
+import com.ruitong.huiyi3.utils.FileUtil;
 import com.ruitong.huiyi3.utils.GsonUtil;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
@@ -79,11 +81,12 @@ public class MyReceiver extends BroadcastReceiver {
 	private RenYuanInFoDao renYuanInFoDao=null;
 	private boolean isA=true;
 	private BenDiMBbeanDao benDiMBbeanDao=null;
-
+	private StringBuilder stringBuilder=null;
 
 	@Override
 	public void onReceive(Context context, Intent intent) {
 		try {
+			stringBuilder=new StringBuilder();
 			baoCunBeanDao = MyApplication.myApplication.getDaoSession().getBaoCunBeanDao();
 			benDiMBbeanDao = MyApplication.myApplication.getDaoSession().getBenDiMBbeanDao();
 			baoCunBean = baoCunBeanDao.load(123456L);
@@ -752,7 +755,6 @@ public class MyReceiver extends BroadcastReceiver {
 				json.put("title",renYuanInFo.getTitle());
 				json.put("job_number", renYuanInFo.getId());
 				json.put("description", renYuanInFo.getSourceMeeting());
-				json.put("gender", renYuanInFo.getGender());
 
 			} catch (JSONException e) {
 				e.printStackTrace();
@@ -825,7 +827,7 @@ public class MyReceiver extends BroadcastReceiver {
 			json.put("title",renYuanInFo.getTitle());
 			json.put("job_number", renYuanInFo.getId());
 			json.put("gender", renYuanInFo.getGender());
-			json.put("department", renYuanInFo.getSourceMeeting());
+			json.put("description", renYuanInFo.getSourceMeeting());
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
@@ -841,12 +843,12 @@ public class MyReceiver extends BroadcastReceiver {
 //				.add("department",renYuanInFo.getDepartment())
 //				.add("title",renYuanInFo.getTitle())
 //				.build();
-		RenYuanInFo renYuanInFo1= renYuanInFoDao.load(renYuanInFo.getId());
+		//RenYuanInFo renYuanInFo1= renYuanInFoDao.load(renYuanInFo.getId());
 
 		Request.Builder requestBuilder = new Request.Builder()
 				//.header("Content-Type", "application/json")
 				.put(requestBody)
-				.url(zhuJiBeanH.getHostUrl()+"/subject/"+(renYuanInFo1==null?"":renYuanInFo1.getSid()));
+				.url(zhuJiBeanH.getHostUrl()+"/subject/"+renYuanInFo.getId());
 
 		// step 3：创建 Call 对象
 		Call call = okHttpClient.newCall(requestBuilder.build());
@@ -855,7 +857,13 @@ public class MyReceiver extends BroadcastReceiver {
 		call.enqueue(new Callback() {
 			@Override
 			public void onFailure(Call call, IOException e) {
-
+				stringBuilder.append("更新人员失败记录:")
+						.append("ID").append(renYuanInFo.getId())
+						.append("姓名:").append(renYuanInFo.getName())
+						.append("时间:")
+						.append(DateUtils.time(System.currentTimeMillis()+""))
+						.append("\n");
+				isA=false;
 				Log.d("AllConnects", "请求失败"+e.getMessage());
 			}
 
@@ -867,14 +875,25 @@ public class MyReceiver extends BroadcastReceiver {
 					ResponseBody body = response.body();
 					String ss=body.string().trim();
 					Log.d("AllConnects", "修该人员"+ss);
-//					JsonObject jsonObject= GsonUtil.parse(ss).getAsJsonObject();
-//					if (jsonObject.get("code").getAsInt()==0){
-//						JsonObject jo=jsonObject.get("data").getAsJsonObject();
-//						renYuanInFo.setSid(jo.get("id").getAsInt());
-//						renYuanInFoDao.insert(renYuanInFo);
-//					}
+					JsonObject jsonObject= GsonUtil.parse(ss).getAsJsonObject();
+					if (jsonObject.get("code").getAsInt()==0){
+						stringBuilder.append("更新人员失败记录:")
+								.append("ID").append(renYuanInFo.getId())
+								.append("姓名:").append(renYuanInFo.getName())
+								.append("时间:")
+								.append(DateUtils.time(System.currentTimeMillis()+""))
+								.append("\n");
+					}
 				}catch (Exception e){
+					stringBuilder.append("更新人员失败记录:")
+							.append("ID").append(renYuanInFo.getId())
+							.append("姓名:").append(renYuanInFo.getName())
+							.append("时间:")
+							.append(DateUtils.time(System.currentTimeMillis()+""))
+							.append("\n");
 					Log.d("WebsocketPushMsg", e.getMessage()+"gggg");
+				}finally {
+					isA=false;
 				}
 
 			}
@@ -1054,7 +1073,7 @@ public class MyReceiver extends BroadcastReceiver {
 	//批量人员操作
 
 	//从老黄后台拿批量信息
-	private void link_getHouTaiPiLiang(int id, final Context context, final int status){
+	private void link_getHouTaiPiLiang(final int id, final Context context, final int status){
 		if (status==3){
 			//删除
 			BenDiQianDaoDao dao= MyApplication.myApplication.getDaoSession().getBenDiQianDaoDao();
@@ -1089,6 +1108,11 @@ public class MyReceiver extends BroadcastReceiver {
 				@Override
 				public void onFailure(Call call, IOException e) {
 					Log.d("AllConnects", "请求失败" + e.getMessage());
+					stringBuilder.append("从后台获取人员信息失败记录:")
+							.append("ID").append(id)
+							.append("时间:")
+							.append(DateUtils.time(System.currentTimeMillis()+""))
+							.append("\n");
 				}
 
 				@Override
@@ -1096,7 +1120,8 @@ public class MyReceiver extends BroadcastReceiver {
 					Log.d("AllConnects", "请求成功" + call.request().toString());
 					//获得返回体
 					try {
-
+						//没了删除，所有在添加前要删掉所有
+						renYuanInFoDao.deleteAll();
 						ResponseBody body = response.body();
 						String ss = body.string().trim();
 						Log.d("AllConnects", "获取批量人员信息" + ss);
@@ -1105,8 +1130,6 @@ public class MyReceiver extends BroadcastReceiver {
 						Gson gson = new Gson();
 						PiLiangBean zhaoPianBean = gson.fromJson(jsonObject, PiLiangBean.class);
 						int size = zhaoPianBean.getObjects().size();
-						//没了删除，所有在添加前要删掉所有
-						renYuanInFoDao.deleteAll();
 
 						for (int i = 0; i < size; i++) {
 							PiLiangBean.ObjectsBean bbb = zhaoPianBean.getObjects().get(i);
@@ -1136,6 +1159,11 @@ public class MyReceiver extends BroadcastReceiver {
 
 
 					} catch (Exception e) {
+						stringBuilder.append("获取后台数据异常记录:")
+								.append("ID").append(id)
+								.append("时间:")
+								.append(DateUtils.time(System.currentTimeMillis()+""))
+								.append("\n");
 						Log.d("WebsocketPushMsg", e.getMessage() + "gggg");
 					}
 				}
@@ -1206,6 +1234,13 @@ public class MyReceiver extends BroadcastReceiver {
 //								Log.d(TAG, "d");
 								int iu=0;
 							}
+						}
+						try {
+							String ss=stringBuilder.toString();
+							FileUtil.savaFileToSD("失败记录"+DateUtils.timesOne(System.currentTimeMillis()+"")+".txt",ss);
+							stringBuilder.delete(0, stringBuilder.length());
+						} catch (Exception e) {
+							e.printStackTrace();
 						}
 
 					}
@@ -1297,6 +1332,13 @@ public class MyReceiver extends BroadcastReceiver {
 		call.enqueue(new Callback() {
 			@Override
 			public void onFailure(Call call, IOException e) {
+
+				stringBuilder.append("上传到旷视图片失败记录:")
+						.append("ID").append(renYuanInFo.getId())
+						.append("姓名:").append(renYuanInFo.getName())
+						.append("时间:")
+						.append(DateUtils.time(System.currentTimeMillis()+""))
+						.append("\n");
 				link_chaXunRenYuan(MyApplication.okHttpClient,context,zhuJiBeanH,renYuanInFo,0);
 				//link_addPiLiangRenYuan(MyApplication.okHttpClient,context,zhuJiBeanH,renYuanInFo,0);
 				//Log.d("AllConnects", "请求识别失败" + e.getMessage());
@@ -1321,12 +1363,24 @@ public class MyReceiver extends BroadcastReceiver {
 						link_chaXunRenYuan(MyApplication.okHttpClient,context,zhuJiBeanH,renYuanInFo,ii);
 						//Log.d("MyReceiver", "图片4");
 					}else {
+						stringBuilder.append("上传到旷视图片失败记录:")
+								.append("ID").append(renYuanInFo.getId())
+								.append("姓名:").append(renYuanInFo.getName())
+								.append("时间:")
+								.append(DateUtils.time(System.currentTimeMillis()+""))
+								.append("\n");
 						link_chaXunRenYuan(MyApplication.okHttpClient,context,zhuJiBeanH,renYuanInFo,0);
 						//link_addPiLiangRenYuan(MyApplication.okHttpClient,context,zhuJiBeanH,renYuanInFo,0);
 						//Log.d("MyReceiver", "图片5");
 					}
 				} catch (Exception e) {
 					//Log.d("MyReceiver", "图片6");
+					stringBuilder.append("上传到旷视图片失败记录:")
+							.append("ID").append(renYuanInFo.getId())
+							.append("姓名:").append(renYuanInFo.getName())
+							.append("时间:")
+							.append(DateUtils.time(System.currentTimeMillis()+""))
+							.append("\n");
 					link_chaXunRenYuan(MyApplication.okHttpClient,context,zhuJiBeanH,renYuanInFo,0);
 				//	link_addPiLiangRenYuan(MyApplication.okHttpClient,context,zhuJiBeanH,renYuanInFo,0);
 					//Log.d("WebsocketPushMsg", e.getMessage());
@@ -1348,6 +1402,11 @@ public class MyReceiver extends BroadcastReceiver {
 					.get();
 		} catch (InterruptedException | ExecutionException e) {
 			e.printStackTrace();
+			stringBuilder.append("从瑞瞳后台下载图片失败记录:")
+					.append("图片地址").append(baoCunBean.getHoutaiDiZhi()).append("/upload/compare/").append(renYuanInFo.getPhoto_ids())
+					.append("时间:")
+					.append(DateUtils.time(System.currentTimeMillis()+""))
+					.append("\n");
 		}
 
 		if (bitmap!=null){
@@ -1413,6 +1472,13 @@ public class MyReceiver extends BroadcastReceiver {
 			@Override
 			public void onFailure(Call call, IOException e) {
 					isA=false;
+				stringBuilder.append("创建人员失败记录:")
+						.append("ID").append(renYuanInFo.getId())
+						.append("姓名:").append(renYuanInFo.getName())
+						.append("时间:")
+						.append(DateUtils.time(System.currentTimeMillis()+""))
+						.append("\n");
+
 				Log.d("AllConnects", "请求失败"+e.getMessage());
 			}
 
@@ -1427,12 +1493,25 @@ public class MyReceiver extends BroadcastReceiver {
 				//	Log.d("MyReceiver", "批量创建人员"+ss);
 					JsonObject jsonObject= GsonUtil.parse(ss).getAsJsonObject();
 					if (jsonObject.get("code").getAsInt()==0){
-						JsonObject jo=jsonObject.get("data").getAsJsonObject();
-						renYuanInFo.setSid(jo.get("id").getAsInt());
-						renYuanInFoDao.update(renYuanInFo);
+						stringBuilder.append("创建人员失败记录:")
+								.append("ID").append(renYuanInFo.getId())
+								.append("姓名:").append(renYuanInFo.getName())
+								.append("时间:")
+								.append(DateUtils.time(System.currentTimeMillis()+""))
+								.append("\n");
+//						JsonObject jo=jsonObject.get("data").getAsJsonObject();
+//						renYuanInFo.setSid(jo.get("id").getAsInt());
+//						renYuanInFoDao.update(renYuanInFo);
 					}
 				}catch (Exception e){
 					Log.d("MyReceiver", e.getMessage()+"gggg");
+					stringBuilder.append("创建人员失败记录:")
+							.append("ID").append(renYuanInFo.getId())
+							.append("姓名:").append(renYuanInFo.getName())
+							.append("时间:")
+							.append(DateUtils.time(System.currentTimeMillis()+""))
+							.append("\n");
+
 				}finally {
 					isA=false;
 				}
@@ -1472,6 +1551,14 @@ public class MyReceiver extends BroadcastReceiver {
 		call.enqueue(new Callback() {
 			@Override
 			public void onFailure(Call call, IOException e) {
+
+				stringBuilder.append("查询旷视人员失败记录:")
+						.append("ID").append(renYuanInFo.getId())
+						.append("姓名:").append(renYuanInFo.getName())
+						.append("时间:")
+						.append(DateUtils.time(System.currentTimeMillis()+""))
+						.append("\n");
+
 				isA=false;
 				Log.d("AllConnects", "请求失败"+e.getMessage());
 			}
@@ -1495,17 +1582,27 @@ public class MyReceiver extends BroadcastReceiver {
 							link_addPiLiangRenYuan(MyApplication.okHttpClient,contex,zhuJiBeanH,renYuanInFo,i);
 							//Log.d("MyReceiver", "111");
 						}
+						int pp=-1;
+
 						for (int i=0;i<size;i++){
 							//相同不做操作
 							if (!zhaoPianBean.getData().get(i).getJob_number().equals(renYuanInFo.getId()+"")){
-
-								link_addPiLiangRenYuan(MyApplication.okHttpClient,contex,zhuJiBeanH,renYuanInFo,i);
+								pp=0;
 								Log.d("MyReceiver", "222");
 							}else {
-								isA=false;
+								pp=1;
+								link_XiuGaiRenYuan(MyApplication.okHttpClient,contex,zhuJiBeanH,renYuanInFo,i);
 								Log.d("MyReceiver", "333");
+								break;
+
 							}
 						}
+
+						if (pp==0){
+							link_addPiLiangRenYuan(MyApplication.okHttpClient,contex,zhuJiBeanH,renYuanInFo,i);
+						}
+
+
 					}else {
 					//	Log.d("MyReceiver", "444");
 						link_addPiLiangRenYuan(MyApplication.okHttpClient,contex,zhuJiBeanH,renYuanInFo,i);
@@ -1514,6 +1611,13 @@ public class MyReceiver extends BroadcastReceiver {
 
 				}catch (Exception e){
 					Log.d("MyReceivereee", e.getMessage()+"gggg");
+					stringBuilder.append("查询旷视人员失败记录:")
+							.append("ID").append(renYuanInFo.getId())
+							.append("姓名:").append(renYuanInFo.getName())
+							.append("时间:")
+							.append(DateUtils.time(System.currentTimeMillis()+""))
+							.append("\n");
+
 					isA=false;
 				}
 
