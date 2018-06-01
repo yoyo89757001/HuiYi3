@@ -147,6 +147,8 @@ public class FileUtil {
             return null;
         }
 
+
+
         File[] files = f.listFiles();
         // Log.d("FileUtil", "files.length:" + files.length);
         if(files==null){//判断权限
@@ -175,6 +177,7 @@ public class FileUtil {
         Log.d("FileUtil", "返回的jsonArray:" + fileList.size());
         return fileList;
     }
+
 
 
     /**

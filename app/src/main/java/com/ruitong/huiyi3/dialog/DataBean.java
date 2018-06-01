@@ -7,6 +7,15 @@ package com.ruitong.huiyi3.dialog;
 public class DataBean {
 
     String job_number;
+    Long id;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public String getJob_number() {
         return job_number;

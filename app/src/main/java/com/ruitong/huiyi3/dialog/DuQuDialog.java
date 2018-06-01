@@ -56,7 +56,9 @@ public class DuQuDialog extends Dialog {
 
     public void setProgressBar(float p){
         progressBar.setProgress((int) p);
-
+        tishi.setVisibility(View.GONE);
+        a1.setVisibility(View.VISIBLE);
+        progressBar.setVisibility(View.VISIBLE);
         a1.setText("入库中..."+ p +"%");
     }
 

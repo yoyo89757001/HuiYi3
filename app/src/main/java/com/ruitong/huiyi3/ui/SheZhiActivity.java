@@ -10,8 +10,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Environment;
@@ -20,20 +18,12 @@ import android.util.Log;
 import android.util.Xml;
 import android.view.View;
 import android.widget.Button;
-import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.target.Target;
 import com.google.gson.JsonObject;
 import com.ruitong.huiyi3.MyApplication;
 import com.ruitong.huiyi3.R;
 import com.ruitong.huiyi3.beans.BaoCunBean;
 import com.ruitong.huiyi3.beans.BaoCunBeanDao;
-import com.ruitong.huiyi3.beans.BenDiQianDao;
-import com.ruitong.huiyi3.beans.BenDiQianDaoDao;
-import com.ruitong.huiyi3.beans.RenShu;
-import com.ruitong.huiyi3.beans.RenYuanInFo;
-import com.ruitong.huiyi3.beans.SheBeiInFoBean;
 import com.ruitong.huiyi3.beans.Subject;
 import com.ruitong.huiyi3.beans.ZhuJiBeanH;
 import com.ruitong.huiyi3.beans.ZhuJiBeanHDao;
@@ -47,6 +37,7 @@ import com.ruitong.huiyi3.dialog.XiuGaiWenZiDialog;
 import com.ruitong.huiyi3.dialog.XiuGaiXinXiDialog;
 import com.ruitong.huiyi3.dialog.YuLanDialog;
 import com.ruitong.huiyi3.dialog.YuYingDialog;
+import com.ruitong.huiyi3.utils.DateUtils;
 import com.ruitong.huiyi3.utils.FileUtil;
 import com.ruitong.huiyi3.utils.GsonUtil;
 import com.ruitong.huiyi3.utils.Utils;
@@ -61,14 +52,12 @@ import org.xmlpull.v1.XmlPullParser;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.Call;
@@ -94,7 +83,7 @@ public class SheZhiActivity extends Activity implements View.OnClickListener, Vi
     private ZhuJiBeanH zhuJiBeanH=null;
     private DuQuDialog duQuDialog=null;
     private static String usbPath=null;
-
+    private StringBuilder stringBuilder=new StringBuilder();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -107,6 +96,8 @@ public class SheZhiActivity extends Activity implements View.OnClickListener, Vi
         if (baoCunBean.getWenzi()==null){
             baoCunBean.setWenzi("");
         }
+
+
 
         baoCunBeanDao.update(baoCunBean);
         baoCunBean=baoCunBeanDao.load(123456L);
@@ -740,6 +731,7 @@ public class SheZhiActivity extends Activity implements View.OnClickListener, Vi
                                         runOnUiThread(new Runnable() {
                                             @Override
                                             public void run() {
+                                                if (duQuDialog!=null)
                                                 duQuDialog.setTiShi("     寻找压缩文件中...(注意:只会解压找到的第一个压缩文件)");
                                             }
                                         });
@@ -763,6 +755,7 @@ public class SheZhiActivity extends Activity implements View.OnClickListener, Vi
                                         runOnUiThread(new Runnable() {
                                             @Override
                                             public void run() {
+                                                if (duQuDialog!=null)
                                                 duQuDialog.setTiShi("        解压文件 "+ finalZipName +" 中...");
                                             }
                                         });
@@ -778,6 +771,7 @@ public class SheZhiActivity extends Activity implements View.OnClickListener, Vi
                                         runOnUiThread(new Runnable() {
                                             @Override
                                             public void run() {
+                                                if (duQuDialog!=null)
                                                 duQuDialog.setTiShi("        解析Xml "+ xmlList.get(0) +" 中...");
                                             }
                                         });
@@ -790,17 +784,17 @@ public class SheZhiActivity extends Activity implements View.OnClickListener, Vi
                                                 //解析成功
                                                 //先登录旷视
                                                 if (zhuJiBeanH.getUsername()!=null && zhuJiBeanH.getPwd()!=null){
-                                                    getOkHttpClient2(subjectList);
+                                                    getOkHttpClient2(subjectList,trg);
 
                                                 }else {
                                                     runOnUiThread(new Runnable() {
                                                         @Override
                                                         public void run() {
+                                                            if (duQuDialog!=null)
                                                             duQuDialog.setTiShi("        登录后台失败,没有账户，密码");
                                                         }
                                                     });
                                                 }
-
 
                                                 final int size= subjectList.size();
                                                 Log.d("ffffff", "size:" + size);
@@ -815,6 +809,13 @@ public class SheZhiActivity extends Activity implements View.OnClickListener, Vi
                                             }
 
                                         } catch (Exception e) {
+
+                                            runOnUiThread(new Runnable() {
+                                                @Override
+                                                public void run() {
+                                                    duQuDialog.setTiShi("        解析Xml "+ xmlList.get(0) +" 失败...");
+                                                }
+                                            });
                                             Log.d("SheZhiActivity", e.getMessage()+"解析XML异常");
                                         }
 
@@ -1333,8 +1334,15 @@ public class SheZhiActivity extends Activity implements View.OnClickListener, Vi
 
     }
 
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        zhuJiBeanH=zhuJiBeanHDao.loadAll().get(0);
+    }
+
     //首先登录-->获取所有主机-->创建或者删除或者更新门禁
-    public void getOkHttpClient2(final List<Subject> subjectList){
+    public void getOkHttpClient2(final List<Subject> subjectList, final String trg){
         zhuJiBeanH=zhuJiBeanHDao.loadAll().get(0);
         okHttpClient = new OkHttpClient.Builder()
                 .writeTimeout(TIMEOUT, TimeUnit.MILLISECONDS)
@@ -1373,39 +1381,112 @@ public class SheZhiActivity extends Activity implements View.OnClickListener, Vi
         mcall.enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (duQuDialog!=null)
+                        duQuDialog.setTiShi("        登录后台失败");
+                    }
+                });
+                Log.d("ffffff", "登陆失败" + e.getMessage());
 
-                Log.d("ffffff", "登陆失败"+e.getMessage());
             }
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
-                String s=response.body().string();
-                Log.d("ffffff", "登陆"+s);
-                JsonObject jsonObject= GsonUtil.parse(s).getAsJsonObject();
-                int i=1;
-                i=jsonObject.get("code").getAsInt();
-                if (i==0){
-                    //登录成功,后续的连接操作因为cookies 原因,要用 MyApplication.okHttpClient
-                    MyApplication.okHttpClient=okHttpClient;
-                    for (Subject subject:subjectList){
-                        //传图片到旷视
-                    link_chaXunRenYuan(okHttpClient,subject.getName());
+
+                try {
+                    String s = response.body().string();
+                    Log.d("ffffff", "登陆" + s);
+                    JsonObject jsonObject = GsonUtil.parse(s).getAsJsonObject();
+                    int i = 1;
+                    i = jsonObject.get("code").getAsInt();
+                    if (i == 0) {
+                        //登录成功,后续的连接操作因为cookies 原因,要用 MyApplication.okHttpClient
+                        MyApplication.okHttpClient = okHttpClient;
+                        final int size=subjectList.size();
+                        //循环
+                        for (int j=0;j<size;j++) {
+
+                            Log.d("SheZhiActivity", "循环到"+subjectList.get(j).getId());
+                            final int finalJ = j;
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+
+                                    if (duQuDialog!=null){
+                                        duQuDialog.setProgressBar(((finalJ / (float) size) * 100));
+                                    }
+
+                                }
+                            });
+
+                            //查询旷视
+                            synchronized (subjectList.get(j)) {
+                                link_chaXunRenYuan(okHttpClient, subjectList.get(j),trg);
+                                try {
+                                    subjectList.get(j).wait();
+                                } catch (InterruptedException e) {
+                                    e.printStackTrace();
+                                }
+
+                            }
+
+                        }
+                        Log.d("SheZhiActivity", "循环完了");
+
+                        try {
+                            String ss=stringBuilder.toString();
+                            FileUtil.savaFileToSD("失败记录"+DateUtils.time(System.currentTimeMillis()+"")+".txt",ss);
+                            stringBuilder.delete(0, stringBuilder.length());
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+
+                                if (duQuDialog!=null){
+                                    if (stringBuilder.length()>0){
+                                        duQuDialog.setTiShi("有失败的记录，已经保存到根目录");
+                                    }else {
+                                        duQuDialog.setTiShi("全部导入成功");
+                                    }
+                                }
 
 
+                            }
+                        });
 
+                    } else {
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                if (duQuDialog!=null)
+                                duQuDialog.setTiShi("        登录后台失败");
+                            }
+                        });
                     }
 
 
-                }
-
+            }catch(Exception e) {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (duQuDialog!=null)
+                            duQuDialog.setTiShi("        登录后台失败");
+                        }
+                    });
+                e.printStackTrace();
             }
+          }
         });
 
 
     }
 
     public static final int TIMEOUT2 = 1000 * 150;
-    private void link_P1(final ZhuJiBeanH zhuJiBeanH, final File file, final RenYuanInFo renYuanInFo, final Context context) {
+    private void link_P1(final ZhuJiBeanH zhuJiBeanH, String filePath, final Subject subject, final int i, final Long id) {
 
         OkHttpClient okHttpClient = new OkHttpClient.Builder()
                 .writeTimeout(TIMEOUT2, TimeUnit.MILLISECONDS)
@@ -1414,10 +1495,11 @@ public class SheZhiActivity extends Activity implements View.OnClickListener, Vi
                 .cookieJar(new CookiesManager())
                 .retryOnConnectionFailure(true)
                 .build();
-        ;
+
         MultipartBody mBody;
         MultipartBody.Builder builder = new MultipartBody.Builder().setType(MultipartBody.FORM);
-
+        Log.d("SheZhiActivity", filePath+"图片文件路径");
+        final File file=new File(filePath);
         RequestBody fileBody1 = RequestBody.create(MediaType.parse("application/octet-stream"),file);
 
         builder.addFormDataPart("photo",file.getName(), fileBody1);
@@ -1436,31 +1518,46 @@ public class SheZhiActivity extends Activity implements View.OnClickListener, Vi
         call.enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-                link_addRenYuan(MyApplication.okHttpClient,context,zhuJiBeanH,renYuanInFo,0);
+                stringBuilder.append("上传图片失败记录:").append("ID").append(subject.getId()).append("姓名:")
+                        .append(subject.getName()).append("时间:").append(DateUtils.time(System.currentTimeMillis()+"")).append("\n");
+                link_addPiLiangRenYuan(MyApplication.okHttpClient,subject, 0);
+
                 Log.d("AllConnects", "请求识别失败" + e.getMessage());
             }
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
-                file.delete();
+
                 Log.d("AllConnects", "请求识别成功" + call.request().toString());
                 //获得返回体
                 try {
                     ResponseBody body = response.body();
                     String ss = body.string();
-
                     Log.d("AllConnects", "传照片" + ss);
                     int ii=0;
                     JsonObject jsonObject = GsonUtil.parse(ss).getAsJsonObject();
                     JsonObject jo=jsonObject.get("data").getAsJsonObject();
                     ii=jo.get("id").getAsInt();
                     if (ii!=0){
-                        link_addRenYuan(MyApplication.okHttpClient,context,zhuJiBeanH,renYuanInFo,ii);
+                        // ii 照片id
+                        if (i==1){
+                            //新增
+                            link_addPiLiangRenYuan(MyApplication.okHttpClient,subject,ii);
+                        }else {
+                            //更新
+                            link_XiuGaiRenYuan(MyApplication.okHttpClient,subject,ii,id);
+                        }
+
                     }else {
-                        link_addRenYuan(MyApplication.okHttpClient,context,zhuJiBeanH,renYuanInFo,0);
+                        stringBuilder.append("上传图片失败记录:").append("ID").append(subject.getId()).append("姓名:")
+                                .append(subject.getName()).append("时间:").append(DateUtils.time(System.currentTimeMillis()+"")).append("\n");
+
+                        link_addPiLiangRenYuan(MyApplication.okHttpClient,subject, 0);
                     }
                 } catch (Exception e) {
-                    link_addRenYuan(MyApplication.okHttpClient,context,zhuJiBeanH,renYuanInFo,0);
+                    stringBuilder.append("上传图片失败记录:").append("ID").append(subject.getId()).append("姓名:")
+                            .append(subject.getName()).append("时间:").append(DateUtils.time(System.currentTimeMillis()+"")).append("\n");
+                    link_addPiLiangRenYuan(MyApplication.okHttpClient,subject, 0);
                     Log.d("WebsocketPushMsg2", e.getMessage());
                 }
             }
@@ -1470,7 +1567,7 @@ public class SheZhiActivity extends Activity implements View.OnClickListener, Vi
 
 
     //查询人员
-    private void link_chaXunRenYuan(final OkHttpClient okHttpClient, String name){
+    private void link_chaXunRenYuan(final OkHttpClient okHttpClient, final Subject subject, final String trg){
         //	Log.d("MyReceivereee", "进来");
         final MediaType JSON=MediaType.parse("application/json; charset=utf-8");
 
@@ -1490,7 +1587,7 @@ public class SheZhiActivity extends Activity implements View.OnClickListener, Vi
         Request.Builder requestBuilder = new Request.Builder()
                 //.header("Content-Type", "application/json")
                 .get()
-                .url(zhuJiBeanH.getHostUrl()+"/mobile-admin/subjects/list?category=employee&name="+name);
+                .url(zhuJiBeanH.getHostUrl()+"/mobile-admin/subjects/list?category=employee&name="+subject.getName());
 
         // step 3：创建 Call 对象
         Call call = okHttpClient.newCall(requestBuilder.build());
@@ -1499,7 +1596,13 @@ public class SheZhiActivity extends Activity implements View.OnClickListener, Vi
         call.enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-                isA=false;
+                stringBuilder.append("查询旷视失败记录:").append("ID:")
+                        .append(subject.getId()).append("姓名:")
+                        .append(subject.getName()).append("时间:")
+                        .append(DateUtils.time(System.currentTimeMillis()+"")).append("\n");
+                synchronized (subject){
+                    subject.notify();
+                }
                 Log.d("AllConnects", "请求失败"+e.getMessage());
             }
 
@@ -1518,36 +1621,222 @@ public class SheZhiActivity extends Activity implements View.OnClickListener, Vi
                     if (zhaoPianBean.getData()!=null){
                         int size=zhaoPianBean.getData().size();
                         if (size==0){
+                            //先传图片
+                            link_P1(zhuJiBeanH,trg+File.separator+subject.getId()+(subject.getPhoto().
+                                    substring(subject.getPhoto().length()-4,subject.getPhoto().length())),subject,1, -1L);
 
-                            link_addPiLiangRenYuan(MyApplication.okHttpClient,contex,zhuJiBeanH,renYuanInFo,i);
-                            //Log.d("MyReceiver", "111");
                         }
                         for (int i=0;i<size;i++){
-                            //相同不做操作
-                            if (!zhaoPianBean.getData().get(i).getJob_number().equals(renYuanInFo.getId()+"")){
-
-                                link_addPiLiangRenYuan(MyApplication.okHttpClient,contex,zhuJiBeanH,renYuanInFo,i);
+                            //相同就更新
+                            if (!zhaoPianBean.getData().get(i).getJob_number().equals(subject.getId()+"")){
+                                //先传图片
+                                link_P1(zhuJiBeanH,trg+File.separator+subject.getId()+(subject.getPhoto().
+                                        substring(subject.getPhoto().length()-4,subject.getPhoto().length())),subject,1, -1L);
                                 Log.d("MyReceiver", "222");
                             }else {
-                                isA=false;
+                                //更新旷视人员信息//先传图片
+                                link_P1(zhuJiBeanH,trg+File.separator+subject.getId()+(subject.getPhoto().
+                                        substring(subject.getPhoto().length()-4,subject.getPhoto().length())),subject,2,zhaoPianBean.getData().get(i).getId());
                                 Log.d("MyReceiver", "333");
                             }
                         }
                     }else {
                         //	Log.d("MyReceiver", "444");
-                        link_addPiLiangRenYuan(MyApplication.okHttpClient,contex,zhuJiBeanH,renYuanInFo,i);
+                        //先传图片
+                        link_P1(zhuJiBeanH,trg+File.separator+subject.getId()+(subject.getPhoto().
+                                substring(subject.getPhoto().length()-4,subject.getPhoto().length())),subject,1, -1L);
                     }
 
 
                 }catch (Exception e){
                     Log.d("MyReceivereee", e.getMessage()+"gggg");
-                    isA=false;
+                    stringBuilder.append("查询旷视失败记录:").append("ID:")
+                            .append(subject.getId()).append("姓名:")
+                            .append(subject.getName()).append("时间:")
+                            .append(DateUtils.time(System.currentTimeMillis()+"")).append("\n");
+                    synchronized (subject){
+                        subject.notify();
+                    }
                 }
 
 
             }
         });
     }
+
+    //修改人员
+    private void link_XiuGaiRenYuan(final OkHttpClient okHttpClient, final Subject renYuanInFo, int i, Long id){
+        final MediaType JSON=MediaType.parse("application/json; charset=utf-8");
+
+        JSONObject json = new JSONObject();
+        try {
+            JSONArray jsonArray= new JSONArray();
+            jsonArray.put(i);
+            json.put("subject_type","0");
+            json.put("name",renYuanInFo.getName());
+            json.put("remark",renYuanInFo.getRemark());
+            json.put("photo_ids",jsonArray);
+            json.put("phone",renYuanInFo.getPhone());
+            json.put("department",renYuanInFo.getDepartment());
+            json.put("title",renYuanInFo.getTitle());
+            json.put("job_number", renYuanInFo.getId());
+            json.put("department", renYuanInFo.getSourceMeeting());
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        RequestBody requestBody = RequestBody.create(JSON, json.toString());
+
+//		RequestBody body = new FormBody.Builder()
+//				.add("subject_type","0")
+//				.add("name",renYuanInFo.getName())
+//				.add("remark",renYuanInFo.getRemark())
+//				.add("photo_ids",list.toString())
+//				.add("phone",renYuanInFo.getPhone())
+//				.add("department",renYuanInFo.getDepartment())
+//				.add("title",renYuanInFo.getTitle())
+//				.build();
+
+        Request.Builder requestBuilder = new Request.Builder()
+                //.header("Content-Type", "application/json")
+                .put(requestBody)
+                .url(zhuJiBeanH.getHostUrl()+"/subject/"+id);
+
+        // step 3：创建 Call 对象
+        Call call = okHttpClient.newCall(requestBuilder.build());
+
+        //step 4: 开始异步请求
+        call.enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                stringBuilder.append("修改人员失败记录:").append("ID:")
+                        .append(renYuanInFo.getId()).append("姓名:")
+                        .append(renYuanInFo.getName()).append("时间:")
+                        .append(DateUtils.time(System.currentTimeMillis()+"")).append("\n");
+                synchronized (renYuanInFo){
+                    renYuanInFo.notify();
+                }
+                Log.d("AllConnects", "请求失败"+e.getMessage());
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                Log.d("AllConnects", "请求成功"+call.request().toString());
+                //获得返回体
+                try{
+                    ResponseBody body = response.body();
+                    String ss=body.string().trim();
+                    Log.d("AllConnects", "修该人员"+ss);
+//					JsonObject jsonObject= GsonUtil.parse(ss).getAsJsonObject();
+//					if (jsonObject.get("code").getAsInt()==0){
+//						JsonObject jo=jsonObject.get("data").getAsJsonObject();
+//						renYuanInFo.setSid(jo.get("id").getAsInt());
+//						renYuanInFoDao.insert(renYuanInFo);
+//					}
+                }catch (Exception e){
+                    stringBuilder.append("修改人员失败记录:").append("ID:")
+                            .append(renYuanInFo.getId()).append("姓名:")
+                            .append(renYuanInFo.getName()).append("时间:")
+                            .append(DateUtils.time(System.currentTimeMillis()+"")).append("\n");
+                    synchronized (renYuanInFo){
+                        renYuanInFo.notify();
+                    }
+                    Log.d("WebsocketPushMsg", e.getMessage()+"gggg");
+                }finally {
+                    synchronized (renYuanInFo){
+                        renYuanInFo.notify();
+                    }
+                }
+
+            }
+        });
+    }
+
+
+    //创建批量人员
+    private void link_addPiLiangRenYuan(final OkHttpClient okHttpClient, final Subject subject, int ii){
+
+        final MediaType JSON=MediaType.parse("application/json; charset=utf-8");
+
+        JSONObject json = new JSONObject();
+        try {
+            JSONArray jsonArray= new JSONArray();
+            jsonArray.put(ii);
+            json.put("subject_type","0");
+            json.put("name",subject.getName());
+            json.put("remark",subject.getRemark());
+            json.put("photo_ids",jsonArray);
+            json.put("phone",subject.getPhone());
+            json.put("department",subject.getDepartment());
+            json.put("title",subject.getTitle());
+            json.put("job_number", subject.getId());
+            json.put("description", subject.getSourceMeeting());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        //Log.d(TAG, json.toString());
+        RequestBody requestBody = RequestBody.create(JSON, json.toString());
+
+//		RequestBody body = new FormBody.Builder()
+//				.add("subject_type","0")
+//				.add("name",renYuanInFo.getName())
+//				.add("remark",renYuanInFo.getRemark())
+//				.add("photo_ids",list.toString())
+//				.add("phone",renYuanInFo.getPhone())
+//				.add("department",renYuanInFo.getDepartment())
+//				.add("title",renYuanInFo.getTitle())
+//				.build();
+
+        Request.Builder requestBuilder = new Request.Builder()
+                //.header("Content-Type", "application/json")
+                .post(requestBody)
+                .url(zhuJiBeanH.getHostUrl()+"/subject");
+
+        // step 3：创建 Call 对象
+        Call call = okHttpClient.newCall(requestBuilder.build());
+
+        //step 4: 开始异步请求
+        call.enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                stringBuilder.append("创建人员失败记录:").append("ID").append(subject.getId()).append("姓名:")
+                        .append(subject.getName()).append("时间:").append(DateUtils.time(System.currentTimeMillis()+"")).append("\n");
+                synchronized (subject){
+                    subject.notify();
+                }
+                Log.d("AllConnects", "请求失败"+e.getMessage());
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                //Log.d("MyReceiver", "请求成功"+call.request().toString());
+                //获得返回体
+                try{
+
+                    ResponseBody body = response.body();
+                    String ss=body.string().trim();
+                    //	Log.d("MyReceiver", "批量创建人员"+ss);
+                    JsonObject jsonObject= GsonUtil.parse(ss).getAsJsonObject();
+                    if (jsonObject.get("code").getAsInt()!=0){
+                        stringBuilder.append("创建人员失败记录:").append("ID").append(subject.getId()).append("姓名:")
+                                .append(subject.getName()).append("时间:").append(DateUtils.time(System.currentTimeMillis()+"")).append("\n");
+                    }
+                }catch (Exception e){
+                    stringBuilder.append("创建人员失败记录:").append("ID").append(subject.getId()).append("姓名:")
+                            .append(subject.getName()).append("时间:").append(DateUtils.time(System.currentTimeMillis()+"")).append("\n");
+                    Log.d("MyReceiver", e.getMessage()+"gggg");
+                }finally {
+                    synchronized (subject){
+                        subject.notify();
+                    }
+                }
+
+
+            }
+        });
+    }
+
 
     private void link_huiqumenjin(){
         final MediaType JSON=MediaType.parse("application/json; charset=utf-8");
