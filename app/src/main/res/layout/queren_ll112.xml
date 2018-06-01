@@ -10,8 +10,6 @@
         android:layout_width="420dp"
         android:layout_height="300dp">
 
-
-
         <ProgressBar
             android:layout_width="match_parent"
             android:padding="10dp"
@@ -40,8 +38,22 @@
             android:textColor="@color/colorBar_bg"
             android:layout_width="match_parent"
             android:layout_margin="20dp"
+            android:minHeight="100dp"
             android:scrollbars="vertical"
-            android:layout_height="200dp" />
+            android:layout_height="wrap_content" />
+
+        <Button
+            android:id="@+id/guanbi"
+            android:background="@drawable/jiaohu3"
+            android:textSize="22sp"
+            android:textColor="@color/write"
+            android:text="关 闭"
+            android:visibility="gone"
+            android:layout_below="@+id/tishi"
+            android:layout_centerHorizontal="true"
+            android:layout_width="110dp"
+            android:gravity="center"
+            android:layout_height="56dp" />
 
     </RelativeLayout>
 

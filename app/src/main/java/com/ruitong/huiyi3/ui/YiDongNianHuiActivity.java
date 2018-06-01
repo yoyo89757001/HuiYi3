@@ -16,17 +16,15 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.os.SystemClock;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+
 import android.util.Log;
-import android.util.Xml;
 import android.view.KeyEvent;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -40,8 +38,6 @@ import com.baidu.tts.client.SpeechSynthesizerListener;
 import com.baidu.tts.client.TtsMode;
 import com.bumptech.glide.Glide;
 
-import com.chad.library.adapter.base.BaseQuickAdapter;
-import com.chad.library.adapter.base.BaseViewHolder;
 import com.facebook.rebound.SimpleSpringListener;
 import com.facebook.rebound.Spring;
 import com.facebook.rebound.SpringConfig;
@@ -57,10 +53,8 @@ import com.ruitong.huiyi3.beans.BenDiQianDaoDao;
 import com.ruitong.huiyi3.beans.BenDiRenShuBean;
 import com.ruitong.huiyi3.beans.BenDiRenShuBeanDao;
 
-
 import com.ruitong.huiyi3.beans.HuanYinYuBeanDao;
 import com.ruitong.huiyi3.beans.HuiYiInFoBean;
-
 
 import com.ruitong.huiyi3.beans.MoShengRenBean;
 import com.ruitong.huiyi3.beans.MoShengRenBeanDao;
@@ -69,7 +63,7 @@ import com.ruitong.huiyi3.beans.QianDaoIdDao;
 import com.ruitong.huiyi3.beans.RenShu;
 import com.ruitong.huiyi3.beans.ShiBieBean;
 import com.ruitong.huiyi3.beans.ShiShiRenShuBean;
-import com.ruitong.huiyi3.beans.Subject;
+
 import com.ruitong.huiyi3.beans.TanChuangBean;
 import com.ruitong.huiyi3.beans.WBBean;
 import com.ruitong.huiyi3.beans.WeiShiBieBean;
@@ -85,23 +79,19 @@ import com.ruitong.huiyi3.utils.GsonUtil;
 import com.ruitong.huiyi3.utils.Utils;
 import com.ruitong.huiyi3.view.GlideCircleTransform;
 import com.ruitong.huiyi3.view.GlideRoundTransform;
-import com.ruitong.huiyi3.view.WrapContentLinearLayoutManager;
+
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.sdsmdg.tastytoast.TastyToast;
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.handshake.ServerHandshake;
-import org.xml.sax.Attributes;
-import org.xml.sax.SAXException;
-import org.xml.sax.helpers.DefaultHandler;
-import org.xmlpull.v1.XmlPullParser;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
+
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -114,8 +104,6 @@ import java.util.Objects;
 import java.util.Random;
 import java.util.Vector;
 
-import javax.xml.parsers.SAXParser;
-import javax.xml.parsers.SAXParserFactory;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -136,13 +124,13 @@ public class YiDongNianHuiActivity extends Activity implements RecytviewCash {
 	private MyReceiver myReceiver=null;
 	//private SurfaceView surfaceview;
 	private ScrollView recyclerView;
-	private MyAdapter adapter=null;
-	private RecyclerView recyclerView2;
-	private MyAdapter2 adapter2=null;
+	//private MyAdapter adapter=null;
+	private HorizontalScrollView recyclerView2;
+	//private MyAdapter2 adapter2=null;
 	private MoShengRenBeanDao daoSession=null;
 	//private SpeechSynthesizer mSpeechSynthesizer;
-	private WrapContentLinearLayoutManager manager;
-	private WrapContentLinearLayoutManager manager2;
+	//private WrapContentLinearLayoutManager manager;
+	//private WrapContentLinearLayoutManager manager2;
 	private static  WebSocketClient webSocketClient=null;
 //	private MediaPlayer mediaPlayer=null;
 //	private IVLCVout vlcVout=null;
@@ -192,7 +180,7 @@ public class YiDongNianHuiActivity extends Activity implements RecytviewCash {
 	private BenDiMBbeanDao benDiMBbeanDao=null;
 
 	private LinearLayout rootLayout;
-
+	private LinearLayout rootLayout2;
 
 
 	public  Handler handler=new Handler(new Handler.Callback() {
@@ -239,7 +227,7 @@ public class YiDongNianHuiActivity extends Activity implements RecytviewCash {
 					}
 
 					if (lingdaoList.size()>6){
-						adapter2.notifyItemRemoved(0);
+						rootLayout2.removeViewAt(0);
 						lingdaoList.remove(0);
 					}
 
@@ -709,6 +697,7 @@ public class YiDongNianHuiActivity extends Activity implements RecytviewCash {
 											break;
 										case 8: {
 											final View view3 = View.inflate(YiDongNianHuiActivity.this, R.layout.item8, null);
+
 											TextView name3 = (TextView) view3.findViewById(R.id.name);
 											ImageView touxiang = (ImageView) view3.findViewById(R.id.touxiang);
 											RelativeLayout root_rl3 = (RelativeLayout) view3.findViewById(R.id.root_rl);
@@ -767,14 +756,68 @@ public class YiDongNianHuiActivity extends Activity implements RecytviewCash {
 											break;
 									}
 
-
-
 									//底部列表的
 									if (b==0){
 										lingdaoList.add(bean);
-										int i2 = lingdaoList.size();
-										adapter2.notifyItemInserted(i2);
-										manager2.scrollToPosition(i2 - 1);
+										//int i2 = lingdaoList.size();
+										final View view3= View.inflate(YiDongNianHuiActivity.this, R.layout.tanchuang_item7, null);
+										ImageView touxiang = (ImageView) view3.findViewById(R.id.touxiang);
+										TextView name3 = (TextView) view3.findViewById(R.id.test2);
+										TextView time = (TextView) view3.findViewById(R.id.test3);
+										name3.setTypeface(typeFace1);
+										time.setTypeface(typeFace1);
+										name3.setText(bean.getName());
+										time.setText(DateUtils.time(System.currentTimeMillis()+""));
+
+
+
+										Glide.with(YiDongNianHuiActivity.this)
+												//	.load(R.drawable.vvv)
+												.load(bean.getTouxiang())
+												//	.load(zhuji+item.getTouxiang())
+												//.apply(myOptions)
+												//.transform(new GlideRoundTransform(MyApplication.getAppContext(), 20))
+												.transform(new GlideCircleTransform(MyApplication.getAppContext(),2,Color.parseColor("#ffffffff")))
+												.into(touxiang);
+
+										rootLayout2.addView(view3);
+
+										RelativeLayout.LayoutParams  ll= (RelativeLayout.LayoutParams) touxiang.getLayoutParams();
+										ll.width=(dw/12);
+										ll.height=(dw/12);
+										touxiang.setLayoutParams(ll);
+										touxiang.invalidate();
+
+
+										new Handler().post(new Runnable() {
+											@Override
+											public void run() {
+												recyclerView2.fullScroll(ScrollView.FOCUS_RIGHT);
+											}
+										});
+
+										//动画
+										SpringSystem springSystem3 = SpringSystem.create();
+										final Spring spring3 = springSystem3.createSpring();
+										//两个参数分别是弹力系数和阻力系数
+										spring3.setSpringConfig(SpringConfig.fromOrigamiTensionAndFriction(80, 6));
+										// 添加弹簧监听器
+										spring3.addListener(new SimpleSpringListener() {
+											@Override
+											public void onSpringUpdate(Spring spring) {
+												// value是一个符合弹力变化的一个数，我们根据value可以做出弹簧动画
+												float value = (float) spring.getCurrentValue();
+												//Log.d(TAG, "value:" + value);
+												//基于Y轴的弹簧阻尼动画
+												//	helper.itemView.setTranslationY(value);
+												// 对图片的伸缩动画
+												//float scale = 1f - (value * 0.5f);
+												view3.setScaleX(value);
+												view3.setScaleY(value);
+											}
+										});
+										// 设置动画结束值
+										spring3.setEndValue(1f);
 									}
 
 									new Thread(new Runnable() {
@@ -880,28 +923,28 @@ public class YiDongNianHuiActivity extends Activity implements RecytviewCash {
 								}
 							}
 
-							TanChuangBean bean = new TanChuangBean();
-							bean.setBytes(b[0]);
-							bean.setName("陌生人");
-							bean.setType(-1);
-							bean.setTouxiang(null);
-							yuangongList.add(bean);
-							final int i3=yuangongList.size();
-							runOnUiThread(new Runnable() {
-								@Override
-								public void run() {
-
-									adapter.notifyItemInserted(i3);
-									manager.scrollToPosition(i3 - 1);
-
-								}
-							});
-
-							Thread.sleep(8000);
-
-							Message message = Message.obtain();
-							message.what = 999;
-							handler.sendMessage(message);
+//							TanChuangBean bean = new TanChuangBean();
+//							bean.setBytes(b[0]);
+//							bean.setName("陌生人");
+//							bean.setType(-1);
+//							bean.setTouxiang(null);
+//							yuangongList.add(bean);
+//							final int i3=yuangongList.size();
+//							runOnUiThread(new Runnable() {
+//								@Override
+//								public void run() {
+//
+//									adapter.notifyItemInserted(i3);
+//									manager.scrollToPosition(i3 - 1);
+//
+//								}
+//							});
+//
+//							Thread.sleep(8000);
+//
+//							Message message = Message.obtain();
+//							message.what = 999;
+//							handler.sendMessage(message);
 
 
 						} catch (Exception e) {
@@ -1011,7 +1054,7 @@ public class YiDongNianHuiActivity extends Activity implements RecytviewCash {
 
 		setContentView(R.layout.yidongnianhuiactivity);
 		rootLayout= (LinearLayout) findViewById(R.id.root_layout);
-
+		rootLayout2= (LinearLayout) findViewById(R.id.root_layout2);
 
 	//	LottieAnimationView vv= (LottieAnimationView) findViewById(R.id.animation_view);
 		// 任何符合颜色过滤界面的类
@@ -1136,22 +1179,22 @@ public class YiDongNianHuiActivity extends Activity implements RecytviewCash {
 		daoSession = MyApplication.getAppContext().getDaoSession().getMoShengRenBeanDao();
 		daoSession.deleteAll();
 		recyclerView = (ScrollView) findViewById(R.id.scrollView);
-		recyclerView2 = (RecyclerView) findViewById(R.id.recyclerView2);
+		recyclerView2 = (HorizontalScrollView) findViewById(R.id.recyclerView2);
 
 
 //		manager = new WrapContentLinearLayoutManager(YiDongNianHuiActivity.this,LinearLayoutManager.VERTICAL,false,this);
 //		recyclerView.setLayoutManager(manager);
 
-		manager2 = new WrapContentLinearLayoutManager(YiDongNianHuiActivity.this,LinearLayoutManager.HORIZONTAL,false,this);
-		//recyclerView2.setLayoutManager(new GridLayoutManager(this,2,GridLayoutManager.HORIZONTAL,false));
-		recyclerView2.setLayoutManager(manager2);
+//		manager2 = new WrapContentLinearLayoutManager(YiDongNianHuiActivity.this,LinearLayoutManager.HORIZONTAL,false,this);
+//		//recyclerView2.setLayoutManager(new GridLayoutManager(this,2,GridLayoutManager.HORIZONTAL,false));
+//		recyclerView2.setLayoutManager(manager2);
 		//recyclerView.addItemDecoration(new MyDecoration(VlcVideoActivity.this, LinearLayoutManager.VERTICAL,20,R.color.transparent));
 
 //		adapter = new MyAdapter(YiDongNianHuiActivity.this, yuangongList);
 //		recyclerView.setAdapter(adapter);
 
-		adapter2 = new MyAdapter2(R.layout.tanchuang_item7, lingdaoList);
-		recyclerView2.setAdapter(adapter2);
+//		adapter2 = new MyAdapter2(R.layout.tanchuang_item7, lingdaoList);
+//		recyclerView2.setAdapter(adapter2);
 
 		RelativeLayout.LayoutParams  params1= (RelativeLayout.LayoutParams) tops_rl.getLayoutParams();
 		params1.height=dh/5+46;
@@ -1303,213 +1346,213 @@ public class YiDongNianHuiActivity extends Activity implements RecytviewCash {
 
 
 
-	private class MyAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
-
-		private LayoutInflater layoutInflater;
-		private Context context;
-		private List<TanChuangBean> contents;
-
-		private MyAdapter(Context c, List<TanChuangBean> strs){
-			layoutInflater = LayoutInflater.from(c);
-			context = c;
-			contents = strs;
-		}
-
-		@Override
-		public int getItemCount() {
-
-			return contents != null ? contents.size() : 0;
-		}
-
-		@Override
-		public int getItemViewType(int position) {
-			//Log.d(TAG, contents.get(position).getBumen()+"gggggggggggggggg");
-			if (mbLeiXingBeanList!=null){
-				int size=mbLeiXingBeanList.size();
-				for (int i=0;i<size;i++){
-					if (contents.get(position).getBumen()!=null && contents.get(position).getBumen().equals(mbLeiXingBeanList.get(i).getSubType())){
-						//什么身份返回什么类型
-						Log.d(TAG, "getNum(7):" + getNum(7));
-						return getNum(7);
-
-					}
-
-				}
-			}
-			return getNum(7);
-		//	return contents.get(position).getType() == 0 ? ITEM_TYPE.ITEM_TYPE_LEFT.ordinal() : ITEM_TYPE.ITEM_TYPE_RIGHT.ordinal() ;
-		}
-
-		@Override
-		public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-			Log.d(TAG, "viewType:" + viewType);
-			RecyclerView.ViewHolder holder=null;
-			//固定的几种模版
-			switch (viewType){
-
-				case 0:
-					holder= new ViewHolder0(layoutInflater.inflate(R.layout.item0,parent,false));
-					break;
-				case 1:
-					holder= new ViewHolder1(layoutInflater.inflate(R.layout.item1,parent,false));
-					break;
-				case 2:
-					holder= new ViewHolder2(layoutInflater.inflate(R.layout.item2,parent,false));
-					break;
-				case 3:
-					holder= new ViewHolder3(layoutInflater.inflate(R.layout.item3,parent,false));
-					break;
-				case 4:
-					holder= new ViewHolder4(layoutInflater.inflate(R.layout.item4,parent,false));
-					break;
-				case 5:
-					holder= new ViewHolder5(layoutInflater.inflate(R.layout.item5,parent,false));
-					break;
-				case 6:
-					holder= new ViewHolder6(layoutInflater.inflate(R.layout.item6,parent,false));
-					break;
-				case 7:
-					holder= new ViewHolder7(layoutInflater.inflate(R.layout.item7,parent,false));
-					break;
-
-					default:
-						holder= new ViewHolder0(layoutInflater.inflate(R.layout.item0,parent,false));
-
-			}
-			return holder;
-
-		}
-
-		@Override
-		public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-
-			if(holder instanceof ViewHolder0){
-
-
-				((ViewHolder0) holder).name0.setText(contents.get(position).getName());
-				((ViewHolder0) holder).zhiwei.setText(contents.get(position).getBumen());
-				int s=mbLeiXingBeanList.size();
-				for (int i=0;i<s;i++){
-					if (contents.get(position).getBumen()!=null && mbLeiXingBeanList.get(i).getSubType()!=null && contents.get(position).getBumen().equals(mbLeiXingBeanList.get(i).getSubType())){
-						//获取本地保存的欢迎语
-						//设置语音
-						((ViewHolder0) holder).huanyinyu.setText(contents.get(position).getName());
-					}
-				}
-
-
-				Log.d(TAG, "ViewHolder0");
-
-			}else if(holder instanceof  ViewHolder1){
-				Log.d(TAG, "ViewHolder1");
-
-				((ViewHolder1) holder).name1.setText(contents.get(position).getName());
-
-			}else if (holder instanceof  ViewHolder2){
-				Log.d(TAG, "ViewHolder2");
-
-				((ViewHolder2) holder).name2.setText(contents.get(position).getName());
-
-			}else if (holder instanceof  ViewHolder3){
-				Log.d(TAG, "ViewHolder3");
-				((ViewHolder3) holder).name3.setText(contents.get(position).getName());
-
-			}else if (holder instanceof  ViewHolder4){
-				Log.d(TAG, "ViewHolder4");
-				((ViewHolder4) holder).name4.setText(contents.get(position).getName());
-
-			}else if (holder instanceof  ViewHolder5){
-				Log.d(TAG, "ViewHolder5");
-				((ViewHolder5) holder).name5.setText(contents.get(position).getName());
-
-			}else if (holder instanceof  ViewHolder6){
-				Log.d(TAG, "ViewHolder6");
-				((ViewHolder6) holder).name6.setText(contents.get(position).getName());
-
-			}else if (holder instanceof  ViewHolder7){
-				Log.d(TAG, "ViewHolder7");
-				((ViewHolder7) holder).name7.setText(contents.get(position).getName());
-
-			}
-
-		}
-
-		private   class ViewHolder0 extends RecyclerView.ViewHolder{
-
-			private TextView name0,huanyinyu,zhiwei;
-			private ViewHolder0(View v){
-				super(v);
-				name0 = (TextView)v.findViewById(R.id.name);
-				huanyinyu = (TextView)v.findViewById(R.id.huanyinyu);
-				zhiwei = (TextView)v.findViewById(R.id.zhiwei);
-			}
-		}
-
-		private  class ViewHolder1 extends RecyclerView.ViewHolder{
-
-			private TextView name1;
-			private ViewHolder1(View v){
-				super(v);
-				name1 = (TextView)v.findViewById(R.id.name);
-			}
-		}
-
-		private  class ViewHolder2 extends RecyclerView.ViewHolder{
-
-			private TextView name2;
-			private ViewHolder2(View v){
-				super(v);
-				name2 = (TextView)v.findViewById(R.id.name);
-			}
-		}
-
-		private  class ViewHolder3 extends RecyclerView.ViewHolder{
-
-			private TextView name3;
-			private ViewHolder3(View v){
-				super(v);
-				name3 = (TextView)v.findViewById(R.id.name);
-			}
-		}
-
-		private  class ViewHolder4 extends RecyclerView.ViewHolder{
-
-			private TextView name4;
-			private ViewHolder4(View v){
-				super(v);
-				name4 = (TextView)v.findViewById(R.id.name);
-			}
-		}
-
-		private  class ViewHolder5 extends RecyclerView.ViewHolder{
-
-			private TextView name5;
-			private ViewHolder5(View v){
-				super(v);
-				name5 = (TextView)v.findViewById(R.id.name);
-			}
-		}
-
-		private  class ViewHolder6 extends RecyclerView.ViewHolder{
-
-			private TextView name6;
-			private ViewHolder6(View v){
-				super(v);
-				name6 = (TextView)v.findViewById(R.id.name);
-			}
-		}
-
-		private  class ViewHolder7 extends RecyclerView.ViewHolder{
-
-			private TextView name7;
-			private ViewHolder7(View v){
-				super(v);
-				name7 = (TextView)v.findViewById(R.id.name);
-			}
-		}
-
-
-	}
+//	private class MyAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
+//
+//		private LayoutInflater layoutInflater;
+//		private Context context;
+//		private List<TanChuangBean> contents;
+//
+//		private MyAdapter(Context c, List<TanChuangBean> strs){
+//			layoutInflater = LayoutInflater.from(c);
+//			context = c;
+//			contents = strs;
+//		}
+//
+//		@Override
+//		public int getItemCount() {
+//
+//			return contents != null ? contents.size() : 0;
+//		}
+//
+//		@Override
+//		public int getItemViewType(int position) {
+//			//Log.d(TAG, contents.get(position).getBumen()+"gggggggggggggggg");
+//			if (mbLeiXingBeanList!=null){
+//				int size=mbLeiXingBeanList.size();
+//				for (int i=0;i<size;i++){
+//					if (contents.get(position).getBumen()!=null && contents.get(position).getBumen().equals(mbLeiXingBeanList.get(i).getSubType())){
+//						//什么身份返回什么类型
+//						Log.d(TAG, "getNum(7):" + getNum(7));
+//						return getNum(7);
+//
+//					}
+//
+//				}
+//			}
+//			return getNum(7);
+//		//	return contents.get(position).getType() == 0 ? ITEM_TYPE.ITEM_TYPE_LEFT.ordinal() : ITEM_TYPE.ITEM_TYPE_RIGHT.ordinal() ;
+//		}
+//
+//		@Override
+//		public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+//			Log.d(TAG, "viewType:" + viewType);
+//			RecyclerView.ViewHolder holder=null;
+//			//固定的几种模版
+//			switch (viewType){
+//
+//				case 0:
+//					holder= new ViewHolder0(layoutInflater.inflate(R.layout.item0,parent,false));
+//					break;
+//				case 1:
+//					holder= new ViewHolder1(layoutInflater.inflate(R.layout.item1,parent,false));
+//					break;
+//				case 2:
+//					holder= new ViewHolder2(layoutInflater.inflate(R.layout.item2,parent,false));
+//					break;
+//				case 3:
+//					holder= new ViewHolder3(layoutInflater.inflate(R.layout.item3,parent,false));
+//					break;
+//				case 4:
+//					holder= new ViewHolder4(layoutInflater.inflate(R.layout.item4,parent,false));
+//					break;
+//				case 5:
+//					holder= new ViewHolder5(layoutInflater.inflate(R.layout.item5,parent,false));
+//					break;
+//				case 6:
+//					holder= new ViewHolder6(layoutInflater.inflate(R.layout.item6,parent,false));
+//					break;
+//				case 7:
+//					holder= new ViewHolder7(layoutInflater.inflate(R.layout.item7,parent,false));
+//					break;
+//
+//					default:
+//						holder= new ViewHolder0(layoutInflater.inflate(R.layout.item0,parent,false));
+//
+//			}
+//			return holder;
+//
+//		}
+//
+//		@Override
+//		public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+//
+//			if(holder instanceof ViewHolder0){
+//
+//
+//				((ViewHolder0) holder).name0.setText(contents.get(position).getName());
+//				((ViewHolder0) holder).zhiwei.setText(contents.get(position).getBumen());
+//				int s=mbLeiXingBeanList.size();
+//				for (int i=0;i<s;i++){
+//					if (contents.get(position).getBumen()!=null && mbLeiXingBeanList.get(i).getSubType()!=null && contents.get(position).getBumen().equals(mbLeiXingBeanList.get(i).getSubType())){
+//						//获取本地保存的欢迎语
+//						//设置语音
+//						((ViewHolder0) holder).huanyinyu.setText(contents.get(position).getName());
+//					}
+//				}
+//
+//
+//				Log.d(TAG, "ViewHolder0");
+//
+//			}else if(holder instanceof  ViewHolder1){
+//				Log.d(TAG, "ViewHolder1");
+//
+//				((ViewHolder1) holder).name1.setText(contents.get(position).getName());
+//
+//			}else if (holder instanceof  ViewHolder2){
+//				Log.d(TAG, "ViewHolder2");
+//
+//				((ViewHolder2) holder).name2.setText(contents.get(position).getName());
+//
+//			}else if (holder instanceof  ViewHolder3){
+//				Log.d(TAG, "ViewHolder3");
+//				((ViewHolder3) holder).name3.setText(contents.get(position).getName());
+//
+//			}else if (holder instanceof  ViewHolder4){
+//				Log.d(TAG, "ViewHolder4");
+//				((ViewHolder4) holder).name4.setText(contents.get(position).getName());
+//
+//			}else if (holder instanceof  ViewHolder5){
+//				Log.d(TAG, "ViewHolder5");
+//				((ViewHolder5) holder).name5.setText(contents.get(position).getName());
+//
+//			}else if (holder instanceof  ViewHolder6){
+//				Log.d(TAG, "ViewHolder6");
+//				((ViewHolder6) holder).name6.setText(contents.get(position).getName());
+//
+//			}else if (holder instanceof  ViewHolder7){
+//				Log.d(TAG, "ViewHolder7");
+//				((ViewHolder7) holder).name7.setText(contents.get(position).getName());
+//
+//			}
+//
+//		}
+//
+//		private   class ViewHolder0 extends RecyclerView.ViewHolder{
+//
+//			private TextView name0,huanyinyu,zhiwei;
+//			private ViewHolder0(View v){
+//				super(v);
+//				name0 = (TextView)v.findViewById(R.id.name);
+//				huanyinyu = (TextView)v.findViewById(R.id.huanyinyu);
+//				zhiwei = (TextView)v.findViewById(R.id.zhiwei);
+//			}
+//		}
+//
+//		private  class ViewHolder1 extends RecyclerView.ViewHolder{
+//
+//			private TextView name1;
+//			private ViewHolder1(View v){
+//				super(v);
+//				name1 = (TextView)v.findViewById(R.id.name);
+//			}
+//		}
+//
+//		private  class ViewHolder2 extends RecyclerView.ViewHolder{
+//
+//			private TextView name2;
+//			private ViewHolder2(View v){
+//				super(v);
+//				name2 = (TextView)v.findViewById(R.id.name);
+//			}
+//		}
+//
+//		private  class ViewHolder3 extends RecyclerView.ViewHolder{
+//
+//			private TextView name3;
+//			private ViewHolder3(View v){
+//				super(v);
+//				name3 = (TextView)v.findViewById(R.id.name);
+//			}
+//		}
+//
+//		private  class ViewHolder4 extends RecyclerView.ViewHolder{
+//
+//			private TextView name4;
+//			private ViewHolder4(View v){
+//				super(v);
+//				name4 = (TextView)v.findViewById(R.id.name);
+//			}
+//		}
+//
+//		private  class ViewHolder5 extends RecyclerView.ViewHolder{
+//
+//			private TextView name5;
+//			private ViewHolder5(View v){
+//				super(v);
+//				name5 = (TextView)v.findViewById(R.id.name);
+//			}
+//		}
+//
+//		private  class ViewHolder6 extends RecyclerView.ViewHolder{
+//
+//			private TextView name6;
+//			private ViewHolder6(View v){
+//				super(v);
+//				name6 = (TextView)v.findViewById(R.id.name);
+//			}
+//		}
+//
+//		private  class ViewHolder7 extends RecyclerView.ViewHolder{
+//
+//			private TextView name7;
+//			private ViewHolder7(View v){
+//				super(v);
+//				name7 = (TextView)v.findViewById(R.id.name);
+//			}
+//		}
+//
+//
+//	}
 
 //	//学生跟陌生人
 //	public  class MyAdapter extends BaseQuickAdapter<TanChuangBean,BaseViewHolder> {
@@ -1861,153 +1904,153 @@ public class YiDongNianHuiActivity extends Activity implements RecytviewCash {
 //	}
 
 
-	//领导
-	private  class MyAdapter2 extends BaseQuickAdapter<TanChuangBean,BaseViewHolder> {
-		//private RequestOptions myOptions = null;
-
-		private MyAdapter2(int layoutResId, List<TanChuangBean> data) {
-			super(layoutResId, data);
-			//myOptions = new RequestOptions();
-			//myOptions.transform(new GrayscaleTransformation(this));
-		}
-
-
-		@Override
-		protected void convert(final BaseViewHolder helper, TanChuangBean item) {
-
-
-			RelativeLayout toprl= helper.getView(R.id.ffflll);
-			TextView t1=helper.getView(R.id.test);
-			TextView t2=helper.getView(R.id.test2);
-			TextView t3=helper.getView(R.id.test3);
-			t1.setTypeface(typeFace1);
-			t1.setText("学号");
-			t2.setTypeface(typeFace1);
-			t2.setText(item.getName());
-			t3.setTypeface(typeFace1);
-			t3.setText(DateUtils.time(System.currentTimeMillis()+""));
-
-			ImageView imageView=helper.getView(R.id.touxiang);
-
-			//tt.setText(item.getName());
+//	//领导
+//	private  class MyAdapter2 extends BaseQuickAdapter<TanChuangBean,BaseViewHolder> {
+//		//private RequestOptions myOptions = null;
 //
-//				switch (item.getType()){
-//					case -1:
-//						//陌生人
-//						//	toprl.setBackgroundResource(R.drawable.tanchuang);
+//		private MyAdapter2(int layoutResId, List<TanChuangBean> data) {
+//			super(layoutResId, data);
+//			//myOptions = new RequestOptions();
+//			//myOptions.transform(new GrayscaleTransformation(this));
+//		}
 //
 //
-//						break;
-//					case 0:
-//						//员工
-//						toprl.setBackgroundResource(R.color.tabtextcolo);
-//						String sa1="热烈欢迎"+item.getName()+"莅临参观指导";
-//						StringBuilder sb1=new StringBuilder();
-//						for(int i=0;i<sa1.length();i++){
-//							sb1.append((sa1.charAt(i)));//依次加入sb中
-//							if((i+1)%(8)==0 &&((i+1)!=sa1.length())){
-//								sb1.append("\n");
-//							}
-//						}
-//
-//						break;
-//
-//					case 1:
-//						//访客
-//
-//						toprl.setBackgroundResource(R.color.tabtextcolo);
-//						String sa="热烈欢迎"+item.getName()+"莅临参观指导";
-//						StringBuilder sb=new StringBuilder();
-//						for(int i=0;i<sa.length();i++){
-//							sb.append((sa.charAt(i)));//依次加入sb中
-//							if((i+1)%(8)==0 &&((i+1)!=sa.length())){
-//								sb.append("\n");
-//							}
-//						}
+//		@Override
+//		protected void convert(final BaseViewHolder helper, TanChuangBean item) {
 //
 //
-//						break;
-//					case 2:
-//						//VIP访客
-//						toprl.setBackgroundResource(R.color.tabtextcolo);
-//						String sa2="热烈欢迎"+item.getName()+"莅临参观指导";
-//						StringBuilder sb2=new StringBuilder();
-//						for(int i=0;i<sa2.length();i++){
-//							sb2.append((sa2.charAt(i)));//依次加入sb中
-//							if((i+1)%(8)==0 &&((i+1)!=sa2.length())){
-//								sb2.append("\n");
-//							}
-//						}
+//			RelativeLayout toprl= helper.getView(R.id.ffflll);
+//			TextView t1=helper.getView(R.id.test);
+//			TextView t2=helper.getView(R.id.test2);
+//			TextView t3=helper.getView(R.id.test3);
+//			t1.setTypeface(typeFace1);
+//			t1.setText("学号");
+//			t2.setTypeface(typeFace1);
+//			t2.setText(item.getName());
+//			t3.setTypeface(typeFace1);
+//			t3.setText(DateUtils.time(System.currentTimeMillis()+""));
 //
+//			ImageView imageView=helper.getView(R.id.touxiang);
 //
-//						break;
-//
+//			//tt.setText(item.getName());
+////
+////				switch (item.getType()){
+////					case -1:
+////						//陌生人
+////						//	toprl.setBackgroundResource(R.drawable.tanchuang);
+////
+////
+////						break;
+////					case 0:
+////						//员工
+////						toprl.setBackgroundResource(R.color.tabtextcolo);
+////						String sa1="热烈欢迎"+item.getName()+"莅临参观指导";
+////						StringBuilder sb1=new StringBuilder();
+////						for(int i=0;i<sa1.length();i++){
+////							sb1.append((sa1.charAt(i)));//依次加入sb中
+////							if((i+1)%(8)==0 &&((i+1)!=sa1.length())){
+////								sb1.append("\n");
+////							}
+////						}
+////
+////						break;
+////
+////					case 1:
+////						//访客
+////
+////						toprl.setBackgroundResource(R.color.tabtextcolo);
+////						String sa="热烈欢迎"+item.getName()+"莅临参观指导";
+////						StringBuilder sb=new StringBuilder();
+////						for(int i=0;i<sa.length();i++){
+////							sb.append((sa.charAt(i)));//依次加入sb中
+////							if((i+1)%(8)==0 &&((i+1)!=sa.length())){
+////								sb.append("\n");
+////							}
+////						}
+////
+////
+////						break;
+////					case 2:
+////						//VIP访客
+////						toprl.setBackgroundResource(R.color.tabtextcolo);
+////						String sa2="热烈欢迎"+item.getName()+"莅临参观指导";
+////						StringBuilder sb2=new StringBuilder();
+////						for(int i=0;i<sa2.length();i++){
+////							sb2.append((sa2.charAt(i)));//依次加入sb中
+////							if((i+1)%(8)==0 &&((i+1)!=sa2.length())){
+////								sb2.append("\n");
+////							}
+////						}
+////
+////
+////						break;
+////
+////				}
+////					case 18:
+////						GPUImage	gpuImage18 = new GPUImage(VlcVideoActivity.this);
+////						gpuImage18.setImage(BitmapFactory.decodeResource(getResources(),R.drawable.a18));
+////						gpuImage18.setFilter(new GPUImageBrightnessFilter(-0.6f));
+////						Bitmap bitmap18 = gpuImage18.getBitmapWithFilterApplied();
+////						imageView.setImageBitmap(bitmap18);
+////					//	imageView.setImageResource(R.drawable.a18);
+//////						Glide.with(MyApplication.getAppContext())
+//////								.load(R.drawable.a18)
+//////								//.load("http://121.46.3.20"+item.getTouxiang())
+//////								//.apply(myOptions)
+//////								//.transform(new GlideCircleTransform(MyApplication.getAppContext(),2,Color.parseColor("#ffffffff")))
+//////								//	.bitmapTransform(new GrayscaleTransformation(VlcVideoActivity.this))
+//////								.into(imageView);
+////						break;
+////					case 19:
+////						imageView.setImageResource(R.drawable.a19);
+//////						Glide.with(MyApplication.getAppContext())
+//////								.load(R.drawable.a19)
+//////								//.load("http://121.46.3.20"+item.getTouxiang())
+//////								//.apply(myOptions)
+//////								//.transform(new GlideCircleTransform(MyApplication.getAppContext(),2,Color.parseColor("#ffffffff")))
+//////								//	.bitmapTransform(new GrayscaleTransformation(VlcVideoActivity.this))
+//////								.into(imageView);
+////						break;
+////
+////
+////				}
+////
+//				if (item.getTouxiang()!=null ){
+//					if (item.getTouxiang()!=null){
+//					//	Log.d(TAG, baoCunBean.getTouxiangzhuji() + item.getTouxiang());
+//						Glide.with(MyApplication.getAppContext())
+//								//	.load(R.drawable.vvv)
+//								.load(item.getTouxiang())
+//							//	.load(zhuji+item.getTouxiang())
+//								//.apply(myOptions)
+//								.transform(new GlideCircleTransform(MyApplication.getAppContext(),2,Color.parseColor("#ffffffff")))
+//							//	.bitmapTransform(new BrightnessFilterTransformation(YiZhongYanShiActivity.this,-0.7f))
+//								//.bitmapTransform(new GrayscaleTransformation(VlcVideoActivity.this))
+//								.into(imageView);
+//					}else {
+//						Glide.with(MyApplication.getAppContext())
+//								.load(R.drawable.zidonghuoqu1)
+//								//.load("http://121.46.3.20"+item.getTouxiang())
+//								//.apply(myOptions)
+//								.transform(new GlideCircleTransform(MyApplication.getAppContext(),2,Color.parseColor("#ffffffff")))
+//								//	.bitmapTransform(new GrayscaleTransformation(VlcVideoActivity.this))
+//								.into(imageView);
+//					}
 //				}
-//					case 18:
-//						GPUImage	gpuImage18 = new GPUImage(VlcVideoActivity.this);
-//						gpuImage18.setImage(BitmapFactory.decodeResource(getResources(),R.drawable.a18));
-//						gpuImage18.setFilter(new GPUImageBrightnessFilter(-0.6f));
-//						Bitmap bitmap18 = gpuImage18.getBitmapWithFilterApplied();
-//						imageView.setImageBitmap(bitmap18);
-//					//	imageView.setImageResource(R.drawable.a18);
-////						Glide.with(MyApplication.getAppContext())
-////								.load(R.drawable.a18)
-////								//.load("http://121.46.3.20"+item.getTouxiang())
-////								//.apply(myOptions)
-////								//.transform(new GlideCircleTransform(MyApplication.getAppContext(),2,Color.parseColor("#ffffffff")))
-////								//	.bitmapTransform(new GrayscaleTransformation(VlcVideoActivity.this))
-////								.into(imageView);
-//						break;
-//					case 19:
-//						imageView.setImageResource(R.drawable.a19);
-////						Glide.with(MyApplication.getAppContext())
-////								.load(R.drawable.a19)
-////								//.load("http://121.46.3.20"+item.getTouxiang())
-////								//.apply(myOptions)
-////								//.transform(new GlideCircleTransform(MyApplication.getAppContext(),2,Color.parseColor("#ffffffff")))
-////								//	.bitmapTransform(new GrayscaleTransformation(VlcVideoActivity.this))
-////								.into(imageView);
-//						break;
 //
+//			RelativeLayout.LayoutParams  ll= (RelativeLayout.LayoutParams) imageView.getLayoutParams();
+//			ll.width=(dw/12);
+//			ll.height=(dw/12);
+//			imageView.setLayoutParams(ll);
+//			imageView.invalidate();
 //
-//				}
+////			RecyclerView.LayoutParams  ll2= (RecyclerView.LayoutParams) toprl.getLayoutParams();
+////			ll2.height=(dw/13)+10;
+////			toprl.setLayoutParams(ll2);
+////			toprl.invalidate();
 //
-				if (item.getTouxiang()!=null ){
-					if (item.getTouxiang()!=null){
-					//	Log.d(TAG, baoCunBean.getTouxiangzhuji() + item.getTouxiang());
-						Glide.with(MyApplication.getAppContext())
-								//	.load(R.drawable.vvv)
-								.load(item.getTouxiang())
-							//	.load(zhuji+item.getTouxiang())
-								//.apply(myOptions)
-								.transform(new GlideCircleTransform(MyApplication.getAppContext(),2,Color.parseColor("#ffffffff")))
-							//	.bitmapTransform(new BrightnessFilterTransformation(YiZhongYanShiActivity.this,-0.7f))
-								//.bitmapTransform(new GrayscaleTransformation(VlcVideoActivity.this))
-								.into(imageView);
-					}else {
-						Glide.with(MyApplication.getAppContext())
-								.load(R.drawable.zidonghuoqu1)
-								//.load("http://121.46.3.20"+item.getTouxiang())
-								//.apply(myOptions)
-								.transform(new GlideCircleTransform(MyApplication.getAppContext(),2,Color.parseColor("#ffffffff")))
-								//	.bitmapTransform(new GrayscaleTransformation(VlcVideoActivity.this))
-								.into(imageView);
-					}
-				}
-
-			RelativeLayout.LayoutParams  ll= (RelativeLayout.LayoutParams) imageView.getLayoutParams();
-			ll.width=(dw/12);
-			ll.height=(dw/12);
-			imageView.setLayoutParams(ll);
-			imageView.invalidate();
-
-//			RecyclerView.LayoutParams  ll2= (RecyclerView.LayoutParams) toprl.getLayoutParams();
-//			ll2.height=(dw/13)+10;
-//			toprl.setLayoutParams(ll2);
-//			toprl.invalidate();
-
-			}
-	}
+//			}
+//	}
 
 //	/**
 //	 * 生成二维码
@@ -2173,6 +2216,19 @@ public class YiDongNianHuiActivity extends Activity implements RecytviewCash {
 					if (mbLeiXingBeanList!=null && mbLeiXingBeanList.size()>0)
 						mbLeiXingBeanList.clear();
 					mbLeiXingBeanList= benDiMBbeanDao.loadAll();
+
+
+					String ss=intent.getStringExtra("bgPath");
+					if (ss!=null){
+						Glide.with(YiDongNianHuiActivity.this)
+								//	.load(R.drawable.vvv)
+								.load(ss)
+								//	.load(zhuji+item.getTouxiang())
+								//.apply(myOptions)
+								//.transform(new GlideRoundTransform(MyApplication.getAppContext(), 20))
+								//.transform(new GlideCircleTransform(MyApplication.getAppContext(),2,Color.parseColor("#ffffffff")))
+								.into(dabg);
+					}
 
 				}
 				if (intent.getAction().equals("shoudongshuaxin")) {
@@ -2381,7 +2437,19 @@ public class YiDongNianHuiActivity extends Activity implements RecytviewCash {
 			TastyToast.makeText(YiDongNianHuiActivity.this,"请先设置主机地址和摄像头IP",TastyToast.LENGTH_SHORT,TastyToast.INFO).show();
 		}
 
+		if (benDiMBbeanDao!=null && benDiMBbeanDao.loadAll().size()>0){
 
+			List<BenDiMBbean> bbeans=benDiMBbeanDao.loadAll();
+			Log.d(TAG, bbeans.get(0).getBottemImageUrl());
+			Glide.with(YiDongNianHuiActivity.this)
+					//	.load(R.drawable.vvv)
+					.load(bbeans.get(0).getBottemImageUrl())
+					//	.load(zhuji+item.getTouxiang())
+					//.apply(myOptions)
+					//.transform(new GlideRoundTransform(MyApplication.getAppContext(), 20))
+					//.transform(new GlideCircleTransform(MyApplication.getAppContext(),2,Color.parseColor("#ffffffff")))
+					.into(dabg);
+		}
 
 		super.onResume();
 

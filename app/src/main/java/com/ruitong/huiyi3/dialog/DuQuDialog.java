@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup.LayoutParams;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -23,6 +24,7 @@ import com.ruitong.huiyi3.R;
 public class DuQuDialog extends Dialog {
     private TextView a1,tishi;
     private ProgressBar progressBar;
+    private Button guanbi;
 
     public DuQuDialog(Context context) {
         super(context, R.style.dialog_style);
@@ -33,6 +35,7 @@ public class DuQuDialog extends Dialog {
         View mView = LayoutInflater.from(getContext()).inflate(R.layout.queren_ll112, null);
         progressBar= (ProgressBar) mView.findViewById(R.id.progressBar);
         a1= (TextView) mView.findViewById(R.id.a1);
+        guanbi= (Button) mView.findViewById(R.id.guanbi);
         tishi= (TextView) mView.findViewById(R.id.tishi);
         tishi.setMovementMethod(ScrollingMovementMethod.getInstance());
         //获得当前窗体
@@ -71,6 +74,12 @@ public class DuQuDialog extends Dialog {
         tishi.setText(s);
     }
 
+    public void setClose(){
+
+     guanbi.setVisibility(View.VISIBLE);
+
+    }
+
     @Override
     public void setContentView(int layoutResID) {
     }
@@ -83,13 +92,13 @@ public class DuQuDialog extends Dialog {
     public void setContentView(View view) {
     }
 
-//    /**
-//     * 确定键监听器
-//     * @param listener
-//     */
-//    public void setOnPositiveListener(View.OnClickListener listener){
-//        positiveButton.setOnClickListener(listener);
-//    }
+    /**
+     * 确定键监听器
+     * @param listener
+     */
+    public void setOnPositiveListener(View.OnClickListener listener){
+        guanbi.setOnClickListener(listener);
+    }
 //    /**
 //     * 取消键监听器
 //     * @param listener

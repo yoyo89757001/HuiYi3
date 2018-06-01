@@ -710,18 +710,20 @@ public class SheZhiActivity extends Activity implements View.OnClickListener, Vi
 
                             duQuDialog=new DuQuDialog(SheZhiActivity.this);
                             duQuDialog.setCanceledOnTouchOutside(false);
+                            duQuDialog.setOnPositiveListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    duQuDialog.dismiss();
+                                }
+                            });
                             duQuDialog.show();
                             bt12.setEnabled(true);
                             if (usbPath==null){
                                 duQuDialog.setTiShi("     读取U盘数据失败");
                                 TastyToast.makeText(SheZhiActivity.this,"请插拔一下USB",TastyToast.LENGTH_SHORT,TastyToast.INFO).show();
+                                duQuDialog.setClose();
                                 return;
                             }
-
-
-
-
-
 
 
                             new Thread(new Runnable() {
@@ -790,8 +792,11 @@ public class SheZhiActivity extends Activity implements View.OnClickListener, Vi
                                                     runOnUiThread(new Runnable() {
                                                         @Override
                                                         public void run() {
-                                                            if (duQuDialog!=null)
-                                                            duQuDialog.setTiShi("        登录后台失败,没有账户，密码");
+                                                            if (duQuDialog!=null){
+                                                                duQuDialog.setClose();
+                                                                duQuDialog.setTiShi("        登录后台失败,没有账户，密码");
+                                                            }
+
                                                         }
                                                     });
                                                 }
@@ -803,7 +808,11 @@ public class SheZhiActivity extends Activity implements View.OnClickListener, Vi
                                                 runOnUiThread(new Runnable() {
                                                     @Override
                                                     public void run() {
-                                                        duQuDialog.setTiShi("        解析Xml "+ xmlList.get(0) +" 失败...");
+                                                        if (duQuDialog!=null){
+                                                            duQuDialog.setClose();
+                                                            duQuDialog.setTiShi("        解析Xml "+ xmlList.get(0) +" 失败...");
+                                                        }
+
                                                     }
                                                 });
                                             }
@@ -813,20 +822,26 @@ public class SheZhiActivity extends Activity implements View.OnClickListener, Vi
                                             runOnUiThread(new Runnable() {
                                                 @Override
                                                 public void run() {
-                                                    duQuDialog.setTiShi("        解析Xml "+ xmlList.get(0) +" 失败...,请确认账户id跟zip包id是否一致");
+                                                    if (duQuDialog!=null){
+                                                        duQuDialog.setClose();
+                                                        duQuDialog.setTiShi("        解析Xml "+ xmlList.get(0) +" 失败...,请确认账户id跟zip包id是否一致");
+                                                    }
+
                                                 }
                                             });
                                             Log.d("SheZhiActivity", e.getMessage()+"解析XML异常");
                                         }
-
-
 
                                     } catch (Exception e) {
                                         Log.d("ffffff", e.getMessage() + "");
                                         runOnUiThread(new Runnable() {
                                             @Override
                                             public void run() {
-                                                duQuDialog.setTiShi("         出现异常");
+                                                if (duQuDialog!=null){
+                                                    duQuDialog.setClose();
+                                                    duQuDialog.setTiShi("         出现异常");
+                                                }
+
                                             }
                                         });
                                     }
@@ -845,8 +860,6 @@ public class SheZhiActivity extends Activity implements View.OnClickListener, Vi
         }
 
     }
-
-
 
 
     private void  ChongsZHI(){
@@ -1389,8 +1402,11 @@ public class SheZhiActivity extends Activity implements View.OnClickListener, Vi
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        if (duQuDialog!=null)
-                        duQuDialog.setTiShi("        登录后台失败");
+                        if (duQuDialog!=null){
+                            duQuDialog.setClose();
+                            duQuDialog.setTiShi("        登录后台失败");
+                        }
+
                     }
                 });
                 Log.d("ffffff", "登陆失败" + e.getMessage());
@@ -1412,8 +1428,7 @@ public class SheZhiActivity extends Activity implements View.OnClickListener, Vi
                         final int size=subjectList.size();
                         //循环
                         for (int j=0;j<size;j++) {
-
-                            Log.d("SheZhiActivity", "循环到"+j);
+                          //  Log.d("SheZhiActivity", "循环到"+j);
                             final int finalJ = j;
                             runOnUiThread(new Runnable() {
                                 @Override
@@ -1438,7 +1453,7 @@ public class SheZhiActivity extends Activity implements View.OnClickListener, Vi
                             }
 
                         }
-                        Log.d("SheZhiActivity", "循环完了");
+                     //   Log.d("SheZhiActivity", "循环完了");
 
                         try {
                             String ss=stringBuilder.toString();
@@ -1453,8 +1468,10 @@ public class SheZhiActivity extends Activity implements View.OnClickListener, Vi
 
                                 if (duQuDialog!=null){
                                     if (stringBuilder.length()>0){
-                                        duQuDialog.setTiShi("            有失败的记录，已经保存到根目录 6");
+                                        duQuDialog.setClose();
+                                        duQuDialog.setTiShi("            有失败的记录，已经保存到根目录");
                                     }else {
+                                        duQuDialog.setClose();
                                         duQuDialog.setTiShi("            全部导入成功");
                                     }
                                 }
@@ -1466,8 +1483,11 @@ public class SheZhiActivity extends Activity implements View.OnClickListener, Vi
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                if (duQuDialog!=null)
-                                duQuDialog.setTiShi("        登录后台失败");
+                                if (duQuDialog!=null){
+                                    duQuDialog.setTiShi("        登录后台失败");
+                                    duQuDialog.setClose();
+                                }
+
                             }
                         });
                     }
@@ -1477,8 +1497,11 @@ public class SheZhiActivity extends Activity implements View.OnClickListener, Vi
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            if (duQuDialog!=null)
-                            duQuDialog.setTiShi("        登录后台失败");
+                            if (duQuDialog!=null){
+                                duQuDialog.setClose();
+                                duQuDialog.setTiShi("        登录后台失败");
+                            }
+
                         }
                     });
                 e.printStackTrace();
@@ -1961,7 +1984,11 @@ public class SheZhiActivity extends Activity implements View.OnClickListener, Vi
                            runOnUiThread(new Runnable() {
                                @Override
                                public void run() {
-                                   duQuDialog.setTiShi("           还没设置账户ID 或者账户id不一致");
+                                   if (duQuDialog!=null){
+                                       duQuDialog.setClose();
+                                       duQuDialog.setTiShi("           还没设置账户ID 或者账户id不一致");
+                                   }
+
                                }
                            });
 

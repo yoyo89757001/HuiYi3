@@ -117,7 +117,6 @@ public class MyReceiver extends BroadcastReceiver {
 							//删掉相同身份的，保证只有一种最新的身份
 							benDiMBbeanDao.delete(bb.get(i));
 						}
-
 					}
 
 					BenDiMBbean benDiMBbean=new BenDiMBbean();
@@ -134,6 +133,7 @@ public class MyReceiver extends BroadcastReceiver {
 					}
 
 					Intent intent2=new Intent("gxshipingdizhi");
+					intent2.putExtra("bgPath",renShu.getContent().getBottemImageUrl());
 					context.sendBroadcast(intent2);
 				}
 
