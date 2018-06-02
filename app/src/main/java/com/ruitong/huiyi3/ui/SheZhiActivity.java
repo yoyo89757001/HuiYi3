@@ -1647,7 +1647,7 @@ public class SheZhiActivity extends Activity implements View.OnClickListener, Vi
 
     }
 
-    public static final int TIMEOUT2 = 1000 * 150;
+    public static final int TIMEOUT2 = 1000 * 100;
     private void link_P1(final ZhuJiBeanH zhuJiBeanH, String filePath, final Subject subject, final Long id) {
 
         OkHttpClient okHttpClient = new OkHttpClient.Builder()
