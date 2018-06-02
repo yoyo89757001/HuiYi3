@@ -13,6 +13,8 @@ import android.content.res.Configuration;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
+import android.os.Message;
 import android.os.SystemClock;
 import android.util.Log;
 import android.util.Xml;
@@ -40,10 +42,16 @@ import com.ruitong.huiyi3.dialog.YuYingDialog;
 import com.ruitong.huiyi3.utils.DateUtils;
 import com.ruitong.huiyi3.utils.FileUtil;
 import com.ruitong.huiyi3.utils.GsonUtil;
+import com.ruitong.huiyi3.utils.UnZipfile;
 import com.ruitong.huiyi3.utils.Utils;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.sdsmdg.tastytoast.TastyToast;
+
+
+import net.lingala.zip4j.core.ZipFile;
+import net.lingala.zip4j.exception.ZipException;
+import net.lingala.zip4j.model.FileHeader;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -57,6 +65,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URLDecoder;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -71,8 +80,10 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
 
+import static com.ruitong.huiyi3.view.AutoScrollTextView.TAG;
 
-public class SheZhiActivity extends Activity implements View.OnClickListener, View.OnFocusChangeListener {
+
+public class SheZhiActivity extends Activity implements View.OnClickListener, View.OnFocusChangeListener, FileUtil.ZipListener {
     private Button bt1,bt2,bt3,bt4,bt5,bt6,bt7,bt8,bt9,bt10,bt11,bt12;
     private List<Button> sheZhiBeanList;
     private BaoCunBeanDao baoCunBeanDao=null;
@@ -85,6 +96,61 @@ public class SheZhiActivity extends Activity implements View.OnClickListener, Vi
     private static String usbPath=null;
     private StringBuilder stringBuilder=new StringBuilder();
 
+    //private UnzipFileListener mUnzipFileListener;
+    private int curpercent = 0;
+
+    private Handler zipHandler = new Handler() {
+
+        @Override
+        public void handleMessage(Message msg) {
+
+            Bundle bundle = msg.getData();
+
+            switch (msg.what) {
+                case UnZipfile.CompressStatus.START:
+                    Log.d(TAG, "unzip start");
+
+                    curpercent = 0;
+
+                    break;
+                case UnZipfile.CompressStatus.HANDLING: {
+                    if (bundle != null) {
+                        int percnt = bundle.getInt(UnZipfile.CompressStatus.PERCENT);
+                        if (curpercent != percnt) {
+                            curpercent = percnt;
+                            if (duQuDialog!=null){
+                                duQuDialog.setProgressBar(percnt);
+                            }
+
+                            Log.d(TAG, "unzip persent =" + percnt);
+                        }
+                    }
+                    break;
+                }
+                case UnZipfile.CompressStatus.COMPLETED: {
+
+                    Log.d(TAG, "unzip completed");
+
+                    break;
+                }
+                case UnZipfile.CompressStatus.ERROR: {
+                    if (bundle != null) {
+
+                        Log.d(TAG, "unzip error msg =" + bundle.getString(UnZipfile.CompressStatus.ERROR_COM));
+                    }
+                    curpercent = 0;
+
+                    break;
+                }
+                default:
+                    break;
+            }
+
+            super.handleMessage(msg);
+        }
+
+    };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -96,8 +162,6 @@ public class SheZhiActivity extends Activity implements View.OnClickListener, Vi
         if (baoCunBean.getWenzi()==null){
             baoCunBean.setWenzi("");
         }
-
-
 
         baoCunBeanDao.update(baoCunBean);
         baoCunBean=baoCunBeanDao.load(123456L);
@@ -733,8 +797,11 @@ public class SheZhiActivity extends Activity implements View.OnClickListener, Vi
                                         runOnUiThread(new Runnable() {
                                             @Override
                                             public void run() {
-                                                if (duQuDialog!=null)
-                                                duQuDialog.setTiShi("     寻找压缩文件中...(注意:只会解压找到的第一个压缩文件)");
+                                                if (duQuDialog!=null){
+
+                                                    duQuDialog.setTiShi("     寻找压缩文件中...(注意:只会解压找到的第一个压缩文件)");
+                                                }
+
                                             }
                                         });
 
@@ -757,12 +824,46 @@ public class SheZhiActivity extends Activity implements View.OnClickListener, Vi
                                         runOnUiThread(new Runnable() {
                                             @Override
                                             public void run() {
-                                                if (duQuDialog!=null)
-                                                duQuDialog.setTiShi("        解压文件 "+ finalZipName +" 中...");
+                                                if (duQuDialog!=null){
+
+                                                    duQuDialog.setTiShi("        解压文件 "+ finalZipName +" 中...");
+                                                }
+
                                             }
                                         });
                                         //解压zip
-                                        FileUtil.Unzip(zz,trg);
+                                      //  FileUtil.Unzip(zz,trg);
+                                    //    FileUtil.readByApacheZipFile(zz,trg,SheZhiActivity.this);
+                                        ZipFile zipFile=null;
+                                        List fileHeaderList=null;
+                                        try {
+                                            // Initiate ZipFile object with the path/name of the zip file.
+                                            zipFile = new ZipFile(zz);
+                                            zipFile.setFileNameCharset("GBK");
+                                             fileHeaderList = zipFile.getFileHeaders();
+                                            // Loop through the file headers
+                                            Log.d(TAG, "fileHeaderList.size():" + fileHeaderList.size());
+
+                                            for (int i = 0; i < fileHeaderList.size(); i++) {
+                                                FileHeader fileHeader = (FileHeader) fileHeaderList.get(i);
+                                                FileHeader fileHeader2 = (FileHeader) fileHeaderList.get(0);
+
+                                                Log.d(TAG, fileHeader2.getFileName());
+
+                                                if (fileHeader.getFileName().contains(".xml")){
+                                                    zipFile.extractFile( fileHeader.getFileName(), trg);
+                                                    Log.d(TAG, "找到了"+i+"张照片");
+                                                }
+                                                // Various other properties are available in FileHeader. Please have a look at FileHeader
+                                                // class to see all the properties
+                                            }
+
+
+                                        } catch (ZipException e) {
+                                            e.printStackTrace();
+                                        }
+                                     //   UnZipfile.getInstance(SheZhiActivity.this).unZip(zz,trg,zipHandler);
+
                                         //拿到XML
                                         List<String> xmls=new ArrayList<>();
                                         final List<String> xmlList= FileUtil.getAllFileXml(trg,xmls);
@@ -781,9 +882,17 @@ public class SheZhiActivity extends Activity implements View.OnClickListener, Vi
                                         try {
 
                                             FileInputStream fin=new FileInputStream(xmlList.get(0));
+                                            Log.d("SheZhiActivity", "fin:" + fin);
                                             List<Subject> subjectList=  pull2xml(fin);
                                             if (subjectList!=null && subjectList.size()>0){
-                                                //解析成功
+                                                //排序
+                                                Collections.sort(subjectList, new Subject());
+                                                Log.d("SheZhiActivity", "解析成功,文件个数:"+subjectList.size());
+                                                if (zipFile!=null){
+                                                    zipFile.setRunInThread(true); // true 在子线程中进行解压 ,
+                                                    // false主线程中解压
+                                                    zipFile.extractAll(trg); // 将压缩文件解压到filePath中..
+                                                }
                                                 //先登录旷视
                                                 if (zhuJiBeanH.getUsername()!=null && zhuJiBeanH.getPwd()!=null){
                                                     getOkHttpClient2(subjectList,trg);
@@ -804,18 +913,19 @@ public class SheZhiActivity extends Activity implements View.OnClickListener, Vi
                                                 final int size= subjectList.size();
                                                 Log.d("ffffff", "size:" + size);
 
-                                            }else {
-                                                runOnUiThread(new Runnable() {
-                                                    @Override
-                                                    public void run() {
-                                                        if (duQuDialog!=null){
-                                                            duQuDialog.setClose();
-                                                            duQuDialog.setTiShi("        解析Xml "+ xmlList.get(0) +" 失败...");
-                                                        }
-
-                                                    }
-                                                });
                                             }
+//                                            else {
+//                                                runOnUiThread(new Runnable() {
+//                                                    @Override
+//                                                    public void run() {
+//                                                        if (duQuDialog!=null){
+//                                                            duQuDialog.setClose();
+//                                                            duQuDialog.setTiShi("        解析Xml "+ xmlList.get(0) +" 失败...");
+//                                                        }
+//
+//                                                    }
+//                                                });
+//                                            }
 
                                         } catch (Exception e) {
 
@@ -1425,9 +1535,34 @@ public class SheZhiActivity extends Activity implements View.OnClickListener, Vi
                     if (i == 0) {
                         //登录成功,后续的连接操作因为cookies 原因,要用 MyApplication.okHttpClient
                         MyApplication.okHttpClient = okHttpClient;
+                        String filePath=null;
                         final int size=subjectList.size();
+                        int t=0;
+                        Log.d(TAG, "size:" + size);
                         //循环
                         for (int j=0;j<size;j++) {
+                            Log.d(TAG, "i:" + j);
+                            while (true){
+                                try {
+                                    Thread.sleep(80);
+                                    t++;
+                                    filePath=trg+File.separator+subjectList.get(j).getId()+(subjectList.get(j).getPhoto().
+                                            substring(subjectList.get(j).getPhoto().length()-4,subjectList.get(j).getPhoto().length()));
+                                    File file=new File(filePath);
+                                    if (file.isFile()|| t==10000){
+                                        t=0;
+                                        Log.d(TAG, "file.length():" + file.length()+"   t:"+t);
+                                        break;
+                                    }
+                                }catch (Exception e){
+                                    filePath=null;
+                                    Log.d(TAG, e.getMessage()+"检测文件是否存在异常");
+                                    break;
+                                }
+
+                            }
+                            Log.d(TAG, "文件存在");
+
                           //  Log.d("SheZhiActivity", "循环到"+j);
                             final int finalJ = j;
                             runOnUiThread(new Runnable() {
@@ -1443,7 +1578,7 @@ public class SheZhiActivity extends Activity implements View.OnClickListener, Vi
 
                             //查询旷视
                             synchronized (subjectList.get(j)) {
-                                link_chaXunRenYuan(okHttpClient, subjectList.get(j),trg);
+                                link_chaXunRenYuan(okHttpClient, subjectList.get(j),trg,filePath);
                                 try {
                                     subjectList.get(j).wait();
                                 } catch (InterruptedException e) {
@@ -1499,7 +1634,7 @@ public class SheZhiActivity extends Activity implements View.OnClickListener, Vi
                         public void run() {
                             if (duQuDialog!=null){
                                 duQuDialog.setClose();
-                                duQuDialog.setTiShi("        登录后台失败");
+                                duQuDialog.setTiShi("        出现异常");
                             }
 
                         }
@@ -1526,7 +1661,8 @@ public class SheZhiActivity extends Activity implements View.OnClickListener, Vi
         MultipartBody mBody;
         MultipartBody.Builder builder = new MultipartBody.Builder().setType(MultipartBody.FORM);
         Log.d("SheZhiActivity", filePath+"图片文件路径");
-        final File file=new File(filePath);
+
+        final File file=new File(filePath==null?"/a":filePath);
         RequestBody fileBody1 = RequestBody.create(MediaType.parse("application/octet-stream"),file);
 
         builder.addFormDataPart("photo",file.getName(), fileBody1);
@@ -1619,7 +1755,8 @@ public class SheZhiActivity extends Activity implements View.OnClickListener, Vi
 
 
     //查询人员
-    private void link_chaXunRenYuan(final OkHttpClient okHttpClient, final Subject subject, final String trg){
+    private void link_chaXunRenYuan(final OkHttpClient okHttpClient, final Subject subject, final String trg, final String filePath){
+
         //	Log.d("MyReceivereee", "进来");
         final MediaType JSON=MediaType.parse("application/json; charset=utf-8");
 
@@ -1652,6 +1789,7 @@ public class SheZhiActivity extends Activity implements View.OnClickListener, Vi
                         .append(subject.getId()).append("姓名:")
                         .append(subject.getName()).append("时间:")
                         .append(DateUtils.time(System.currentTimeMillis()+"")).append("\n");
+                link_P1(zhuJiBeanH,filePath,subject, -1L);
                 synchronized (subject){
                     subject.notify();
                 }
@@ -1674,8 +1812,7 @@ public class SheZhiActivity extends Activity implements View.OnClickListener, Vi
                         int size=zhaoPianBean.getData().size();
                         if (size==0){
                             //先传图片
-                            link_P1(zhuJiBeanH,trg+File.separator+subject.getId()+(subject.getPhoto().
-                                    substring(subject.getPhoto().length()-4,subject.getPhoto().length())),subject, -1L);
+                            link_P1(zhuJiBeanH,filePath,subject, -1L);
                         }
                         int pp=-1;
                         for (int i=0;i<size;i++){
@@ -1689,8 +1826,7 @@ public class SheZhiActivity extends Activity implements View.OnClickListener, Vi
                                 //相同就不需要再往下比对了，跳出当前循环
                                 pp=1;
                                 //更新旷视人员信息//先传图片
-                                link_P1(zhuJiBeanH,trg+File.separator+subject.getId()+(subject.getPhoto().
-                                        substring(subject.getPhoto().length()-4,subject.getPhoto().length())),subject,zhaoPianBean.getData().get(i).getId());
+                                link_P1(zhuJiBeanH,filePath,subject,zhaoPianBean.getData().get(i).getId());
                                 Log.d("MyReceiver", "333");
                                 break;
                             }
@@ -1698,24 +1834,25 @@ public class SheZhiActivity extends Activity implements View.OnClickListener, Vi
                         if (pp==0){
                             //跟所有人都不同， 再新增
                             //先传图片
-                            link_P1(zhuJiBeanH,trg+File.separator+subject.getId()+(subject.getPhoto().
-                                    substring(subject.getPhoto().length()-4,subject.getPhoto().length())),subject, -1L);
+                            link_P1(zhuJiBeanH,filePath,subject,-1L);
                         }
 
                     }else {
                         //	Log.d("MyReceiver", "444");
                         //先传图片
-                        link_P1(zhuJiBeanH,trg+File.separator+subject.getId()+(subject.getPhoto().
-                                substring(subject.getPhoto().length()-4,subject.getPhoto().length())),subject, -1L);
+                        link_P1(zhuJiBeanH,filePath,subject, -1L);
                     }
 
 
                 }catch (Exception e){
+
                     Log.d("AllConnects查询旷视异常", e.getMessage()+"gggg");
                     stringBuilder.append("查询旷视失败记录:").append("ID:")
                             .append(subject.getId()).append("姓名:")
                             .append(subject.getName()).append("时间:")
                             .append(DateUtils.time(System.currentTimeMillis()+"")).append("\n");
+                    link_P1(zhuJiBeanH,filePath,subject, -1L);
+
                     synchronized (subject){
                         subject.notify();
                     }
@@ -1992,10 +2129,12 @@ public class SheZhiActivity extends Activity implements View.OnClickListener, Vi
                                }
                            });
 
+                           Thread.sleep(1500);
                            return null;
                        }
 
                     } else if ("Subject".equals(parser.getName())) {
+
                         student=new Subject();
                         student.setId(parser.getAttributeValue(0));
 
@@ -2100,6 +2239,41 @@ public class SheZhiActivity extends Activity implements View.OnClickListener, Vi
         }
         return list;
     }
+
+    @Override
+    public void zipStart() {
+
+    }
+
+    @Override
+    public void zipSuccess() {
+
+    }
+
+    @Override
+    public void zipProgress(final int progress) {
+
+        if (duQuDialog!=null){
+
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if (duQuDialog!=null){
+                    duQuDialog.setProgressBar(progress);
+                }
+            }
+        });
+
+        }
+
+
+    }
+
+    @Override
+    public void zipFail() {
+
+    }
+
 
 
 

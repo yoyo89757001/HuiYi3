@@ -3061,6 +3061,7 @@ public class YiDongNianHuiActivity extends Activity implements RecytviewCash {
 		// step 3：创建 Call 对象
 		Call call = okHttpClient.newCall(requestBuilder.build());
 
+
 		//step 4: 开始异步请求
 		call.enqueue(new Callback() {
 			@Override

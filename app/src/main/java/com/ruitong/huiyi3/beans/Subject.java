@@ -1,10 +1,14 @@
 package com.ruitong.huiyi3.beans;
 
+import android.support.annotation.NonNull;
+
+import java.util.Comparator;
+
 /**
  * Created by Administrator on 2018/5/31.
  */
 
-public class Subject {
+public class Subject implements Comparator<Subject> {
 
     private String id;
     private String remark;
@@ -151,5 +155,12 @@ public class Subject {
                 ", sourceMeeting='" + sourceMeeting + '\'' +
                 ", photo='" + photo + '\'' +
                 '}';
+    }
+
+
+
+    @Override
+    public int compare(Subject o1, Subject o2) {
+        return o1.getId().compareTo(o2.getId());
     }
 }

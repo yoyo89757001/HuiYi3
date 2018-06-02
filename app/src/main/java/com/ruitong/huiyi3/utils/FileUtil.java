@@ -10,12 +10,21 @@ import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.List;
 import java.util.zip.ZipEntry;
+import java.util.zip.ZipException;
+import java.util.zip.ZipFile;
 import java.util.zip.ZipInputStream;
+
+import static com.ruitong.huiyi3.view.AutoScrollTextView.TAG;
 
 /**
  * Created by chenjun on 2017/5/17.
@@ -92,7 +101,7 @@ public class FileUtil {
 
 
     public static void Unzip(String zipFile, String targetDir) {
-        int BUFFER = 4096; //这里缓冲区我们使用4KB，
+        int BUFFER = 1024*100; //这里缓冲区我们使用4KB，
         String strEntry; //保存每个zip的条目名称
 
         try {
@@ -135,6 +144,140 @@ public class FileUtil {
         }
     }
 
+    public interface ZipListener {
+        /** 开始解压 */
+        void zipStart();
+
+        /** 解压成功 */
+        void zipSuccess();
+
+        /** 解压进度 */
+        void zipProgress(int progress);
+
+        /** 解压失败 */
+        void zipFail();
+    }
+
+    /**
+     * 获取压缩包解压后的内存大小
+     *
+     * @param filePath
+     *            文件路径
+     * @return 返回内存long类型的值
+     */
+    public static long getZipTrueSize(String filePath) {
+        long size = 0;
+        ZipFile f;
+        try {
+            f = new ZipFile(filePath);
+            Enumeration<? extends ZipEntry> en = f.entries();
+            while (en.hasMoreElements()) {
+                size += en.nextElement().getSize();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return size;
+    }
+
+
+
+
+    /**
+     * [* 使用 org.apache.tools.zip.ZipFile 解压文件，它与 java 类库中的
+     * java.util.zip.ZipFile 使用方式是一新的，只不过多了设置编码方式的 接口。
+     * 注，apache 没有提供 ZipInputStream 类，所以只能使用它提供的ZipFile 来读取压缩文件。]<BR>
+     * @param archive 压缩包路径
+     * @param decompressDir 解压路径
+     * @throws IOException
+     * @throws FileNotFoundException
+     * @throws ZipException
+     */
+    public static void readByApacheZipFile(String archive, String decompressDir,ZipListener listener)
+            throws IOException, FileNotFoundException, ZipException {
+
+        long sumLength = 0;
+        long ziplength = getZipTrueSize(archive);
+        Log.e(TAG, "readByApacheZipFile"+ziplength);
+       // BufferedInputStream bi;
+        ZipFile zf = new ZipFile(archive);// 支持中文
+        Enumeration e = zf.entries();
+        InputStream is = null;
+        int count=0;
+
+        while(e.hasMoreElements()) {
+
+            ZipEntry entry= (ZipEntry) e.nextElement();
+
+            is= zf.getInputStream(entry);
+
+            File dstFile = new File(decompressDir+"/"+entry.getName());
+            if (dstFile.exists()){
+                is.close();
+                continue;
+            }
+            FileOutputStream  fos= new FileOutputStream(dstFile);
+
+            byte[]buffer = new byte[10240];
+
+            while((count = is.read(buffer, 0, buffer.length)) != -1){
+                sumLength += count;
+                int progress = (int) ((sumLength * 100) / ziplength);
+                updateProgress(progress, listener);
+                fos.write(buffer,0,count);
+            }
+            fos.close();
+            is.close();
+        }
+
+//        while (e.hasMoreElements()) {
+//            ZipEntry ze2 = (ZipEntry) e.nextElement();
+//            String entryName = ze2.getName();
+//            Log.e(TAG, entryName);
+//            String path = decompressDir + "/" + entryName;
+//            if (ze2.isDirectory()) {
+//                Log.e(TAG, "正在创建解压目录 - " + entryName);
+//                File decompressDirFile = new File(path);
+//                if (!decompressDirFile.exists()) {
+//                    decompressDirFile.mkdirs();
+//                }
+//            } else {
+//
+//
+//                Log.e(TAG, "正在创建解压文件 - " + entryName);
+//                String fileDir = path.substring(0, path.lastIndexOf("/"));
+//                File fileDirFile = new File(fileDir);
+//                if (!fileDirFile.exists()) {
+//                    fileDirFile.mkdirs();
+//                }
+//                BufferedOutputStream bos = new BufferedOutputStream(
+//                        new FileOutputStream(decompressDir + "/" + entryName));
+//                bi = new BufferedInputStream(zf.getInputStream(ze2));
+//                byte[] readContent = new byte[10240];
+//                int readCount = bi.read(readContent);
+//                while (readCount != -1) {
+//                    sumLength += readCount;
+//                    int progress = (int) ((sumLength * 100) / ziplength);
+//                    updateProgress(progress, listener);
+//
+//                    bos.write(readContent, 0, readCount);
+//                    readCount = bi.read(readContent);
+//                }
+//                bos.close();
+//            }
+//        }
+        zf.close();
+    }
+
+   private static int lastProgress = 0;
+    private static void updateProgress(int progress, ZipListener listener2) {
+        /** 因为会频繁的刷新,这里我只是进度>1%的时候才去显示 */
+        if (progress > lastProgress) {
+            lastProgress = progress;
+            listener2.zipProgress(progress);
+        }
+    }
+
     /**
      * 获取指定目录内所有文件路径
      * @param dirPath 需要查询的文件目录
@@ -142,12 +285,10 @@ public class FileUtil {
      */
     public static List<String> getAllFileXml(String dirPath, List<String> fileList) {
         File f = new File(dirPath);
-        Log.d("FileUtil", "f.exists():" + f.exists()+dirPath);
+        Log.d("FileUtilXML", "f.exists():" + f.exists()+dirPath);
         if (!f.exists()) {//判断路径是否存在
             return null;
         }
-
-
 
         File[] files = f.listFiles();
         // Log.d("FileUtil", "files.length:" + files.length);
@@ -155,7 +296,7 @@ public class FileUtil {
             return null;
         }
 
-        Log.d("FileUtil", "文件夹个数" + files.length);
+        Log.d("FileUtilXml", "文件夹个数" + files.length);
 
         for (File _file : files) {//遍历目录
             if(_file.isFile() && (_file.getName().endsWith("xml") )){
@@ -174,7 +315,7 @@ public class FileUtil {
                 getAllFileXml(_file.getAbsolutePath(),fileList);
             }
         }
-        Log.d("FileUtil", "返回的jsonArray:" + fileList.size());
+        Log.d("FileUtil", "返回的xml个数:" + fileList.size());
         return fileList;
     }
 
