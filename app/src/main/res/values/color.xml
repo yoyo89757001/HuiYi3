@@ -14,7 +14,6 @@
     <color name="write">#ffffffff</color>
     <color name="blake">#ff111111</color>
     <color name="textcolor">#8c050505</color>
-    <color name="jinhuang">#ffe725</color>
     <!-- 半透明 -->
 
     <!-- 用于页面背景 -->
@@ -26,7 +25,6 @@
     <!-- 辅助文字-->
     <!-- 橙色 -->
     <color name="dark_grey">#e2e1e1</color><!-- 深灰 -->
-    <color name="hegong">#640107</color>
 
     <color name="touming22">#59000000</color>
 </resources>

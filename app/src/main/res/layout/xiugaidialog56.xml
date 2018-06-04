@@ -8,7 +8,6 @@
     <LinearLayout
         android:gravity="center_horizontal"
         android:orientation="vertical"
-        android:id="@+id/www"
         android:layout_width="280dp"
         android:layout_height="wrap_content">
 
@@ -44,12 +43,10 @@
     <LinearLayout
         android:gravity="center_horizontal"
         android:orientation="vertical"
-        android:id="@+id/www3"
         android:layout_width="280dp"
         android:layout_height="wrap_content">
 
         <TextView
-            android:id="@+id/title23"
             android:text="修改账户ID(必填)"
             android:textSize="18sp"
             android:gravity="center"
@@ -82,12 +79,10 @@
     <LinearLayout
         android:gravity="center_horizontal"
         android:orientation="vertical"
-        android:id="@+id/www2"
         android:layout_width="280dp"
         android:layout_height="200dp">
 
         <TextView
-            android:id="@+id/title22"
             android:text="修改广告机名(必填)"
             android:textSize="18sp"
             android:layout_weight="0.6"

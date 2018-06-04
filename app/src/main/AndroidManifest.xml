@@ -57,9 +57,6 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ui.XinChunActivity"
-            android:screenOrientation="landscape" />
-        <activity
             android:name=".ui.YiDongNianHuiActivity"
             android:screenOrientation="portrait" />
         <activity android:name=".ui.SheZhiActivity" />

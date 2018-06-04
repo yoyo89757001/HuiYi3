@@ -16,14 +16,12 @@
     <LinearLayout
         android:gravity="center_horizontal"
         android:orientation="vertical"
-        android:id="@+id/www1"
         android:minWidth="320dp"
         android:layout_width="0dp"
         android:layout_weight="1"
         android:layout_height="300dp">
 
         <TextView
-            android:id="@+id/title21"
             android:text="举办企业"
             android:textSize="18sp"
             android:layout_weight="1"
@@ -53,7 +51,6 @@
             android:layout_width="match_parent"
             android:layout_height="0.8dp"/>
         <TextView
-            android:id="@+id/title221"
             android:text="修改文字大小"
             android:textSize="18sp"
             android:layout_weight="1"
@@ -94,7 +91,6 @@
     <LinearLayout
         android:gravity="center_horizontal"
         android:orientation="vertical"
-        android:id="@+id/www"
         android:minWidth="320dp"
         android:layout_weight="1"
         android:layout_width="0dp"
@@ -131,7 +127,6 @@
             android:layout_width="match_parent"
             android:layout_height="0.8dp"/>
         <TextView
-            android:id="@+id/title22"
             android:text="修改文字大小"
             android:textSize="18sp"
             android:layout_weight="1"

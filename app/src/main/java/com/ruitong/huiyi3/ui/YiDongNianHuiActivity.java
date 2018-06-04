@@ -755,7 +755,7 @@ public class YiDongNianHuiActivity extends Activity implements RecytviewCash {
 										}
 											break;
 										case 9: {
-											final View view3 = View.inflate(YiDongNianHuiActivity.this, R.layout.item8, null);
+											final View view3 = View.inflate(YiDongNianHuiActivity.this, R.layout.item9, null);
 
 											TextView name3 = (TextView) view3.findViewById(R.id.name);
 											ImageView touxiang = (ImageView) view3.findViewById(R.id.touxiang);
@@ -779,6 +779,183 @@ public class YiDongNianHuiActivity extends Activity implements RecytviewCash {
 
 											ViewGroup.LayoutParams params3 = root_rl3.getLayoutParams();
 											params3.width = dw / 3;
+											root_rl3.setLayoutParams(params3);
+											root_rl3.invalidate();
+
+											new Handler().post(new Runnable() {
+												@Override
+												public void run() {
+													recyclerView.fullScroll(ScrollView.FOCUS_DOWN);
+												}
+											});
+
+											//动画
+											SpringSystem springSystem3 = SpringSystem.create();
+											final Spring spring3 = springSystem3.createSpring();
+											//两个参数分别是弹力系数和阻力系数
+											spring3.setSpringConfig(SpringConfig.fromOrigamiTensionAndFriction(80, 6));
+											// 添加弹簧监听器
+											spring3.addListener(new SimpleSpringListener() {
+												@Override
+												public void onSpringUpdate(Spring spring) {
+													// value是一个符合弹力变化的一个数，我们根据value可以做出弹簧动画
+													float value = (float) spring.getCurrentValue();
+													//Log.d(TAG, "value:" + value);
+													//基于Y轴的弹簧阻尼动画
+													//	helper.itemView.setTranslationY(value);
+													// 对图片的伸缩动画
+													//float scale = 1f - (value * 0.5f);
+													view3.setScaleX(value);
+													view3.setScaleY(value);
+												}
+											});
+											// 设置动画结束值
+											spring3.setEndValue(1f);
+										}
+										break;
+										case 10: {
+											final View view3 = View.inflate(YiDongNianHuiActivity.this, R.layout.item10, null);
+
+											TextView name3 = (TextView) view3.findViewById(R.id.name);
+											ImageView touxiang = (ImageView) view3.findViewById(R.id.touxiang);
+											RelativeLayout root_rl3 = (RelativeLayout) view3.findViewById(R.id.root_rl);
+											name3.setText(bean.getName());
+											TextView zhiwei = (TextView) view3.findViewById(R.id.zhiwei);
+											zhiwei.setText(bean.getBumen());
+											TextView huanyinyu = (TextView) view3.findViewById(R.id.huanyinyu);
+											huanyinyu.setText(hyy);
+
+											Glide.with(YiDongNianHuiActivity.this)
+													//	.load(R.drawable.vvv)
+													.load(bean.getTouxiang())
+													//	.load(zhuji+item.getTouxiang())
+													//.apply(myOptions)
+													.transform(new GlideRoundTransform(MyApplication.getAppContext(), 20))
+													//.transform(new GlideCircleTransform(MyApplication.getAppContext(),2,Color.parseColor("#ffffffff")))
+													.into(touxiang);
+
+											rootLayout.addView(view3);
+
+											ViewGroup.LayoutParams params3 = root_rl3.getLayoutParams();
+											params3.width = dw / 2;
+											root_rl3.setLayoutParams(params3);
+											root_rl3.invalidate();
+
+											new Handler().post(new Runnable() {
+												@Override
+												public void run() {
+													recyclerView.fullScroll(ScrollView.FOCUS_DOWN);
+												}
+											});
+
+											//动画
+											SpringSystem springSystem3 = SpringSystem.create();
+											final Spring spring3 = springSystem3.createSpring();
+											//两个参数分别是弹力系数和阻力系数
+											spring3.setSpringConfig(SpringConfig.fromOrigamiTensionAndFriction(80, 6));
+											// 添加弹簧监听器
+											spring3.addListener(new SimpleSpringListener() {
+												@Override
+												public void onSpringUpdate(Spring spring) {
+													// value是一个符合弹力变化的一个数，我们根据value可以做出弹簧动画
+													float value = (float) spring.getCurrentValue();
+													//Log.d(TAG, "value:" + value);
+													//基于Y轴的弹簧阻尼动画
+													//	helper.itemView.setTranslationY(value);
+													// 对图片的伸缩动画
+													//float scale = 1f - (value * 0.5f);
+													view3.setScaleX(value);
+													view3.setScaleY(value);
+												}
+											});
+											// 设置动画结束值
+											spring3.setEndValue(1f);
+										}
+										break;
+										case 11: {
+											final View view3 = View.inflate(YiDongNianHuiActivity.this, R.layout.item11, null);
+
+											TextView name3 = (TextView) view3.findViewById(R.id.name);
+											ImageView touxiang = (ImageView) view3.findViewById(R.id.touxiang);
+											RelativeLayout root_rl3 = (RelativeLayout) view3.findViewById(R.id.root_rl);
+											name3.setText(bean.getName());
+											TextView zhiwei = (TextView) view3.findViewById(R.id.zhiwei);
+											zhiwei.setText(bean.getBumen());
+											TextView huanyinyu = (TextView) view3.findViewById(R.id.huanyinyu);
+											huanyinyu.setText(hyy);
+
+											Glide.with(YiDongNianHuiActivity.this)
+													//	.load(R.drawable.vvv)
+													.load(bean.getTouxiang())
+													//	.load(zhuji+item.getTouxiang())
+													//.apply(myOptions)
+													.transform(new GlideRoundTransform(MyApplication.getAppContext(), 20))
+													//.transform(new GlideCircleTransform(MyApplication.getAppContext(),2,Color.parseColor("#ffffffff")))
+													.into(touxiang);
+
+											rootLayout.addView(view3);
+
+											ViewGroup.LayoutParams params3 = root_rl3.getLayoutParams();
+											params3.width = dw / 2;
+											root_rl3.setLayoutParams(params3);
+											root_rl3.invalidate();
+
+											new Handler().post(new Runnable() {
+												@Override
+												public void run() {
+													recyclerView.fullScroll(ScrollView.FOCUS_DOWN);
+												}
+											});
+
+											//动画
+											SpringSystem springSystem3 = SpringSystem.create();
+											final Spring spring3 = springSystem3.createSpring();
+											//两个参数分别是弹力系数和阻力系数
+											spring3.setSpringConfig(SpringConfig.fromOrigamiTensionAndFriction(80, 6));
+											// 添加弹簧监听器
+											spring3.addListener(new SimpleSpringListener() {
+												@Override
+												public void onSpringUpdate(Spring spring) {
+													// value是一个符合弹力变化的一个数，我们根据value可以做出弹簧动画
+													float value = (float) spring.getCurrentValue();
+													//Log.d(TAG, "value:" + value);
+													//基于Y轴的弹簧阻尼动画
+													//	helper.itemView.setTranslationY(value);
+													// 对图片的伸缩动画
+													//float scale = 1f - (value * 0.5f);
+													view3.setScaleX(value);
+													view3.setScaleY(value);
+												}
+											});
+											// 设置动画结束值
+											spring3.setEndValue(1f);
+										}
+										break;
+										case 12: {
+											final View view3 = View.inflate(YiDongNianHuiActivity.this, R.layout.item12, null);
+
+											TextView name3 = (TextView) view3.findViewById(R.id.name);
+											ImageView touxiang = (ImageView) view3.findViewById(R.id.touxiang);
+											RelativeLayout root_rl3 = (RelativeLayout) view3.findViewById(R.id.root_rl);
+											name3.setText(bean.getName());
+											TextView zhiwei = (TextView) view3.findViewById(R.id.zhiwei);
+											zhiwei.setText(bean.getBumen());
+											TextView huanyinyu = (TextView) view3.findViewById(R.id.huanyinyu);
+											huanyinyu.setText(hyy);
+
+											Glide.with(YiDongNianHuiActivity.this)
+													//	.load(R.drawable.vvv)
+													.load(bean.getTouxiang())
+													//	.load(zhuji+item.getTouxiang())
+													//.apply(myOptions)
+													.transform(new GlideRoundTransform(MyApplication.getAppContext(), 20))
+													//.transform(new GlideCircleTransform(MyApplication.getAppContext(),2,Color.parseColor("#ffffffff")))
+													.into(touxiang);
+
+											rootLayout.addView(view3);
+
+											ViewGroup.LayoutParams params3 = root_rl3.getLayoutParams();
+											params3.width = dw / 2;
 											root_rl3.setLayoutParams(params3);
 											root_rl3.invalidate();
 
@@ -2410,12 +2587,12 @@ public class YiDongNianHuiActivity extends Activity implements RecytviewCash {
 
 
 		final List<String> av=new ArrayList<>();
-		av.add("http://imgsrc.baidu.com/imgad/pic/item/738b4710b912c8fcab9694ebf6039245d68821aa.jpg");
+		av.add("http://imgsrc.baidu.com/imgad/pic/item/ac4bd11373f0820207282ceb41fbfbedaa641baf.jpg");
 		av.add("http://imgsrc.baidu.com/imgad/pic/item/0eb30f2442a7d933258223eea74bd11373f00101.jpg");
 		av.add("http://imgsrc.baidu.com/imgad/pic/item/500fd9f9d72a60596f8f2f322334349b033bba7f.jpg");
-		av.add("http://pic32.photophoto.cn/20140721/0022005472773589_b.jpg");
-		av.add("http://pic.58pic.com/58pic/15/54/72/62V58PICmk7_1024.png");
-		av.add("http://upfiles1.yingsheng.com/Files/2015/05/23/20150523182000675.jpg");
+		av.add("http://pic1.win4000.com/wallpaper/5/532931489604e.jpg");
+		av.add("http://imgsrc.baidu.com/imgad/pic/item/d788d43f8794a4c273cb6b0804f41bd5ad6e392c.jpg");
+		av.add("http://imgsrc.baidu.com/imgad/pic/item/7dd98d1001e93901750ba62d71ec54e736d19693.jpg");
 
 		final List<String> bumen=new ArrayList<>();
 		bumen.add("观众");

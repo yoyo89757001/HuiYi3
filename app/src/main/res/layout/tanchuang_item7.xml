@@ -2,7 +2,6 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:background="@color/img_full_opaque"
     android:layout_width="wrap_content"
-    android:id="@+id/ffflll"
     android:layout_height="wrap_content">
 
 
@@ -17,7 +16,6 @@
 
 
 <TextView
-    android:id="@+id/test"
     android:textSize="24sp"
     android:text="学号"
     android:visibility="gone"
