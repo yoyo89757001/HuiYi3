@@ -595,8 +595,8 @@ public class YiDongNianHuiActivity extends Activity implements RecytviewCash {
 													.load(bean.getTouxiang())
 													//	.load(zhuji+item.getTouxiang())
 													//.apply(myOptions)
-													.transform(new GlideRoundTransform(MyApplication.getAppContext(), 20))
-													//.transform(new GlideCircleTransform(MyApplication.getAppContext(),2,Color.parseColor("#ffffffff")))
+													//.transform(new GlideRoundTransform(MyApplication.getAppContext(), 20))
+													.transform(new GlideCircleTransform(MyApplication.getAppContext(),2,Color.parseColor("#ffffffff")))
 													.into(touxiang);
 
 											rootLayout.addView(view3);
@@ -643,7 +643,7 @@ public class YiDongNianHuiActivity extends Activity implements RecytviewCash {
 											TextView huanyinyu = (TextView) view3.findViewById(R.id.huanyinyu);
 											huanyinyu.setText(hyy);
 											ImageView touxiang = (ImageView) view3.findViewById(R.id.touxiang);
-											RelativeLayout root_rl3 = (RelativeLayout) view3.findViewById(R.id.root_rl);
+											LinearLayout root_rl3 = (LinearLayout) view3.findViewById(R.id.root_rl);
 											name3.setText(bean.getName());
 											TextView zhiwei = (TextView) view3.findViewById(R.id.zhiwei);
 											zhiwei.setText(bean.getBumen());
@@ -653,14 +653,14 @@ public class YiDongNianHuiActivity extends Activity implements RecytviewCash {
 													.load(bean.getTouxiang())
 													//	.load(zhuji+item.getTouxiang())
 													//.apply(myOptions)
-													.transform(new GlideRoundTransform(MyApplication.getAppContext(), 20))
-													//.transform(new GlideCircleTransform(MyApplication.getAppContext(),2,Color.parseColor("#ffffffff")))
+													//.transform(new GlideRoundTransform(MyApplication.getAppContext(), 20))
+													.transform(new GlideCircleTransform(MyApplication.getAppContext(),2,Color.parseColor("#ffffffff")))
 													.into(touxiang);
 
 											rootLayout.addView(view3);
 
 											ViewGroup.LayoutParams params3 = root_rl3.getLayoutParams();
-											params3.height = dh / 5;
+											params3.height = dh / 4;
 											root_rl3.setLayoutParams(params3);
 											root_rl3.invalidate();
 
@@ -712,8 +712,8 @@ public class YiDongNianHuiActivity extends Activity implements RecytviewCash {
 													.load(bean.getTouxiang())
 													//	.load(zhuji+item.getTouxiang())
 													//.apply(myOptions)
-													.transform(new GlideRoundTransform(MyApplication.getAppContext(), 20))
-													//.transform(new GlideCircleTransform(MyApplication.getAppContext(),2,Color.parseColor("#ffffffff")))
+													//.transform(new GlideRoundTransform(MyApplication.getAppContext(), 20))
+													.transform(new GlideCircleTransform(MyApplication.getAppContext(),2,Color.parseColor("#ffffffff")))
 													.into(touxiang);
 
 											rootLayout.addView(view3);
@@ -754,8 +754,68 @@ public class YiDongNianHuiActivity extends Activity implements RecytviewCash {
 											spring3.setEndValue(1f);
 										}
 											break;
+										case 9: {
+											final View view3 = View.inflate(YiDongNianHuiActivity.this, R.layout.item8, null);
+
+											TextView name3 = (TextView) view3.findViewById(R.id.name);
+											ImageView touxiang = (ImageView) view3.findViewById(R.id.touxiang);
+											RelativeLayout root_rl3 = (RelativeLayout) view3.findViewById(R.id.root_rl);
+											name3.setText(bean.getName());
+											TextView zhiwei = (TextView) view3.findViewById(R.id.zhiwei);
+											zhiwei.setText(bean.getBumen());
+											TextView huanyinyu = (TextView) view3.findViewById(R.id.huanyinyu);
+											huanyinyu.setText(hyy);
+
+											Glide.with(YiDongNianHuiActivity.this)
+													//	.load(R.drawable.vvv)
+													.load(bean.getTouxiang())
+													//	.load(zhuji+item.getTouxiang())
+													//.apply(myOptions)
+													//.transform(new GlideRoundTransform(MyApplication.getAppContext(), 20))
+													.transform(new GlideCircleTransform(MyApplication.getAppContext(),2,Color.parseColor("#ffffffff")))
+													.into(touxiang);
+
+											rootLayout.addView(view3);
+
+											ViewGroup.LayoutParams params3 = root_rl3.getLayoutParams();
+											params3.width = dw / 3;
+											root_rl3.setLayoutParams(params3);
+											root_rl3.invalidate();
+
+											new Handler().post(new Runnable() {
+												@Override
+												public void run() {
+													recyclerView.fullScroll(ScrollView.FOCUS_DOWN);
+												}
+											});
+
+											//动画
+											SpringSystem springSystem3 = SpringSystem.create();
+											final Spring spring3 = springSystem3.createSpring();
+											//两个参数分别是弹力系数和阻力系数
+											spring3.setSpringConfig(SpringConfig.fromOrigamiTensionAndFriction(80, 6));
+											// 添加弹簧监听器
+											spring3.addListener(new SimpleSpringListener() {
+												@Override
+												public void onSpringUpdate(Spring spring) {
+													// value是一个符合弹力变化的一个数，我们根据value可以做出弹簧动画
+													float value = (float) spring.getCurrentValue();
+													//Log.d(TAG, "value:" + value);
+													//基于Y轴的弹簧阻尼动画
+													//	helper.itemView.setTranslationY(value);
+													// 对图片的伸缩动画
+													//float scale = 1f - (value * 0.5f);
+													view3.setScaleX(value);
+													view3.setScaleY(value);
+												}
+											});
+											// 设置动画结束值
+											spring3.setEndValue(1f);
+										}
+										break;
 									}
 
+//**************************************************************************************************************
 									//底部列表的
 									if (b==0){
 										lingdaoList.add(bean);
