@@ -21,6 +21,7 @@ import android.util.Xml;
 import android.view.View;
 import android.widget.Button;
 
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.ruitong.huiyi3.MyApplication;
 import com.ruitong.huiyi3.R;
@@ -34,6 +35,7 @@ import com.ruitong.huiyi3.dialog.DuQuDialog;
 import com.ruitong.huiyi3.dialog.GaiNiMaBi;
 import com.ruitong.huiyi3.dialog.HuanYingYuDialog;
 import com.ruitong.huiyi3.dialog.MoBanDialog;
+import com.ruitong.huiyi3.dialog.ShanChuKuDialog;
 import com.ruitong.huiyi3.dialog.XiuGaiHouTaiDialog;
 import com.ruitong.huiyi3.dialog.XiuGaiWenZiDialog;
 import com.ruitong.huiyi3.dialog.XiuGaiXinXiDialog;
@@ -99,57 +101,57 @@ public class SheZhiActivity extends Activity implements View.OnClickListener, Vi
     //private UnzipFileListener mUnzipFileListener;
     private int curpercent = 0;
 
-    private Handler zipHandler = new Handler() {
-
-        @Override
-        public void handleMessage(Message msg) {
-
-            Bundle bundle = msg.getData();
-
-            switch (msg.what) {
-                case UnZipfile.CompressStatus.START:
-                    Log.d(TAG, "unzip start");
-
-                    curpercent = 0;
-
-                    break;
-                case UnZipfile.CompressStatus.HANDLING: {
-                    if (bundle != null) {
-                        int percnt = bundle.getInt(UnZipfile.CompressStatus.PERCENT);
-                        if (curpercent != percnt) {
-                            curpercent = percnt;
-                            if (duQuDialog!=null){
-                                duQuDialog.setProgressBar(percnt);
-                            }
-
-                            Log.d(TAG, "unzip persent =" + percnt);
-                        }
-                    }
-                    break;
-                }
-                case UnZipfile.CompressStatus.COMPLETED: {
-
-                    Log.d(TAG, "unzip completed");
-
-                    break;
-                }
-                case UnZipfile.CompressStatus.ERROR: {
-                    if (bundle != null) {
-
-                        Log.d(TAG, "unzip error msg =" + bundle.getString(UnZipfile.CompressStatus.ERROR_COM));
-                    }
-                    curpercent = 0;
-
-                    break;
-                }
-                default:
-                    break;
-            }
-
-            super.handleMessage(msg);
-        }
-
-    };
+//    private Handler zipHandler = new Handler() {
+//
+//        @Override
+//        public void handleMessage(Message msg) {
+//
+//            Bundle bundle = msg.getData();
+//
+//            switch (msg.what) {
+//                case UnZipfile.CompressStatus.START:
+//                    Log.d(TAG, "unzip start");
+//
+//                    curpercent = 0;
+//
+//                    break;
+//                case UnZipfile.CompressStatus.HANDLING: {
+//                    if (bundle != null) {
+//                        int percnt = bundle.getInt(UnZipfile.CompressStatus.PERCENT);
+//                        if (curpercent != percnt) {
+//                            curpercent = percnt;
+//                            if (duQuDialog!=null){
+//                                duQuDialog.setProgressBar(percnt);
+//                            }
+//
+//                            Log.d(TAG, "unzip persent =" + percnt);
+//                        }
+//                    }
+//                    break;
+//                }
+//                case UnZipfile.CompressStatus.COMPLETED: {
+//
+//                    Log.d(TAG, "unzip completed");
+//
+//                    break;
+//                }
+//                case UnZipfile.CompressStatus.ERROR: {
+//                    if (bundle != null) {
+//
+//                        Log.d(TAG, "unzip error msg =" + bundle.getString(UnZipfile.CompressStatus.ERROR_COM));
+//                    }
+//                    curpercent = 0;
+//
+//                    break;
+//                }
+//                default:
+//                    break;
+//            }
+//
+//            super.handleMessage(msg);
+//        }
+//
+//    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -256,8 +258,8 @@ public class SheZhiActivity extends Activity implements View.OnClickListener, Vi
                 break;
 
             case 2:
-                startActivity(new Intent(SheZhiActivity.this,XinChunActivity.class));
-                SystemClock.sleep(1600);
+//                startActivity(new Intent(SheZhiActivity.this,XinChunActivity.class));
+//                SystemClock.sleep(1600);
                 break;
             case 3:
 
@@ -554,31 +556,63 @@ public class SheZhiActivity extends Activity implements View.OnClickListener, Vi
                 animatorSet8.setDuration(300);
                 animatorSet8.addListener(new AnimatorListenerAdapter(){
                     @Override public void onAnimationEnd(Animator animation) {
+                        final ShanChuKuDialog shanChuKuDialog=new ShanChuKuDialog(SheZhiActivity.this);
+                        shanChuKuDialog.setOnQueRenListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                if (shanChuKuDialog.getMiMa().equals("123456789")){
+                                    //执行删除
+                                    if (zhuJiBeanH!=null && zhuJiBeanH.getHostUrl()!=null &&
+                                            !zhuJiBeanH.getHostUrl().equals("") && zhuJiBeanH.getUsername()!=null &&
+                                            !zhuJiBeanH.getUsername().equals("")){
+                                        getOkHttpClient(2);
+                                        shanChuKuDialog.dismiss();
+                                    }else {
+                                        shanChuKuDialog.setMiMa("没有主机地址");
+                                    }
+
+                                }else {
+
+                                    shanChuKuDialog.setMiMa("密码不正确");
+                                }
+
+
+                            }
+                        });
+                        shanChuKuDialog.setQuXiaoListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                shanChuKuDialog.dismiss();
+                            }
+                        });
+                        shanChuKuDialog.show();
+
+
                         //弹窗
-                        final XiuGaiWenZiDialog dialog=new XiuGaiWenZiDialog(SheZhiActivity.this);
-                        dialog.setContents(baoCunBean.getWenzi()+"",baoCunBean.getSize()==0? "30":String.valueOf(baoCunBean.getSize()),
-                                baoCunBean.getWenzi1()+"",baoCunBean.getSize1()==0? "60":String.valueOf(baoCunBean.getSize1()));
-                        dialog.setOnQueRenListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                baoCunBean.setWenzi(dialog.getContents());
-                                baoCunBean.setSize(Integer.valueOf(dialog.getSize()));
-                                baoCunBean.setWenzi1(dialog.getContents2());
-                                baoCunBean.setSize1(Integer.valueOf(dialog.getSize2()));
-                                baoCunBeanDao.update(baoCunBean);
-                                baoCunBean=baoCunBeanDao.load(123456L);
-                                dialog.dismiss();
-
-                            }
-                        });
-                        dialog.setQuXiaoListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                dialog.dismiss();
-                            }
-                        });
-
-                        dialog.show();
+//                        final XiuGaiWenZiDialog dialog=new XiuGaiWenZiDialog(SheZhiActivity.this);
+//                        dialog.setContents(baoCunBean.getWenzi()+"",baoCunBean.getSize()==0? "30":String.valueOf(baoCunBean.getSize()),
+//                                baoCunBean.getWenzi1()+"",baoCunBean.getSize1()==0? "60":String.valueOf(baoCunBean.getSize1()));
+//                        dialog.setOnQueRenListener(new View.OnClickListener() {
+//                            @Override
+//                            public void onClick(View v) {
+//                                baoCunBean.setWenzi(dialog.getContents());
+//                                baoCunBean.setSize(Integer.valueOf(dialog.getSize()));
+//                                baoCunBean.setWenzi1(dialog.getContents2());
+//                                baoCunBean.setSize1(Integer.valueOf(dialog.getSize2()));
+//                                baoCunBeanDao.update(baoCunBean);
+//                                baoCunBean=baoCunBeanDao.load(123456L);
+//                                dialog.dismiss();
+//
+//                            }
+//                        });
+//                        dialog.setQuXiaoListener(new View.OnClickListener() {
+//                            @Override
+//                            public void onClick(View v) {
+//                                dialog.dismiss();
+//                            }
+//                        });
+//
+//                        dialog.show();
 
                         bt8.setEnabled(true);
                     }
@@ -818,7 +852,7 @@ public class SheZhiActivity extends Activity implements View.OnClickListener, Vi
                                         Log.d("SheZhiActivity", trg);
                                         File file = new File(trg);
                                         if (!file.exists()) {
-                                            file.mkdirs();
+                                            Log.d(TAG, "创建文件状态:" + file.mkdir());
                                         }
                                         final String finalZipName = zipName;
                                         runOnUiThread(new Runnable() {
@@ -859,7 +893,14 @@ public class SheZhiActivity extends Activity implements View.OnClickListener, Vi
                                             }
 
 
-                                        } catch (ZipException e) {
+                                        } catch (final ZipException e) {
+                                            runOnUiThread(new Runnable() {
+                                                @Override
+                                                public void run() {
+                                                    if (duQuDialog!=null)
+                                                        duQuDialog.setTiShi("        "+e.getMessage());
+                                                }
+                                            });
                                             e.printStackTrace();
                                         }
                                      //   UnZipfile.getInstance(SheZhiActivity.this).unZip(zz,trg,zipHandler);
@@ -913,6 +954,17 @@ public class SheZhiActivity extends Activity implements View.OnClickListener, Vi
                                                 final int size= subjectList.size();
                                                 Log.d("ffffff", "size:" + size);
 
+                                            }else {
+                                                runOnUiThread(new Runnable() {
+                                                    @Override
+                                                    public void run() {
+                                                        if (duQuDialog!=null){
+                                                            duQuDialog.setClose();
+                                                            duQuDialog.setTiShi("        解析Xml失败...");
+                                                        }
+
+                                                    }
+                                                });
                                             }
 //                                            else {
 //                                                runOnUiThread(new Runnable() {
@@ -1388,7 +1440,7 @@ public class SheZhiActivity extends Activity implements View.OnClickListener, Vi
 
                     zhuJiBeanHDao.deleteAll();
                     zhuJiBeanHDao.insert(zhaoPianBean);
-                    getOkHttpClient();
+                    getOkHttpClient(1);
                 }catch (Exception e){
 
                     Log.d("WebsocketPushMsg", e.getMessage()+"gggg");
@@ -1398,7 +1450,7 @@ public class SheZhiActivity extends Activity implements View.OnClickListener, Vi
     }
 
     //首先登录-->获取所有主机-->创建或者删除或者更新门禁
-    public void getOkHttpClient(){
+    public void getOkHttpClient(final int type){
         zhuJiBeanH=zhuJiBeanHDao.loadAll().get(0);
         okHttpClient = new OkHttpClient.Builder()
                 .writeTimeout(TIMEOUT, TimeUnit.MILLISECONDS)
@@ -1451,7 +1503,13 @@ public class SheZhiActivity extends Activity implements View.OnClickListener, Vi
                 if (i==0){
                     //登录成功,后续的连接操作因为cookies 原因,要用 MyApplication.okHttpClient
                     MyApplication.okHttpClient=okHttpClient;
-                    link_huiqumenjin();
+                    if (type==1){
+                        link_huiqumenjin();
+                    }else {
+
+                        link_getKu();
+                    }
+
 
 
                 }
@@ -1466,6 +1524,7 @@ public class SheZhiActivity extends Activity implements View.OnClickListener, Vi
     @Override
     protected void onResume() {
         super.onResume();
+        if (zhuJiBeanHDao.loadAll().size()>0)
         zhuJiBeanH=zhuJiBeanHDao.loadAll().get(0);
     }
 
@@ -1685,6 +1744,8 @@ public class SheZhiActivity extends Activity implements View.OnClickListener, Vi
                 stringBuilder.append("上传图片失败记录:")
                         .append("ID").append(subject.getId()).append("姓名:")
                         .append(subject.getName())
+                        .append("原因:")
+                        .append(e.getMessage())
                         .append("时间:")
                         .append(DateUtils.time(System.currentTimeMillis()+""))
                         .append("\n");
@@ -1711,22 +1772,34 @@ public class SheZhiActivity extends Activity implements View.OnClickListener, Vi
                     Log.d("AllConnects图片上传", "传照片" + ss);
                     int ii=0;
                     JsonObject jsonObject = GsonUtil.parse(ss).getAsJsonObject();
+                    if (jsonObject.get("code").getAsInt()==0){
+
+
                     JsonObject jo=jsonObject.get("data").getAsJsonObject();
                     ii=jo.get("id").getAsInt();
-                    if (ii!=0){
+
+                    if (ii!=0) {
                         // ii 照片id
-                        if (id==-1){
+                        if (id == -1) {
                             //新增
-                            link_addPiLiangRenYuan(MyApplication.okHttpClient,subject,ii);
-                        }
-                        else {
+                            link_addPiLiangRenYuan(MyApplication.okHttpClient, subject, ii);
+                        } else {
                             //更新
-                            link_XiuGaiRenYuan(MyApplication.okHttpClient,subject,ii,id);
+                            link_XiuGaiRenYuan(MyApplication.okHttpClient, subject, ii, id);
                         }
 
+                    }
+
                     }else {
-                        stringBuilder.append("上传图片失败记录:").append("ID").append(subject.getId()).append("姓名:")
-                                .append(subject.getName()).append("时间:").append(DateUtils.time(System.currentTimeMillis()+"")).append("\n");
+                       // Log.d("SheZhiActivity333333", jsonObject.get("desc").getAsString());
+                        stringBuilder.append("上传图片失败记录:")
+                                .append("ID").append(subject.getId())
+                                .append("姓名:")
+                                .append(subject.getName())
+                                .append("原因:")
+                                .append(jsonObject.get("desc").getAsString())
+                                .append("时间:")
+                                .append(DateUtils.time(System.currentTimeMillis()+"")).append("\n");
 
                         if (id==-1){
                             //新增
@@ -1737,8 +1810,14 @@ public class SheZhiActivity extends Activity implements View.OnClickListener, Vi
                         }
                     }
                 } catch (Exception e) {
-                    stringBuilder.append("上传图片失败记录:").append("ID").append(subject.getId()).append("姓名:")
-                            .append(subject.getName()).append("时间:").append(DateUtils.time(System.currentTimeMillis()+"")).append("\n");
+                    stringBuilder.append("上传图片失败记录:").append("ID").
+                            append(subject.getId())
+                            .append("姓名:")
+                            .append(subject.getName())
+                            .append("原因:")
+                            .append(e.getMessage())
+                            .append("时间:").
+                            append(DateUtils.time(System.currentTimeMillis()+"")).append("\n");
                     if (id==-1){
                         //新增
                         link_addPiLiangRenYuan(MyApplication.okHttpClient,subject,0);
@@ -2004,7 +2083,7 @@ public class SheZhiActivity extends Activity implements View.OnClickListener, Vi
                 synchronized (subject){
                     subject.notify();
                 }
-                Log.d("AllConnects批量新增", "请求失败"+e.getMessage());
+              //  Log.d("AllConnects批量新增", "请求失败"+e.getMessage());
             }
 
             @Override
@@ -2015,7 +2094,7 @@ public class SheZhiActivity extends Activity implements View.OnClickListener, Vi
 
                     ResponseBody body = response.body();
                     String ss=body.string().trim();
-                    	Log.d("AllConnects批量新增", "批量创建人员"+ss);
+                    //	Log.d("AllConnects批量新增", "批量创建人员"+ss);
                     JsonObject jsonObject= GsonUtil.parse(ss).getAsJsonObject();
                     if (jsonObject.get("code").getAsInt()!=0){
                         stringBuilder.append("创建人员失败记录:").append("ID").append(subject.getId()).append("姓名:")
@@ -2036,6 +2115,118 @@ public class SheZhiActivity extends Activity implements View.OnClickListener, Vi
         });
     }
 
+    //获取全部库
+    private void link_getKu(){
+        final MediaType JSON=MediaType.parse("application/json; charset=utf-8");
+//        OkHttpClient okHttpClient=  new OkHttpClient.Builder()
+//                .writeTimeout(TIMEOUT, TimeUnit.MILLISECONDS)
+//                .connectTimeout(TIMEOUT, TimeUnit.MILLISECONDS)
+//                .readTimeout(TIMEOUT, TimeUnit.MILLISECONDS)
+//			//	.cookieJar(new CookiesManager())
+//                .retryOnConnectionFailure(true)
+//                .build();
+
+//        RequestBody body = new FormBody.Builder()
+//                .add("accountId",id)
+//                .add("machineCode",Utils.getSerialNumber(this)==null?Utils.getIMSI():Utils.getSerialNumber(this))
+//                .build();
+        Request.Builder requestBuilder = new Request.Builder()
+                .header("Content-Type", "application/json")
+                .get()
+                .url(zhuJiBeanH.getHostUrl()+"/mobile-admin/subjects");
+
+        // step 3：创建 Call 对象
+        Call call = okHttpClient.newCall(requestBuilder.build());
+
+        //step 4: 开始异步请求
+        call.enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                Log.d("AllConnects", "请求失败"+e.getMessage());
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+              //  Log.d("AllConnects", "请求成功"+call.request().toString());
+                //获得返回体
+                try{
+                    ResponseBody body = response.body();
+                    String ss=body.string().trim();
+                    Log.d("AllConnects", "获取库"+ss);
+                    JsonObject jsonObject= GsonUtil.parse(ss).getAsJsonObject();
+                  //  BuMenBeans zhaoPianBean = gson.fromJson(jsonObject, BuMenBeans.class);
+                    JsonArray jsonArray=jsonObject.get("data").getAsJsonArray();
+                   // Log.d("SheZhiActivity5555", "jsonArray.size():" + jsonArray.size());
+                    for (JsonElement j : jsonArray ){
+                        Thread.sleep(20);
+                        link_shanchuKu(j.getAsJsonObject().get("id").getAsString());
+                    }
+
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            TastyToast.makeText(SheZhiActivity.this, "删除人脸库成功", TastyToast.LENGTH_SHORT, TastyToast.INFO).show();
+                        }
+                    });
+
+                }catch (Exception e){
+
+                    Log.d("WebsocketPushMsg", e.getMessage()+"kkkkk");
+                }
+            }
+        });
+    }
+
+    //删除全部库
+    private void link_shanchuKu(String id){
+      //  Log.d("SheZhiActivity5555", id);
+        final MediaType JSON=MediaType.parse("application/json; charset=utf-8");
+//        OkHttpClient okHttpClient=  new OkHttpClient.Builder()
+//                .writeTimeout(TIMEOUT, TimeUnit.MILLISECONDS)
+//                .connectTimeout(TIMEOUT, TimeUnit.MILLISECONDS)
+//                .readTimeout(TIMEOUT, TimeUnit.MILLISECONDS)
+//			//	.cookieJar(new CookiesManager())
+//                .retryOnConnectionFailure(true)
+//                .build();
+
+//        RequestBody body = new FormBody.Builder()
+//                .add("accountId",id)
+//                .add("machineCode",Utils.getSerialNumber(this)==null?Utils.getIMSI():Utils.getSerialNumber(this))
+//                .build();
+        Request.Builder requestBuilder = new Request.Builder()
+               // .header("Content-Type", "application/json")
+                .delete()
+                .url(zhuJiBeanH.getHostUrl()+"/subject/"+id);
+
+        // step 3：创建 Call 对象
+        Call call = okHttpClient.newCall(requestBuilder.build());
+
+        //step 4: 开始异步请求
+        call.enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                Log.d("AllConnects", "请求失败"+e.getMessage());
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                Log.d("AllConnects", "请求成功"+call.request().toString());
+                //获得返回体
+                try{
+
+                    ResponseBody body = response.body();
+                    String ss=body.string().trim();
+                    Log.d("AllConnects", "删除库"+ss);
+                  //  JsonObject jsonObject= GsonUtil.parse(ss).getAsJsonObject();
+
+
+                }catch (Exception e){
+
+                    Log.d("WebsocketPushMsg", e.getMessage()+"kkkkk");
+                }
+            }
+        });
+    }
 
     private void link_huiqumenjin(){
         final MediaType JSON=MediaType.parse("application/json; charset=utf-8");

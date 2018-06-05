@@ -12,6 +12,8 @@
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
 
+
+
     <!-- Required  一些系统要求的权限，如访问网络等 -->
     <uses-permission android:name="com.ruitong.huiyi3.permission.JPUSH_MESSAGE" />
     <uses-permission android:name="android.permission.RECEIVE_USER_PRESENT" />

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:background="@drawable/bg11"
+    android:background="@drawable/bgbgbg"
     android:layout_height="match_parent">
 
     <ScrollView
@@ -18,7 +18,7 @@
                 android:id="@+id/bt1"
                 android:layout_width="150dp"
                 android:layout_height="56dp"
-                android:visibility="gone"
+                                                                                                       android:visibility="gone"
                 android:layout_marginTop="20dp"
                 android:background="@drawable/zidonghuoqu1"
                 android:text="设置摄像头IP"
@@ -92,7 +92,7 @@
                 android:id="@+id/bt8"
                 android:layout_marginTop="20dp"
                 android:textSize="16sp"
-                android:text="文字设置"
+                android:text="清空全部人脸库"
                 android:textColor="@color/lanse33"
                 android:background="@drawable/zidonghuoqu2"
                 android:layout_width="150dp"
