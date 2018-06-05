@@ -9,6 +9,9 @@ import android.os.Environment;
 import android.os.SystemClock;
 import android.util.Log;
 
+import com.arialyy.annotations.Download;
+import com.arialyy.aria.core.Aria;
+import com.arialyy.aria.core.download.DownloadTask;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.Target;
 import com.ruitong.huiyi3.MyApplication;
@@ -85,6 +88,7 @@ public class MyReceiver extends BroadcastReceiver {
 
 	@Override
 	public void onReceive(Context context, Intent intent) {
+		Aria.download(this).register();
 		try {
 			stringBuilder=new StringBuilder();
 			baoCunBeanDao = MyApplication.myApplication.getDaoSession().getBaoCunBeanDao();
@@ -136,14 +140,34 @@ public class MyReceiver extends BroadcastReceiver {
 					intent2.putExtra("bgPath",renShu.getContent().getBottemImageUrl());
 					context.sendBroadcast(intent2);
 				}
+				if (jsonObject.get("title").getAsString().equals("zip包下载地址")){
 
+					String path =baoCunBean.getHoutaiDiZhi()+jsonObject.get("content").getAsString();
+					Aria.download(MyReceiver.this)
+							.load(path)     //读取下载地址
+							.setFilePath(Environment.getExternalStorageDirectory().getAbsolutePath()+File.separator+"xxccc.zip")
+							.start();   //启动下载
+
+				}
 				Gson gson=new Gson();
 				TuiSongBean renShu=gson.fromJson(jsonObject,TuiSongBean.class);
 				//1 新增 2修改//3是删除
 				switch (renShu.getTitle()){
 					case "主机管理":
 						//先从老黄哪里拿主机数据。
-						link_getHouTaiZhuJi(renShu.getContent().getId(),context,renShu.getContent().getStatus());
+
+						String path= Environment.getExternalStorageDirectory()+File.separator+"ruitongzip";
+						File destDir = new File(path);
+						if (!destDir.exists()) {
+							Log.d(TAG, "destDir.mkdirs():" + destDir.mkdirs());
+						}
+
+						String path2 ="http://192.168.2.163:8080/upload/zip/10000030/20180605.zip";
+						Aria.download(MyReceiver.this)
+								.load(path2)     //读取下载地址
+								.setFilePath(path+File.separator+"zzzccc.zip")
+								.start();
+						//	link_getHouTaiZhuJi(renShu.getContent().getId(),context,renShu.getContent().getStatus());
 						break;
 					case "设备管理":
 						//先从老黄哪里拿门禁数据。
@@ -290,6 +314,32 @@ public class MyReceiver extends BroadcastReceiver {
 			}
 		});
 	}
+
+
+	//在这里处理任务执行中的状态，如进度进度条的刷新
+	@Download.onTaskRunning
+	protected void running(DownloadTask task) {
+//		if(task.getDownloadUrl()){
+//		//	可以通过url判断是否是指定任务的回调
+//
+//		}
+		if (task.getEntity().getUrl().equals())
+		int p = task.getPercent();	//任务进度百分比
+
+		String speed = task.getConvertSpeed();	//转换单位后的下载速度，单位转换需要在配置文件中打开
+		Log.d("ghghghghgg", "p:" + p+"  "+speed);
+	//	String speed1 = task.getSpeed(); //原始byte长度速度
+	}
+
+	@Download.onTaskComplete
+	void taskComplete(DownloadTask task) {
+		//在这里处理任务完成的状态
+		Log.d(TAG, "task.isRunning():" + task.isRunning());
+	//	task.cancel();
+		Aria.download(MyReceiver.this).register().removeAllTask(true);
+
+	}
+
 
 	//从老黄后台拿门禁信息
 	private void link_getHouTaiMenJin(int id, final Context context, final int status){

@@ -8,6 +8,7 @@ import android.os.Environment;
 import android.support.multidex.MultiDexApplication;
 import android.util.Log;
 
+import com.arialyy.aria.core.Aria;
 import com.ruitong.huiyi3.beans.DaoMaster;
 import com.ruitong.huiyi3.beans.DaoSession;
 import com.ruitong.huiyi3.cookies.CookiesManager;
@@ -41,7 +42,7 @@ public class MyApplication extends MultiDexApplication {
 	@Override
 	public void onCreate() {
 		super.onCreate();
-
+		Aria.init(this);
 				try {
 					setDatabase();
 			//	JPushInterface.init(getApplicationContext());
