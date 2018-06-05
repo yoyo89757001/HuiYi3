@@ -13,8 +13,6 @@ import android.content.res.Configuration;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.Handler;
-import android.os.Message;
 import android.os.SystemClock;
 import android.util.Log;
 import android.util.Xml;
@@ -37,14 +35,14 @@ import com.ruitong.huiyi3.dialog.HuanYingYuDialog;
 import com.ruitong.huiyi3.dialog.MoBanDialog;
 import com.ruitong.huiyi3.dialog.ShanChuKuDialog;
 import com.ruitong.huiyi3.dialog.XiuGaiHouTaiDialog;
-import com.ruitong.huiyi3.dialog.XiuGaiWenZiDialog;
+
 import com.ruitong.huiyi3.dialog.XiuGaiXinXiDialog;
 import com.ruitong.huiyi3.dialog.YuLanDialog;
 import com.ruitong.huiyi3.dialog.YuYingDialog;
 import com.ruitong.huiyi3.utils.DateUtils;
 import com.ruitong.huiyi3.utils.FileUtil;
 import com.ruitong.huiyi3.utils.GsonUtil;
-import com.ruitong.huiyi3.utils.UnZipfile;
+
 import com.ruitong.huiyi3.utils.Utils;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;

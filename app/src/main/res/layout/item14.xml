@@ -11,16 +11,16 @@
         android:layout_width="188dp"
         android:id="@+id/touxiang"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="194dp"
+        android:layout_marginTop="184dp"
         android:scaleType="fitXY"
-        android:layout_height="280dp" />
+        android:layout_height="230dp" />
 
 
     <LinearLayout
         android:orientation="vertical"
         android:layout_centerHorizontal="true"
         android:layout_below="@+id/touxiang"
-        android:layout_marginTop="80dp"
+        android:layout_marginTop="60dp"
         android:gravity="center"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -38,7 +38,7 @@
             android:textSize="32sp"
             android:textColor="@color/colorBar_bg2"
             android:id="@+id/huanyinyu"
-            android:layout_marginTop="6dp"
+            android:layout_marginTop="2dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 
