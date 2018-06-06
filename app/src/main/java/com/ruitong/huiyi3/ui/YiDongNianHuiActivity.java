@@ -67,6 +67,8 @@ import com.ruitong.huiyi3.beans.ShiShiRenShuBean;
 import com.ruitong.huiyi3.beans.TanChuangBean;
 import com.ruitong.huiyi3.beans.WBBean;
 import com.ruitong.huiyi3.beans.WeiShiBieBean;
+import com.ruitong.huiyi3.beans.ZhuJiBeanH;
+import com.ruitong.huiyi3.beans.ZhuJiBeanHDao;
 import com.ruitong.huiyi3.interfaces.RecytviewCash;
 import com.ruitong.huiyi3.service.AlarmReceiver;
 import com.ruitong.huiyi3.tts.control.InitConfig;
@@ -173,14 +175,15 @@ public class YiDongNianHuiActivity extends Activity implements RecytviewCash {
 	private BenDiRenShuBeanDao benDiRenShuBeanDao=null;
 	private QianDaoIdDao qianDaoIdDao=null;
 	private String huiYiName="", jubanGongSi="",huiyiZhuTi="";
-	private String tiHuan=null;
-	private HuanYinYuBeanDao huanYinYuBeanDao=MyApplication.getAppContext().getDaoSession().getHuanYinYuBeanDao();
+	//private String tiHuan=null;
+	//private HuanYinYuBeanDao huanYinYuBeanDao=MyApplication.getAppContext().getDaoSession().getHuanYinYuBeanDao();
 	private BenDiQianDaoDao benDiQianDaoDao=null;
 	private List<BenDiMBbean> mbLeiXingBeanList=null;
 	private BenDiMBbeanDao benDiMBbeanDao=null;
-
 	private LinearLayout rootLayout;
 	private LinearLayout rootLayout2;
+	private String touxiangPath=null;
+	private ZhuJiBeanHDao zhuJiBeanHDao=null;
 
 
 	public  Handler handler=new Handler(new Handler.Callback() {
@@ -238,7 +241,6 @@ public class YiDongNianHuiActivity extends Activity implements RecytviewCash {
 			if (msg.arg1==1){
 
 				//view1.setVisibility(View.GONE);
-
 
 				ShiBieBean.PersonBeanSB dataBean= (ShiBieBean.PersonBeanSB) msg.obj;
 				try {
@@ -301,7 +303,7 @@ public class YiDongNianHuiActivity extends Activity implements RecytviewCash {
 
 											Glide.with(YiDongNianHuiActivity.this)
 													//	.load(R.drawable.vvv)
-													.load(bean.getTouxiang())
+													.load(touxiangPath+bean.getTouxiang())
 													//	.load(zhuji+item.getTouxiang())
 													//.apply(myOptions)
 													.transform(new GlideRoundTransform(MyApplication.getAppContext(), 20))
@@ -360,7 +362,7 @@ public class YiDongNianHuiActivity extends Activity implements RecytviewCash {
 
 											Glide.with(YiDongNianHuiActivity.this)
 													//	.load(R.drawable.vvv)
-													.load(bean.getTouxiang())
+													.load(touxiangPath+bean.getTouxiang())
 													//	.load(zhuji+item.getTouxiang())
 													//.apply(myOptions)
 													.transform(new GlideRoundTransform(MyApplication.getAppContext(), 20))
@@ -418,7 +420,7 @@ public class YiDongNianHuiActivity extends Activity implements RecytviewCash {
 
 											Glide.with(YiDongNianHuiActivity.this)
 													//	.load(R.drawable.vvv)
-													.load(bean.getTouxiang())
+													.load(touxiangPath+bean.getTouxiang())
 													//	.load(zhuji+item.getTouxiang())
 													//.apply(myOptions)
 													.transform(new GlideRoundTransform(MyApplication.getAppContext(), 20))
@@ -476,7 +478,7 @@ public class YiDongNianHuiActivity extends Activity implements RecytviewCash {
 
 											Glide.with(YiDongNianHuiActivity.this)
 													//	.load(R.drawable.vvv)
-													.load(bean.getTouxiang())
+													.load(touxiangPath+bean.getTouxiang())
 													//	.load(zhuji+item.getTouxiang())
 													//.apply(myOptions)
 													.transform(new GlideRoundTransform(MyApplication.getAppContext(), 20))
@@ -534,7 +536,7 @@ public class YiDongNianHuiActivity extends Activity implements RecytviewCash {
 
 											Glide.with(YiDongNianHuiActivity.this)
 													//	.load(R.drawable.vvv)
-													.load(bean.getTouxiang())
+													.load(touxiangPath+bean.getTouxiang())
 													//	.load(zhuji+item.getTouxiang())
 													//.apply(myOptions)
 													.transform(new GlideRoundTransform(MyApplication.getAppContext(), 20))
@@ -592,7 +594,7 @@ public class YiDongNianHuiActivity extends Activity implements RecytviewCash {
 
 											Glide.with(YiDongNianHuiActivity.this)
 													//	.load(R.drawable.vvv)
-													.load(bean.getTouxiang())
+													.load(touxiangPath+bean.getTouxiang())
 													//	.load(zhuji+item.getTouxiang())
 													//.apply(myOptions)
 													//.transform(new GlideRoundTransform(MyApplication.getAppContext(), 20))
@@ -650,7 +652,7 @@ public class YiDongNianHuiActivity extends Activity implements RecytviewCash {
 //
 											Glide.with(YiDongNianHuiActivity.this)
 													//	.load(R.drawable.vvv)
-													.load(bean.getTouxiang())
+													.load(touxiangPath+bean.getTouxiang())
 													//	.load(zhuji+item.getTouxiang())
 													//.apply(myOptions)
 													//.transform(new GlideRoundTransform(MyApplication.getAppContext(), 20))
@@ -709,7 +711,7 @@ public class YiDongNianHuiActivity extends Activity implements RecytviewCash {
 
 											Glide.with(YiDongNianHuiActivity.this)
 													//	.load(R.drawable.vvv)
-													.load(bean.getTouxiang())
+													.load(touxiangPath+bean.getTouxiang())
 													//	.load(zhuji+item.getTouxiang())
 													//.apply(myOptions)
 													//.transform(new GlideRoundTransform(MyApplication.getAppContext(), 20))
@@ -768,7 +770,7 @@ public class YiDongNianHuiActivity extends Activity implements RecytviewCash {
 
 											Glide.with(YiDongNianHuiActivity.this)
 													//	.load(R.drawable.vvv)
-													.load(bean.getTouxiang())
+													.load(touxiangPath+bean.getTouxiang())
 													//	.load(zhuji+item.getTouxiang())
 													//.apply(myOptions)
 													//.transform(new GlideRoundTransform(MyApplication.getAppContext(), 20))
@@ -827,7 +829,7 @@ public class YiDongNianHuiActivity extends Activity implements RecytviewCash {
 
 											Glide.with(YiDongNianHuiActivity.this)
 													//	.load(R.drawable.vvv)
-													.load(bean.getTouxiang())
+													.load(touxiangPath+bean.getTouxiang())
 													//	.load(zhuji+item.getTouxiang())
 													//.apply(myOptions)
 													.transform(new GlideRoundTransform(MyApplication.getAppContext(), 20))
@@ -886,7 +888,7 @@ public class YiDongNianHuiActivity extends Activity implements RecytviewCash {
 
 											Glide.with(YiDongNianHuiActivity.this)
 													//	.load(R.drawable.vvv)
-													.load(bean.getTouxiang())
+													.load(touxiangPath+bean.getTouxiang())
 													//	.load(zhuji+item.getTouxiang())
 													//.apply(myOptions)
 													.transform(new GlideRoundTransform(MyApplication.getAppContext(), 20))
@@ -945,7 +947,7 @@ public class YiDongNianHuiActivity extends Activity implements RecytviewCash {
 
 											Glide.with(YiDongNianHuiActivity.this)
 													//	.load(R.drawable.vvv)
-													.load(bean.getTouxiang())
+													.load(touxiangPath+bean.getTouxiang())
 													//	.load(zhuji+item.getTouxiang())
 													//.apply(myOptions)
 													.transform(new GlideRoundTransform(MyApplication.getAppContext(), 20))
@@ -1004,7 +1006,7 @@ public class YiDongNianHuiActivity extends Activity implements RecytviewCash {
 
 											Glide.with(YiDongNianHuiActivity.this)
 													//	.load(R.drawable.vvv)
-													.load(bean.getTouxiang())
+													.load(touxiangPath+bean.getTouxiang())
 													//	.load(zhuji+item.getTouxiang())
 													//.apply(myOptions)
 													.transform(new GlideRoundTransform(MyApplication.getAppContext(), 20))
@@ -1063,7 +1065,7 @@ public class YiDongNianHuiActivity extends Activity implements RecytviewCash {
 
 											Glide.with(YiDongNianHuiActivity.this)
 													//	.load(R.drawable.vvv)
-													.load(bean.getTouxiang())
+													.load(touxiangPath+bean.getTouxiang())
 													//	.load(zhuji+item.getTouxiang())
 													//.apply(myOptions)
 													.transform(new GlideRoundTransform(MyApplication.getAppContext(), 20))
@@ -1122,7 +1124,7 @@ public class YiDongNianHuiActivity extends Activity implements RecytviewCash {
 
 											Glide.with(YiDongNianHuiActivity.this)
 													//	.load(R.drawable.vvv)
-													.load(bean.getTouxiang())
+													.load(touxiangPath+bean.getTouxiang())
 													//	.load(zhuji+item.getTouxiang())
 													//.apply(myOptions)
 													.transform(new GlideRoundTransform(MyApplication.getAppContext(), 20))
@@ -1187,7 +1189,7 @@ public class YiDongNianHuiActivity extends Activity implements RecytviewCash {
 
 										Glide.with(YiDongNianHuiActivity.this)
 												//	.load(R.drawable.vvv)
-												.load(bean.getTouxiang())
+												.load(touxiangPath+bean.getTouxiang())
 												//	.load(zhuji+item.getTouxiang())
 												//.apply(myOptions)
 												//.transform(new GlideRoundTransform(MyApplication.getAppContext(), 20))
@@ -1201,7 +1203,6 @@ public class YiDongNianHuiActivity extends Activity implements RecytviewCash {
 										ll.height=(dw/12);
 										touxiang.setLayoutParams(ll);
 										touxiang.invalidate();
-
 
 										new Handler().post(new Runnable() {
 											@Override
@@ -1452,6 +1453,7 @@ public class YiDongNianHuiActivity extends Activity implements RecytviewCash {
 		qianDaoIdDao=MyApplication.myApplication.getDaoSession().getQianDaoIdDao();
 		//tanChuangBeanDao=MyApplication.myApplication.getDaoSession().getTanChuangBeanDao();
 		baoCunBeanDao = MyApplication.myApplication.getDaoSession().getBaoCunBeanDao();
+		zhuJiBeanHDao = MyApplication.myApplication.getDaoSession().getZhuJiBeanHDao();
 		baoCunBean = baoCunBeanDao.load(123456L);
 		if (baoCunBean == null) {
 			BaoCunBean baoCunBea = new BaoCunBean();
@@ -1524,12 +1526,14 @@ public class YiDongNianHuiActivity extends Activity implements RecytviewCash {
 		link_bgbg.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				if (baoCunBean.getHoutaiDiZhi()!=null && !baoCunBean.getHoutaiDiZhi().equals("") && baoCunBean.getZhanghuId()!=null && !baoCunBean.getZhanghuId().equals("") && baoCunBean.getHuiyiId()!=null && !baoCunBean.getHuiyiId().equals("") ){
+				if (baoCunBean.getHoutaiDiZhi()!=null && !baoCunBean.getHoutaiDiZhi().equals("")
+						&& baoCunBean.getZhanghuId()!=null && !baoCunBean.getZhanghuId().equals("")
+						&& baoCunBean.getZhanhuiId()!=null && !baoCunBean.getZhanhuiId().equals("") ){
 					//link_login();
 					link_bg();
 					link_shishi_renshu();
 				}else {
-					TastyToast.makeText(YiDongNianHuiActivity.this,"请先设置账户和会议id",TastyToast.LENGTH_SHORT,TastyToast.INFO).show();
+					TastyToast.makeText(YiDongNianHuiActivity.this,"请先设置账户id",TastyToast.LENGTH_SHORT,TastyToast.INFO).show();
 				}
 
 			}
@@ -1660,8 +1664,7 @@ public class YiDongNianHuiActivity extends Activity implements RecytviewCash {
 //			//link_login();
 //		}
 
-		zhanghuID=baoCunBean.getZhanghuId();
-		huiyiID=baoCunBean.getHuiyiId();
+
 
 
 //		File logFile = new File(Environment.getExternalStorageDirectory().getAbsolutePath()+ File.separator +"qiandao.txt");
@@ -2675,19 +2678,19 @@ public class YiDongNianHuiActivity extends Activity implements RecytviewCash {
 		}
 	}
 
-	private void link_fasong(String discernPhoto,int timestamp,long id,String name,String weizhi) {
+	private void link_fasong(int timestamp,String id) {
 		//Log.d(TAG, DateUtils.time(timestamp + "000"));
 		OkHttpClient okHttpClient= MyApplication.getOkHttpClient();
 		RequestBody body = new FormBody.Builder()
-				.add("accountId",baoCunBean.getZhanghuId())
-                .add("snapshotPhoto","")
-                .add("discernPhoto",discernPhoto)
-				.add("timestamp2",DateUtils.time(timestamp+"000"))
+				//.add("accountId",baoCunBean.getZhanghuId())
+               // .add("snapshotPhoto","")
+                 .add("exhibition_id",baoCunBean.getZhanhuiId())
+				.add("timestamp",DateUtils.time(timestamp+"000"))
 				.add("subjectId",id+"")
-				.add("subjectName",name)
-				.add("conferenceName",huiYiName)
-				.add("screenPosition",weizhi)
-				.add("conference_id",baoCunBean.getHuiyiId())
+				.add("screenId",baoCunBean.getGonggao())
+				//.add("conferenceName",huiYiName)
+			//	.add("screenPosition",weizhi)
+				.add("conference_id",baoCunBean.getZhanghuId())
 				.build();
 		Request.Builder requestBuilder = new Request.Builder()
 				//.header("Content-Type", "application/json")
@@ -2761,64 +2764,6 @@ public class YiDongNianHuiActivity extends Activity implements RecytviewCash {
 	@Override
 	protected void onResume() {
 
-
-		final List<String> av=new ArrayList<>();
-		av.add("http://imgsrc.baidu.com/imgad/pic/item/ac4bd11373f0820207282ceb41fbfbedaa641baf.jpg");
-		av.add("http://imgsrc.baidu.com/imgad/pic/item/0eb30f2442a7d933258223eea74bd11373f00101.jpg");
-		av.add("http://imgsrc.baidu.com/imgad/pic/item/500fd9f9d72a60596f8f2f322334349b033bba7f.jpg");
-		av.add("http://pic1.win4000.com/wallpaper/5/532931489604e.jpg");
-		av.add("http://imgsrc.baidu.com/imgad/pic/item/d788d43f8794a4c273cb6b0804f41bd5ad6e392c.jpg");
-		av.add("http://imgsrc.baidu.com/imgad/pic/item/7dd98d1001e93901750ba62d71ec54e736d19693.jpg");
-
-		final List<String> bumen=new ArrayList<>();
-		bumen.add("观众");
-		bumen.add("媒体");
-		bumen.add("员工");
-		bumen.add("工作人员");
-		bumen.add("观众");
-		bumen.add("工作人员");
-		bumen.add("媒体");
-		bumen.add("员工");
-		bumen.add("工作人员");
-
-
-		new Thread(new Runnable() {
-			@Override
-			public void run() {
-				try {
-					Thread.sleep(2000);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-
-				while (pp){
-					c++;
-					if (c==50){
-						pp=false;
-					}
-
-					try {
-						Thread.sleep(500);
-					} catch (InterruptedException e) {
-						e.printStackTrace();
-					}
-					ShiBieBean.PersonBeanSB sb=new ShiBieBean.PersonBeanSB();
-					sb.setAvatar(av.get(getNum(6)));
-					sb.setId((long) getNum(88));
-					//Log.d(TAG, c+"");
-					sb.setName("测试");
-					sb.setDepartment(bumen.get(getNum(8)));
-
-					Message message2 = Message.obtain();
-					message2.arg1 = 1;
-					message2.obj = sb;
-					handler.sendMessage(message2);
-
-				}
-
-			}
-		}).start();
-
 		if (netWorkStateReceiver == null) {
 			netWorkStateReceiver = new NetWorkStateReceiver();
 			IntentFilter filter = new IntentFilter();
@@ -2827,10 +2772,26 @@ public class YiDongNianHuiActivity extends Activity implements RecytviewCash {
 		}
 
 		baoCunBean=baoCunBeanDao.load(123456L);
-		if (baoCunBean.getHoutaiDiZhi()!=null && !baoCunBean.getHoutaiDiZhi().equals("") && baoCunBean.getZhanghuId()!=null && !baoCunBean.getZhanghuId().equals("") && baoCunBean.getHuiyiId()!=null && !baoCunBean.getHuiyiId().equals("")){
+		if (baoCunBean.getHoutaiDiZhi()!=null && !baoCunBean.getHoutaiDiZhi().equals("")
+				&& baoCunBean.getZhanghuId()!=null && !baoCunBean.getZhanghuId().equals("")
+				&& baoCunBean.getZhanhuiId()!=null && !baoCunBean.getZhanhuiId().equals("")){
 			link_bg();
 			link_shishi_renshu();
 		}
+
+		List<ZhuJiBeanH> hh=zhuJiBeanHDao.loadAll();
+		if (hh!=null && hh.size()>0){
+			touxiangPath=hh.get(0).getHostUrl();
+			if (touxiangPath==null || touxiangPath.equals("")){
+				touxiangPath="http://www.192.168.1.1";
+			}
+		}else {
+			touxiangPath="http://www.192.168.1.1";
+		}
+
+		zhanghuID=baoCunBean.getZhanghuId();
+		huiyiID=baoCunBean.getZhanhuiId();
+
 
 		if (baoCunBean!=null && baoCunBean.getZhujiDiZhi()!=null){
 			try {
@@ -2865,7 +2826,6 @@ public class YiDongNianHuiActivity extends Activity implements RecytviewCash {
 		}
 
 		super.onResume();
-
 
 	}
 
@@ -3063,7 +3023,7 @@ public class YiDongNianHuiActivity extends Activity implements RecytviewCash {
 					WBBean wbBean= gson.fromJson(jsonObject, WBBean.class);
 
 					if (wbBean.getType().equals("recognized")) { //识别
-					//	Log.d("WebsocketPushMsg", "识别出了");
+						Log.d("WebsocketPushMsg", "识别出了");
 
 						final ShiBieBean dataBean = gson.fromJson(jsonObject, ShiBieBean.class);
 
@@ -3077,9 +3037,9 @@ public class YiDongNianHuiActivity extends Activity implements RecytviewCash {
 										//QianDaoId qianDaoId=qianDaoIdDao.load(Long.parseLong(dataBean.getPerson().getJob_number()));
 
 										if (baoCunBean.getHoutaiDiZhi()!=null && !baoCunBean.getHoutaiDiZhi().equals("") && zhanghuID!=null && !zhanghuID.equals("") && huiyiID!=null && !huiyiID.equals("")){
-											link_fasong(dataBean.getPerson().getAvatar(),dataBean.getData().getTimestamp()
-													,dataBean.getPerson().getId(),dataBean.getPerson().getName(),dataBean.getScreen().getCamera_position());
-											link_getAll_User(dataBean.getPerson().getJob_number());
+											link_fasong(dataBean.getData().getTimestamp()
+													,dataBean.getPerson().getJob_number());
+											//link_getAll_User(dataBean.getPerson().getJob_number());
 
 //										switch (dataBean.getPerson().getDepartment()) {
 //											case "省公司领导":
@@ -3114,7 +3074,7 @@ public class YiDongNianHuiActivity extends Activity implements RecytviewCash {
 //												break;
 //										}
 //										qianDaoId.setIsQd(true);
-//										qianDaoIdDao.update(qianDaoId);
+//										qianDaoIdDao.update(qianDaoId)
 									}
 								//daoSession.insert(bean);
 								//Log.d(TAG, "111");
@@ -3181,7 +3141,6 @@ public class YiDongNianHuiActivity extends Activity implements RecytviewCash {
 				@Override
 				public void onClose(int i, String s, boolean b) {
 					isLianJie=false;
-
 					//Log.d("WebsocketPushMsg", "onClose"+i);
 					runOnUiThread( new Runnable() {
 						@Override
@@ -3213,6 +3172,18 @@ public class YiDongNianHuiActivity extends Activity implements RecytviewCash {
 
 				@Override
 				public void onError(Exception e) {
+					isLianJie=false;
+					//Log.d("WebsocketPushMsg", "onClose"+i);
+					runOnUiThread( new Runnable() {
+						@Override
+						public void run() {
+							if (!YiDongNianHuiActivity.this.isFinishing()){
+								wangluo.setVisibility(View.VISIBLE);
+								//wangluo.setText("连接识别主机失败,重连中...");
+							}
+
+						}
+					});
 					Log.d("WebsocketPushMsg9", "onError"+e.getMessage());
 
 				}
@@ -3663,14 +3634,13 @@ public class YiDongNianHuiActivity extends Activity implements RecytviewCash {
 	}
 
 	private void link_bg(){
-
 	//	final MediaType JSON=MediaType.parse("application/json; charset=utf-8");
 		OkHttpClient okHttpClient= MyApplication.getOkHttpClient();
 			//RequestBody requestBody = RequestBody.create(JSON, json);
 		RequestBody body = new FormBody.Builder()
-				.add("id",baoCunBean.getHuiyiId())
+				.add("id",baoCunBean.getZhanhuiId())
 				.build();
-
+		Log.d(TAG, baoCunBean.getZhanhuiId()+"获取后台会议信息");
 		Request.Builder requestBuilder = new Request.Builder()
 //				.header("Content-Type", "application/json")
 //				.header("user-agent","Koala Admin")
@@ -3706,13 +3676,14 @@ public class YiDongNianHuiActivity extends Activity implements RecytviewCash {
 					for (int i=0;i<si;i++){
 						if (DateUtils.datas(System.currentTimeMillis()+"").equals(DateUtils.datas(gg.get(i).getStartTime()+""))){
 
-							baoCunBean.setZhanhuiId(gg.get(i).getExhibitionId()+"");
+							//baoCunBean.setZhanhuiId(gg.get(i).getExhibitionId()+"");
 							baoCunBean.setZhanhuiBianMa(gg.get(i).getSubConferenceCode()+"");
 							baoCunBeanDao.update(baoCunBean);
 							break;
-
-
 						}
+
+					}
+					if (baoCunBean.getZhanhuiId()==null){
 
 					}
 
@@ -3731,7 +3702,7 @@ public class YiDongNianHuiActivity extends Activity implements RecytviewCash {
 		//RequestBody requestBody = RequestBody.create(JSON, json);
 		RequestBody body = new FormBody.Builder()
 				.add("accountId",baoCunBean.getZhanghuId())
-				.add("conferenceId",baoCunBean.getHuiyiId())
+			//	.add("conferenceId",baoCunBean.getHuiyiId())
 				.build();
 
 		Request.Builder requestBuilder = new Request.Builder()

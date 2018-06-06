@@ -26,7 +26,6 @@ import com.ruitong.huiyi3.beans.BaoCunBeanDao;
 import com.ruitong.huiyi3.beans.BenDiMBbean;
 import com.ruitong.huiyi3.beans.BenDiMBbeanDao;
 import com.ruitong.huiyi3.beans.BenDiQianDaoDao;
-import com.ruitong.huiyi3.beans.HuiYiInFoBean;
 import com.ruitong.huiyi3.beans.MOBan;
 import com.ruitong.huiyi3.beans.PiLiangBean;
 import com.ruitong.huiyi3.beans.RenYuanInFo;
@@ -109,11 +108,12 @@ public class MyReceiver extends BroadcastReceiver {
 	String path2=null;
 	private Context context;
 	private final String SDPATH = Environment.getExternalStorageDirectory().getAbsolutePath()+File.separator+"ruitongzip";
+	public static boolean isDW=true;
 
 	@Override
 	public void onReceive(Context context, Intent intent) {
 		this.context=context;
-		Aria.download(this).register();
+		Aria.download(MyReceiver.this).register();
 		try {
 			stringBuilder=new StringBuilder();
 			stringBuilder2=new StringBuilder();
@@ -133,6 +133,7 @@ public class MyReceiver extends BroadcastReceiver {
 				//send the Registration Id to your server...
 
 			} else if (JPushInterface.ACTION_MESSAGE_RECEIVED.equals(intent.getAction())) {
+
 
 				Logger.d(TAG, "[MyReceiver] 接收到推送下来的自定义消息: " + bundle.getString(JPushInterface.EXTRA_MESSAGE));
 
@@ -167,12 +168,27 @@ public class MyReceiver extends BroadcastReceiver {
 					context.sendBroadcast(intent2);
 				}
 				if (jsonObject.get("title").getAsString().equals("zip包下载地址")){
+					isDW=true;
+					Thread.sleep(1500);
 
-					String path =baoCunBean.getHoutaiDiZhi()+jsonObject.get("content").getAsString();
-					Aria.download(MyReceiver.this)
-							.load(path)     //读取下载地址
-							.setFilePath(Environment.getExternalStorageDirectory().getAbsolutePath()+File.separator+"xxccc.zip")
-							.start();   //启动下载
+					baoCunBean.setZhanhuiId(jsonObject.get("content").getAsJsonObject().get("id").getAsInt()+"");
+					baoCunBean.setGonggao(jsonObject.get("content").getAsJsonObject().get("screenId").getAsInt()+"");
+					baoCunBeanDao.update(baoCunBean);
+
+					path2 =baoCunBean.getHoutaiDiZhi()+jsonObject.get("content").getAsJsonObject().get("zip_url").getAsString();
+
+					File file = new File(SDPATH);
+					if (!file.exists()) {
+						Log.d(TAG, "file.mkdirs():" + file.mkdirs());
+					}
+					if (isDW) {
+						isDW=false;
+
+						Aria.download(MyReceiver.this)
+								.load(path2)     //读取下载地址
+								.setFilePath(SDPATH + File.separator + System.currentTimeMillis() + ".zip")
+								.start();
+					}
 
 				}
 				Gson gson=new Gson();
@@ -181,20 +197,7 @@ public class MyReceiver extends BroadcastReceiver {
 				switch (renShu.getTitle()){
 					case "主机管理":
 						//先从老黄哪里拿主机数据。
-
-
-						File file = new File(SDPATH);
-						if (!file.exists()) {
-							Log.d(TAG, "file.mkdirs():" + file.mkdirs());
-						}
-
-						 path2 ="http://192.168.2.161:8080/upload/zip/10000030/20180605.zip";
-						Aria.download(this).register().removeAllTask(false);
-						Aria.download(MyReceiver.this)
-								.load(path2)     //读取下载地址
-								.setFilePath(SDPATH+File.separator+System.currentTimeMillis()+".zip")
-								.start();
-						//	link_getHouTaiZhuJi(renShu.getContent().getId(),context,renShu.getContent().getStatus());
+						link_getHouTaiZhuJi(renShu.getContent().getId(),context,renShu.getContent().getStatus());
 						break;
 					case "设备管理":
 						//先从老黄哪里拿门禁数据。
@@ -244,7 +247,7 @@ public class MyReceiver extends BroadcastReceiver {
 				Logger.d(TAG, "[MyReceiver] Unhandled intent - " + intent.getAction());
 			}
 		} catch (Exception e){
-			Logger.d(TAG, "[MyReceiver] 抛出了异常");
+			Logger.d(TAG, "[MyReceiver] 抛出了异常"+e.getMessage());
 		}
 	}
 
@@ -345,6 +348,7 @@ public class MyReceiver extends BroadcastReceiver {
 	//在这里处理任务执行中的状态，如进度进度条的刷新
 	@Download.onTaskRunning
 	protected void running(DownloadTask task) {
+		isDW=false;
 //		if(task.getDownloadUrl()){-
 //		//	可以通过url判断是否是指定任务的回调
 //		}
@@ -358,9 +362,9 @@ public class MyReceiver extends BroadcastReceiver {
 	//	String speed1 = task.getSpeed(); //原始byte长度速度
 	}
 
-
 	@Download.onTaskComplete
 	void taskComplete(DownloadTask task) {
+		isDW=true;
 		//在这里处理任务完成的状态
 		if (task.getEntity().getUrl().equals(path2)){
 			String ss=SDPATH+File.separator+(task.getTaskName().substring(0,task.getTaskName().length()-4));
@@ -372,13 +376,17 @@ public class MyReceiver extends BroadcastReceiver {
 			jieya(SDPATH+File.separator+task.getTaskName(),ss);
 
 			Log.d(TAG, "task.isRunning():" + task.isRunning()+ task.getTaskName());
+			if (baoCunBean!=null && baoCunBean.getZhanghuId()!=null)
+				link_uplodexiazai();
 		}
 		//提交下载完成状态
-		link_uplodexiazai();
-
 	}
+
+
+
 	@Download.onTaskStop
 	void taskFail(DownloadTask task) {
+		isDW=true;
 		//在这里失败的
 		if (task.getEntity().getUrl().equals(path2)){
 			showNotifictionIcon(context,0,"下载失败","人脸库下载失败");
@@ -537,12 +545,12 @@ public class MyReceiver extends BroadcastReceiver {
 							Log.d(TAG, "i:" + j);
 							while (true){
 								try {
-									Thread.sleep(80);
+									Thread.sleep(50);
 									t++;
 									filePath=trg+File.separator+subjectList.get(j).getId()+(subjectList.get(j).getPhoto().
 											substring(subjectList.get(j).getPhoto().length()-4,subjectList.get(j).getPhoto().length()));
 									File file=new File(filePath);
-									if (file.isFile()|| t==10000){
+									if (file.isFile()|| t==200){
 										t=0;
 										Log.d(TAG, "file.length():" + file.length()+"   t:"+t);
 										break;
@@ -1669,9 +1677,10 @@ public class MyReceiver extends BroadcastReceiver {
 		OkHttpClient okHttpClient= MyApplication.getOkHttpClient();
 		//RequestBody requestBody = RequestBody.create(JSON, json);
 		RequestBody body = new FormBody.Builder()
-				.add("id",baoCunBean.getHuiyiId())
+				.add("id",baoCunBean.getZhanhuiId())
+				.add("downloads","1")
 				.build();
-
+		Log.d(TAG, baoCunBean.getZhanhuiId()+"展会id");
 		Request.Builder requestBuilder = new Request.Builder()
 //				.header("Content-Type", "application/json")
 //				.header("user-agent","Koala Admin")
