@@ -1526,7 +1526,7 @@ public class SheZhiActivity extends Activity implements View.OnClickListener, Vi
         zhuJiBeanH=zhuJiBeanHDao.loadAll().get(0);
     }
 
-    //首先登录-->获取所有主机-->创建或者删除或者更新门禁
+    //首先登录
     public void getOkHttpClient2(final List<Subject> subjectList, final String trg){
         zhuJiBeanH=zhuJiBeanHDao.loadAll().get(0);
         okHttpClient = new OkHttpClient.Builder()
@@ -1536,18 +1536,6 @@ public class SheZhiActivity extends Activity implements View.OnClickListener, Vi
                 .cookieJar(new CookiesManager())
                 .retryOnConnectionFailure(true)
                 .build();
-
-//			JSONObject json = new JSONObject();
-//			try {
-//				json.put("username", "test@megvii.com");
-//				json.put("password", "123456");
-//			} catch (JSONException e) {
-//				e.printStackTrace();
-//			}
-
-
-        //创建一个RequestBody(参数1：数据类型 参数2传递的json串)
-        //	RequestBody requestBody = RequestBody.create(JSON, json.toString());
 
         RequestBody body = new FormBody.Builder()
                 .add("username", zhuJiBeanH.getUsername())

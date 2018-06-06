@@ -34,13 +34,16 @@ public class BaoCunBean {
     private int size1;
     private String guanggaojiMing;
     private String shiPingWeiZhi;
-    @Generated(hash = 1854052627)
+    private String zhanhuiId;
+    private String zhanhuiBianMa;
+    @Generated(hash = 1490855387)
     public BaoCunBean(@NotNull Long id, String shipingIP, String zhujiDiZhi,
-                      int moban, String tuisongDiZhi, String gonggao,
-                      boolean isShowMoshengren, boolean isShowShiPingLiu, boolean isHengOrShu,
-                      int yusu, int yudiao, int boyingren, String zhanghuId, String wenzi,
-                      int size, String touxiangzhuji, String houtaiDiZhi, String huiyiId,
-                      String wenzi1, int size1, String guanggaojiMing, String shiPingWeiZhi) {
+            int moban, String tuisongDiZhi, String gonggao,
+            boolean isShowMoshengren, boolean isShowShiPingLiu, boolean isHengOrShu,
+            int yusu, int yudiao, int boyingren, String zhanghuId, String wenzi,
+            int size, String touxiangzhuji, String houtaiDiZhi, String huiyiId,
+            String wenzi1, int size1, String guanggaojiMing, String shiPingWeiZhi,
+            String zhanhuiId, String zhanhuiBianMa) {
         this.id = id;
         this.shipingIP = shipingIP;
         this.zhujiDiZhi = zhujiDiZhi;
@@ -63,6 +66,8 @@ public class BaoCunBean {
         this.size1 = size1;
         this.guanggaojiMing = guanggaojiMing;
         this.shiPingWeiZhi = shiPingWeiZhi;
+        this.zhanhuiId = zhanhuiId;
+        this.zhanhuiBianMa = zhanhuiBianMa;
     }
     @Generated(hash = 1469853663)
     public BaoCunBean() {
@@ -199,5 +204,16 @@ public class BaoCunBean {
     public void setShiPingWeiZhi(String shiPingWeiZhi) {
         this.shiPingWeiZhi = shiPingWeiZhi;
     }
-
+    public String getZhanhuiId() {
+        return this.zhanhuiId;
+    }
+    public void setZhanhuiId(String zhanhuiId) {
+        this.zhanhuiId = zhanhuiId;
+    }
+    public String getZhanhuiBianMa() {
+        return this.zhanhuiBianMa;
+    }
+    public void setZhanhuiBianMa(String zhanhuiBianMa) {
+        this.zhanhuiBianMa = zhanhuiBianMa;
+    }
 }

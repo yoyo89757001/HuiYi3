@@ -1595,7 +1595,6 @@ public class YiDongNianHuiActivity extends Activity implements RecytviewCash {
 		recyclerView = (ScrollView) findViewById(R.id.scrollView);
 		recyclerView2 = (HorizontalScrollView) findViewById(R.id.recyclerView2);
 
-
 //		manager = new WrapContentLinearLayoutManager(YiDongNianHuiActivity.this,LinearLayoutManager.VERTICAL,false,this);
 //		recyclerView.setLayoutManager(manager);
 
@@ -3639,10 +3638,6 @@ public class YiDongNianHuiActivity extends Activity implements RecytviewCash {
 								}
 								n1.setText(cc2.toString());
 
-//								n2.setText(benDiRenShuBean.getNShen()+"");
-//								n3.setText(benDiRenShuBean.getNShi()+"");
-//								n4.setText(benDiRenShuBean.getNTeyao()+"");
-
 								TastyToast.makeText(YiDongNianHuiActivity.this,"更新总人数成功",TastyToast.LENGTH_SHORT,TastyToast.INFO).show();
 
 							}
@@ -3711,29 +3706,11 @@ public class YiDongNianHuiActivity extends Activity implements RecytviewCash {
 					for (int i=0;i<si;i++){
 						if (DateUtils.datas(System.currentTimeMillis()+"").equals(DateUtils.datas(gg.get(i).getStartTime()+""))){
 
-//							huiYiName=gg.get(i).getConference_name();
-//							baoCunBean.setWenzi(gg.get(i).getConference_theme());
-//							baoCunBean.setWenzi1(gg.get(i).getCompany());
+							baoCunBean.setZhanhuiId(gg.get(i).getExhibitionId()+"");
+							baoCunBean.setZhanhuiBianMa(gg.get(i).getSubConferenceCode()+"");
 							baoCunBeanDao.update(baoCunBean);
+							break;
 
-							runOnUiThread(new Runnable() {
-								@Override
-								public void run() {
-//									if (!YiDongNianHuiActivity.this.isFinishing()){
-//										t1.setText(renShu.getCompany());
-//										t2.setText(renShu.getConference_theme());
-//										liucheng.setText(renShu.getConference_flow());
-//										Glide.with(YiDongNianHuiActivity.this)
-//												.load(baoCunBean.getHoutaiDiZhi()+"/upload/background/"+renShu.getBackground())
-//
-//												//.load("http://121.46.3.20"+item.getTouxiang())
-//												//.apply(myOptions)
-//												//.transform(new GlideCircleTransform(MyApplication.getAppContext(),2,Color.parseColor("#ffffffff")))
-//												//	.bitmapTransform(new GrayscaleTransformation(VlcVideoActivity.this))
-//												.into(dabg);
-//									}
-								}
-							});
 
 						}
 
