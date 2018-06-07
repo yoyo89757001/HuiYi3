@@ -638,7 +638,7 @@ public class SheZhiActivity extends Activity implements View.OnClickListener, Vi
                         //弹窗
                         final XiuGaiHouTaiDialog dialog=new XiuGaiHouTaiDialog(SheZhiActivity.this);
                         if (baoCunBean.getHoutaiDiZhi()==null && baoCunBean.getGuanggaojiMing()==null){
-                            dialog.setContents("http://ly.huifnet.com","广告机1","10000011");
+                            dialog.setContents("http://192.168.2.161:8080","广告机1","10000032");
                         }else {
                             dialog.setContents(baoCunBean.getHoutaiDiZhi(),baoCunBean.getGuanggaojiMing(),baoCunBean.getZhanghuId());
                         }
@@ -1586,7 +1586,7 @@ public class SheZhiActivity extends Activity implements View.OnClickListener, Vi
                         Log.d(TAG, "size:" + size);
                         //循环
                         for (int j=0;j<size;j++) {
-                            Log.d(TAG, "i:" + j);
+                           // Log.d(TAG, "i:" + j);
                             while (true){
                                 try {
                                     Thread.sleep(80);
@@ -1606,7 +1606,7 @@ public class SheZhiActivity extends Activity implements View.OnClickListener, Vi
                                 }
 
                             }
-                            Log.d(TAG, "文件存在");
+                          //  Log.d(TAG, "文件存在");
 
                           //  Log.d("SheZhiActivity", "循环到"+j);
                             final int finalJ = j;
@@ -1693,7 +1693,7 @@ public class SheZhiActivity extends Activity implements View.OnClickListener, Vi
     }
 
     public static final int TIMEOUT2 = 1000 * 100;
-    private void link_P1(final ZhuJiBeanH zhuJiBeanH, String filePath, final Subject subject, final Long id) {
+    private void link_P1(final ZhuJiBeanH zhuJiBeanH, String filePath, final Subject subject, final int id) {
 
         OkHttpClient okHttpClient = new OkHttpClient.Builder()
                 .writeTimeout(TIMEOUT2, TimeUnit.MILLISECONDS)
@@ -1854,7 +1854,7 @@ public class SheZhiActivity extends Activity implements View.OnClickListener, Vi
                         .append(subject.getId()).append("姓名:")
                         .append(subject.getName()).append("时间:")
                         .append(DateUtils.time(System.currentTimeMillis()+"")).append("\n");
-                link_P1(zhuJiBeanH,filePath,subject, -1L);
+                link_P1(zhuJiBeanH,filePath,subject, -1);
                 synchronized (subject){
                     subject.notify();
                 }
@@ -1877,7 +1877,7 @@ public class SheZhiActivity extends Activity implements View.OnClickListener, Vi
                         int size=zhaoPianBean.getData().size();
                         if (size==0){
                             //先传图片
-                            link_P1(zhuJiBeanH,filePath,subject, -1L);
+                            link_P1(zhuJiBeanH,filePath,subject, -1);
                         }
                         int pp=-1;
                         for (int i=0;i<size;i++){
@@ -1899,13 +1899,13 @@ public class SheZhiActivity extends Activity implements View.OnClickListener, Vi
                         if (pp==0){
                             //跟所有人都不同， 再新增
                             //先传图片
-                            link_P1(zhuJiBeanH,filePath,subject,-1L);
+                            link_P1(zhuJiBeanH,filePath,subject,-1);
                         }
 
                     }else {
                         //	Log.d("MyReceiver", "444");
                         //先传图片
-                        link_P1(zhuJiBeanH,filePath,subject, -1L);
+                        link_P1(zhuJiBeanH,filePath,subject, -1);
                     }
 
 
@@ -1916,7 +1916,7 @@ public class SheZhiActivity extends Activity implements View.OnClickListener, Vi
                             .append(subject.getId()).append("姓名:")
                             .append(subject.getName()).append("时间:")
                             .append(DateUtils.time(System.currentTimeMillis()+"")).append("\n");
-                    link_P1(zhuJiBeanH,filePath,subject, -1L);
+                    link_P1(zhuJiBeanH,filePath,subject, -1);
 
                     synchronized (subject){
                         subject.notify();
@@ -1929,7 +1929,7 @@ public class SheZhiActivity extends Activity implements View.OnClickListener, Vi
     }
 
     //修改人员
-    private void link_XiuGaiRenYuan(final OkHttpClient okHttpClient, final Subject renYuanInFo, int i, Long id){
+    private void link_XiuGaiRenYuan(final OkHttpClient okHttpClient, final Subject renYuanInFo, int i, int id){
         final MediaType JSON=MediaType.parse("application/json; charset=utf-8");
 
         JSONObject json = new JSONObject();

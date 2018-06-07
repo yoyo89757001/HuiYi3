@@ -59,10 +59,7 @@ dependencies {
 //    compile 'tv.danmaku.ijk.media:ijkplayer-armv7a:0.8.4'
 //    compile 'tv.danmaku.ijk.media:ijkplayer-exo:0.8.4'
     compile 'com.jude:rollviewpager:1.4.6'
-    compile('com.arialyy.aria:aria-core:3.4.1'){
-        exclude group: 'com.android.support'
-    }
-    annotationProcessor 'com.arialyy.aria:aria-compiler:3.4.1'
+    implementation 'com.liulishuo.filedownloader:library:1.7.4'
     compile 'com.github.CymChad:BaseRecyclerViewAdapterHelper:2.9.31'
     compile 'com.github.florent37:viewanimator:1.0.5'
     // compile 'com.zhy:base-rvadapter:3.0.3'

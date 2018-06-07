@@ -3730,7 +3730,7 @@ public class YiDongNianHuiActivity extends Activity implements RecytviewCash {
 
 					ResponseBody body = response.body();
 					String ss=body.string().trim();
-					Log.d("AllConnects", "获取实时人数"+ss);
+					//Log.d("AllConnects", "获取实时人数"+ss);
 
 					JsonArray jsonArray= GsonUtil.parse(ss).getAsJsonArray();
 

@@ -14,11 +14,11 @@ import android.support.v7.app.NotificationCompat;
 import android.util.Log;
 import android.util.Xml;
 
-import com.arialyy.annotations.Download;
-import com.arialyy.aria.core.Aria;
-import com.arialyy.aria.core.download.DownloadTask;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.Target;
+import com.liulishuo.filedownloader.BaseDownloadTask;
+import com.liulishuo.filedownloader.FileDownloadListener;
+import com.liulishuo.filedownloader.FileDownloader;
 import com.ruitong.huiyi3.MyApplication;
 import com.ruitong.huiyi3.R;
 import com.ruitong.huiyi3.beans.BaoCunBean;
@@ -111,9 +111,9 @@ public class MyReceiver extends BroadcastReceiver {
 	public static boolean isDW=true;
 
 	@Override
-	public void onReceive(Context context, Intent intent) {
+	public void onReceive(final Context context, Intent intent) {
 		this.context=context;
-		Aria.download(MyReceiver.this).register();
+
 		try {
 			stringBuilder=new StringBuilder();
 			stringBuilder2=new StringBuilder();
@@ -134,9 +134,7 @@ public class MyReceiver extends BroadcastReceiver {
 
 			} else if (JPushInterface.ACTION_MESSAGE_RECEIVED.equals(intent.getAction())) {
 
-
 				Logger.d(TAG, "[MyReceiver] 接收到推送下来的自定义消息: " + bundle.getString(JPushInterface.EXTRA_MESSAGE));
-
 				JsonObject jsonObject= GsonUtil.parse(bundle.getString(JPushInterface.EXTRA_MESSAGE)).getAsJsonObject();
 				if (jsonObject.get("title").getAsString().equals("迎宾设置")){
 					Gson gson=new Gson();
@@ -168,26 +166,100 @@ public class MyReceiver extends BroadcastReceiver {
 					context.sendBroadcast(intent2);
 				}
 				if (jsonObject.get("title").getAsString().equals("zip包下载地址")){
+					FileDownloader.setup(context);
 					isDW=true;
-					Thread.sleep(1500);
+					Thread.sleep(1200);
 
 					baoCunBean.setZhanhuiId(jsonObject.get("content").getAsJsonObject().get("id").getAsInt()+"");
 					baoCunBean.setGonggao(jsonObject.get("content").getAsJsonObject().get("screenId").getAsInt()+"");
 					baoCunBeanDao.update(baoCunBean);
 
 					path2 =baoCunBean.getHoutaiDiZhi()+jsonObject.get("content").getAsJsonObject().get("zip_url").getAsString();
-
+					Log.d(TAG, path2);
 					File file = new File(SDPATH);
 					if (!file.exists()) {
 						Log.d(TAG, "file.mkdirs():" + file.mkdirs());
 					}
 					if (isDW) {
 						isDW=false;
+						Log.d(TAG, "进入下载");
+						FileDownloader.getImpl().create(path2)
+								.setPath(SDPATH + File.separator + System.currentTimeMillis() + ".zip")
+								.setListener(new FileDownloadListener() {
+									@Override
+									protected void pending(BaseDownloadTask task, int soFarBytes, int totalBytes) {
 
-						Aria.download(MyReceiver.this)
-								.load(path2)     //读取下载地址
-								.setFilePath(SDPATH + File.separator + System.currentTimeMillis() + ".zip")
-								.start();
+									}
+
+									@Override
+									protected void connected(BaseDownloadTask task, String etag, boolean isContinue, int soFarBytes, int totalBytes) {
+										//已经连接上
+
+										}
+
+									@Override
+									protected void progress(BaseDownloadTask task, int soFarBytes, int totalBytes) {
+										//进度
+										isDW=false;
+										if (task.getUrl().equals(path2)){
+											showNotifictionIcon(context,soFarBytes,"下载中","下载人脸库中");
+										}
+									}
+
+									@Override
+									protected void blockComplete(BaseDownloadTask task) {
+										//完成
+
+									}
+
+									@Override
+									protected void retry(final BaseDownloadTask task, final Throwable ex, final int retryingTimes, final int soFarBytes) {
+									//重试
+
+
+									}
+
+									@Override
+									protected void completed(BaseDownloadTask task) {
+										//完成整个下载过程
+										if (task.getUrl().equals(path2)){
+											isDW=true;
+											String ss=SDPATH+File.separator+(task.getFilename().substring(0,task.getFilename().length()-4));
+											File file = new File(ss);
+											if (!file.exists()) {
+												Log.d(TAG, "创建文件状态:" + file.mkdir());
+											}
+											showNotifictionIcon(context,0,"解压中","解压人脸库中");
+											jieya(SDPATH+File.separator+task.getFilename(),ss);
+
+											Log.d(TAG, "task.isRunning():" + task.isRunning()+ task.getFilename());
+											if (baoCunBean!=null && baoCunBean.getZhanghuId()!=null)
+												link_uplodexiazai();
+										}
+									}
+
+									@Override
+									protected void paused(BaseDownloadTask task, int soFarBytes, int totalBytes) {
+
+									}
+
+									@Override
+									protected void error(BaseDownloadTask task, Throwable e) {
+										//出错
+										if (task.getUrl().equals(path2)){
+											isDW=true;
+											showNotifictionIcon(context,0,"下载失败",""+e);
+											Log.d(TAG, "task.isRunning():" + task.getFilename()+"失败");
+										}
+									}
+
+									@Override
+									protected void warn(BaseDownloadTask task) {
+										//在下载队列中(正在等待/正在下载)已经存在相同下载连接与相同存储路径的任务
+
+									}
+								}).start();
+
 					}
 
 				}
@@ -345,63 +417,6 @@ public class MyReceiver extends BroadcastReceiver {
 	}
 
 
-	//在这里处理任务执行中的状态，如进度进度条的刷新
-	@Download.onTaskRunning
-	protected void running(DownloadTask task) {
-		isDW=false;
-//		if(task.getDownloadUrl()){-
-//		//	可以通过url判断是否是指定任务的回调
-//		}
-
-		if (task.getEntity().getUrl().equals(path2)){
-			int p = task.getPercent();	//任务进度百分比
-		//	String speed = task.getConvertSpeed();	//转换单位后的下载速度，单位转换需要在配置文件中打开
-		//	Log.d("ghghghghgg", "p:" + p+"  "+speed);
-			showNotifictionIcon(context,p,"下载中","下载人脸库中");
-		}
-	//	String speed1 = task.getSpeed(); //原始byte长度速度
-	}
-
-	@Download.onTaskComplete
-	void taskComplete(DownloadTask task) {
-
-		//在这里处理任务完成的状态
-		if (task.getEntity().getUrl().equals(path2)){
-			isDW=true;
-			String ss=SDPATH+File.separator+(task.getTaskName().substring(0,task.getTaskName().length()-4));
-			File file = new File(ss);
-			if (!file.exists()) {
-				Log.d(TAG, "创建文件状态:" + file.mkdir());
-			}
-			showNotifictionIcon(context,0,"解压中","解压人脸库中");
-			jieya(SDPATH+File.separator+task.getTaskName(),ss);
-
-			Log.d(TAG, "task.isRunning():" + task.isRunning()+ task.getTaskName());
-			if (baoCunBean!=null && baoCunBean.getZhanghuId()!=null)
-				link_uplodexiazai();
-		}
-		//提交下载完成状态
-	}
-
-	@Download.onTaskFail
-	void taskFail(DownloadTask task) {
-		//在这里失败的
-		if (task.getEntity().getUrl().equals(path2)){
-			isDW=true;
-			showNotifictionIcon(context,0,"下载失败","人脸库下载失败");
-			Log.d(TAG, "task.isRunning():" + task.getTaskName());
-		}
-	}
-
-	@Download.onTaskStop
-	void taskStop(DownloadTask task) {
-		//在这里失败的
-		if (task.getEntity().getUrl().equals(path2)){
-			isDW=true;
-			showNotifictionIcon(context,0,"下载失败","人脸库下载失败");
-			Log.d(TAG, "task.isRunning():" + task.getTaskName());
-		}
-	}
 
 	public static void showNotifictionIcon(Context context,int p,String title,String contextss) {
 		NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
@@ -621,7 +636,7 @@ public class MyReceiver extends BroadcastReceiver {
 	}
 
 	public static final int TIMEOUT2 = 1000 * 100;
-	private void link_P1(final ZhuJiBeanH zhuJiBeanH, String filePath, final Subject subject, final Long id) {
+	private void link_P1(final ZhuJiBeanH zhuJiBeanH, String filePath, final Subject subject, final int id) {
 
 		OkHttpClient okHttpClient = new OkHttpClient.Builder()
 				.writeTimeout(TIMEOUT2, TimeUnit.MILLISECONDS)
@@ -780,7 +795,7 @@ public class MyReceiver extends BroadcastReceiver {
 						.append(subject.getId()).append("姓名:")
 						.append(subject.getName()).append("时间:")
 						.append(DateUtils.time(System.currentTimeMillis()+"")).append("\n");
-				link_P1(zhuJiBeanH,filePath,subject, -1L);
+				link_P1(zhuJiBeanH,filePath,subject, -1);
 				synchronized (subject){
 					subject.notify();
 				}
@@ -803,7 +818,7 @@ public class MyReceiver extends BroadcastReceiver {
 						int size=zhaoPianBean.getData().size();
 						if (size==0){
 							//先传图片
-							link_P1(zhuJiBeanH,filePath,subject, -1L);
+							link_P1(zhuJiBeanH,filePath,subject, -1);
 						}
 						int pp=-1;
 						for (int i=0;i<size;i++){
@@ -825,13 +840,13 @@ public class MyReceiver extends BroadcastReceiver {
 						if (pp==0){
 							//跟所有人都不同， 再新增
 							//先传图片
-							link_P1(zhuJiBeanH,filePath,subject,-1L);
+							link_P1(zhuJiBeanH,filePath,subject,-1);
 						}
 
 					}else {
 						//	Log.d("MyReceiver", "444");
 						//先传图片
-						link_P1(zhuJiBeanH,filePath,subject, -1L);
+						link_P1(zhuJiBeanH,filePath,subject, -1);
 					}
 
 
@@ -842,11 +857,106 @@ public class MyReceiver extends BroadcastReceiver {
 							.append(subject.getId()).append("姓名:")
 							.append(subject.getName()).append("时间:")
 							.append(DateUtils.time(System.currentTimeMillis()+"")).append("\n");
-					link_P1(zhuJiBeanH,filePath,subject, -1L);
+					link_P1(zhuJiBeanH,filePath,subject, -1);
 
 					synchronized (subject){
 						subject.notify();
 					}
+				}
+
+			}
+		});
+	}
+
+
+	//查询单个人员
+	private void link_chaXunRenYuan2(final OkHttpClient okHttpClient, final RenYuanInFo renYuanInFo, final int ii){
+		Log.d(TAG, "单个人员招聘id:" + ii);
+		//	Log.d("MyReceivereee", "进来");
+		final MediaType JSON=MediaType.parse("application/json; charset=utf-8");
+
+		//Log.d(TAG, json.toString());
+		//RequestBody requestBody = RequestBody.create(JSON, json.toString());
+
+//		RequestBody body = new FormBody.Builder()
+//				.add("subject_type","0")
+//				.add("name",renYuanInFo.getName())
+//				.add("remark",renYuanInFo.getRemark())
+//				.add("photo_ids",list.toString())
+//				.add("phone",renYuanInFo.getPhone())
+//				.add("department",renYuanInFo.getDepartment())
+//				.add("title",renYuanInFo.getTitle())
+//				.build();
+
+		Request.Builder requestBuilder = new Request.Builder()
+				//.header("Content-Type", "application/json")
+				.get()
+				.url(zhuJiBeanH.getHostUrl()+"/mobile-admin/subjects/list?category=employee&name="+renYuanInFo.getName());
+
+		// step 3：创建 Call 对象
+		Call call = okHttpClient.newCall(requestBuilder.build());
+
+		//step 4: 开始异步请求
+		call.enqueue(new Callback() {
+			@Override
+			public void onFailure(Call call, IOException e) {
+				link_XiuGaiRenYuan(MyApplication.okHttpClient,context,zhuJiBeanH,renYuanInFo,ii);
+				Log.d("AllConnects查询旷视", "请求失败"+e.getMessage());
+			}
+
+			@Override
+			public void onResponse(Call call, Response response) throws IOException {
+				//  Log.d("AllConnects查询旷视", "请求成功"+call.request().toString());
+				//获得返回体
+				try{
+
+					ResponseBody body = response.body();
+					String ss=body.string().trim();
+					Log.d("MyReceivereee", "查询旷视单个人员"+ss);
+					JsonObject jsonObject= GsonUtil.parse(ss).getAsJsonObject();
+					Gson gson = new Gson();
+					GaiNiMaBi zhaoPianBean = gson.fromJson(jsonObject, GaiNiMaBi.class);
+					if (zhaoPianBean.getData()!=null){
+						int size=zhaoPianBean.getData().size();
+						if (size==0){
+
+							link_XiuGaiRenYuan(MyApplication.okHttpClient,context,zhuJiBeanH,renYuanInFo,ii);
+						}
+						int pp=-1;
+						for (int i=0;i<size;i++){
+							//相同就更新
+							if (!zhaoPianBean.getData().get(i).getJob_number().equals(renYuanInFo.getId()+"")){
+								//跟所有人都不同， 再新增
+								pp=0;
+								Log.d("MyReceiver", "222");
+							}
+							else {
+								//相同就不需要再往下比对了，跳出当前循环
+								pp=1;
+								//更新旷视人员信息//先传图片
+								renYuanInFo.setSid(zhaoPianBean.getData().get(i).getId());
+								link_XiuGaiRenYuan(MyApplication.okHttpClient,context,zhuJiBeanH,renYuanInFo,ii);
+								Log.d("MyReceiver", "333");
+								break;
+							}
+						}
+						if (pp==0){
+							//跟所有人都不同， 再新增
+							//先传图片
+							link_XiuGaiRenYuan(MyApplication.okHttpClient,context,zhuJiBeanH,renYuanInFo,ii);
+						}
+
+					}else {
+						//	Log.d("MyReceiver", "444");
+						//先传图片
+						link_XiuGaiRenYuan(MyApplication.okHttpClient,context,zhuJiBeanH,renYuanInFo,ii);
+					}
+
+
+				}catch (Exception e){
+
+					Log.d("AllConnects查询旷视异常", e.getMessage()+"gggg");
+
 				}
 
 
@@ -855,7 +965,7 @@ public class MyReceiver extends BroadcastReceiver {
 	}
 
 	//修改人员
-	private void link_XiuGaiRenYuan(final OkHttpClient okHttpClient, final Subject renYuanInFo, int i, Long id){
+	private void link_XiuGaiRenYuan(final OkHttpClient okHttpClient, final Subject renYuanInFo, int i, int id){
 		final MediaType JSON=MediaType.parse("application/json; charset=utf-8");
 
 		JSONObject json = new JSONObject();
@@ -1377,10 +1487,12 @@ public class MyReceiver extends BroadcastReceiver {
 										e.printStackTrace();
 									}
 									if (bitmap!=null){
-										link_P2(zhuJiBeanH,compressImage(bitmap),renYuanInFo,context);
-									}else {
 
-										link_XiuGaiRenYuan(MyApplication.okHttpClient,context,zhuJiBeanH,renYuanInFo,0);
+										link_P2(zhuJiBeanH,compressImage(bitmap),renYuanInFo,context);
+
+									}else {
+										link_chaXunRenYuan2(okHttpClient,renYuanInFo,0);
+										//link_XiuGaiRenYuan(MyApplication.okHttpClient,context,zhuJiBeanH,renYuanInFo,0);
 									}
 									break;
 								case 3:
@@ -1769,7 +1881,7 @@ public class MyReceiver extends BroadcastReceiver {
 		Request.Builder requestBuilder = new Request.Builder()
 				//.header("Content-Type", "application/json")
 				.put(requestBody)
-				.url(zhuJiBeanH.getHostUrl()+"/subject/"+renYuanInFo.getId());
+				.url(zhuJiBeanH.getHostUrl()+"/subject/"+renYuanInFo.getSid());
 
 		// step 3：创建 Call 对象
 		Call call = okHttpClient.newCall(requestBuilder.build());
@@ -1929,7 +2041,7 @@ public class MyReceiver extends BroadcastReceiver {
 	public static final int TIMEOUT = 1000 * 150;
 	private void link_P2(final ZhuJiBeanH zhuJiBeanH, final File file, final RenYuanInFo renYuanInFo, final Context context) {
 
-		OkHttpClient okHttpClient = new OkHttpClient.Builder()
+		final OkHttpClient okHttpClient = new OkHttpClient.Builder()
 				.writeTimeout(TIMEOUT, TimeUnit.MILLISECONDS)
 				.connectTimeout(TIMEOUT, TimeUnit.MILLISECONDS)
 				.readTimeout(TIMEOUT, TimeUnit.MILLISECONDS)
@@ -1958,7 +2070,9 @@ public class MyReceiver extends BroadcastReceiver {
 		call.enqueue(new Callback() {
 			@Override
 			public void onFailure(Call call, IOException e) {
-				link_XiuGaiRenYuan(MyApplication.okHttpClient,context,zhuJiBeanH,renYuanInFo,0);
+				link_chaXunRenYuan2(okHttpClient,renYuanInFo,0);
+
+			//
 				Log.d("AllConnects", "请求识别失败" + e.getMessage());
 			}
 
@@ -1971,18 +2085,22 @@ public class MyReceiver extends BroadcastReceiver {
 					ResponseBody body = response.body();
 					String ss = body.string();
 
-					Log.d("AllConnects", "传照片" + ss);
+					Log.d("AllConnects", "传照片单个人员" + ss);
 					int ii=0;
 					JsonObject jsonObject = GsonUtil.parse(ss).getAsJsonObject();
 					JsonObject jo=jsonObject.get("data").getAsJsonObject();
 					ii=jo.get("id").getAsInt();
 					if (ii!=0){
-						link_XiuGaiRenYuan(MyApplication.okHttpClient,context,zhuJiBeanH,renYuanInFo,ii);
+					//	link_XiuGaiRenYuan(MyApplication.okHttpClient,context,zhuJiBeanH,renYuanInFo,ii);
+						link_chaXunRenYuan2(okHttpClient,renYuanInFo,ii);
+
 					}else {
-						link_XiuGaiRenYuan(MyApplication.okHttpClient,context,zhuJiBeanH,renYuanInFo,0);
+						//link_XiuGaiRenYuan(MyApplication.okHttpClient,context,zhuJiBeanH,renYuanInFo,0);
+						link_chaXunRenYuan2(okHttpClient,renYuanInFo,0);
 					}
 				} catch (Exception e) {
-					link_XiuGaiRenYuan(MyApplication.okHttpClient,context,zhuJiBeanH,renYuanInFo,0);
+					//link_XiuGaiRenYuan(MyApplication.okHttpClient,context,zhuJiBeanH,renYuanInFo,0);
+					link_chaXunRenYuan2(okHttpClient,renYuanInFo,0);
 					Log.d("WebsocketPushMsg1", e.getMessage());
 				}
 			}

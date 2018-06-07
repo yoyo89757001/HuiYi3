@@ -7,13 +7,13 @@ package com.ruitong.huiyi3.dialog;
 public class DataBean {
 
     String job_number;
-    Long id;
+    int id;
 
-    public Long getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(int id) {
         this.id = id;
     }
 
