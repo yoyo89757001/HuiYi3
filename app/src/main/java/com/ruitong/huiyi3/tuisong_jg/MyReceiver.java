@@ -364,9 +364,10 @@ public class MyReceiver extends BroadcastReceiver {
 
 	@Download.onTaskComplete
 	void taskComplete(DownloadTask task) {
-		isDW=true;
+
 		//在这里处理任务完成的状态
 		if (task.getEntity().getUrl().equals(path2)){
+			isDW=true;
 			String ss=SDPATH+File.separator+(task.getTaskName().substring(0,task.getTaskName().length()-4));
 			File file = new File(ss);
 			if (!file.exists()) {
@@ -382,13 +383,21 @@ public class MyReceiver extends BroadcastReceiver {
 		//提交下载完成状态
 	}
 
-
-
-	@Download.onTaskStop
+	@Download.onTaskFail
 	void taskFail(DownloadTask task) {
-		isDW=true;
 		//在这里失败的
 		if (task.getEntity().getUrl().equals(path2)){
+			isDW=true;
+			showNotifictionIcon(context,0,"下载失败","人脸库下载失败");
+			Log.d(TAG, "task.isRunning():" + task.getTaskName());
+		}
+	}
+
+	@Download.onTaskStop
+	void taskStop(DownloadTask task) {
+		//在这里失败的
+		if (task.getEntity().getUrl().equals(path2)){
+			isDW=true;
 			showNotifictionIcon(context,0,"下载失败","人脸库下载失败");
 			Log.d(TAG, "task.isRunning():" + task.getTaskName());
 		}
