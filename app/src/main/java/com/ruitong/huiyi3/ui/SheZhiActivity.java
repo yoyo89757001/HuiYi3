@@ -1592,7 +1592,7 @@ public class SheZhiActivity extends Activity implements View.OnClickListener, Vi
                                     Thread.sleep(80);
                                     t++;
                                     filePath=trg+File.separator+subjectList.get(j).getId()+(subjectList.get(j).getPhoto().
-                                            substring(subjectList.get(j).getPhoto().length()-4,subjectList.get(j).getPhoto().length()));
+                                            substring(subjectList.get(j).getPhoto().lastIndexOf(".")));
                                     File file=new File(filePath);
                                     if (file.isFile()|| t==10000){
                                         t=0;

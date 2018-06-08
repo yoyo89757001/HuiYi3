@@ -7,9 +7,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.Environment;
 import android.support.multidex.MultiDexApplication;
 import android.util.Log;
-
-import com.liulishuo.filedownloader.FileDownloader;
-import com.liulishuo.filedownloader.services.DownloadMgrInitialParams;
 import com.ruitong.huiyi3.beans.DaoMaster;
 import com.ruitong.huiyi3.beans.DaoSession;
 import com.ruitong.huiyi3.cookies.CookiesManager;

@@ -110,6 +110,7 @@ public class MyReceiver extends BroadcastReceiver {
 	private final String SDPATH = Environment.getExternalStorageDirectory().getAbsolutePath()+File.separator+"ruitongzip";
 	public static boolean isDW=true;
 
+
 	@Override
 	public void onReceive(final Context context, Intent intent) {
 		this.context=context;
@@ -147,11 +148,13 @@ public class MyReceiver extends BroadcastReceiver {
 							benDiMBbeanDao.delete(bb.get(i));
 						}
 					}
+					String p1=renShu.getContent().getBottemImageUrl().substring(1,renShu.getContent().getBottemImageUrl().length()-1);
+					String p2=renShu.getContent().getPopupImageUrl().substring(1,renShu.getContent().getPopupImageUrl().length()-1);
 
 					BenDiMBbean benDiMBbean=new BenDiMBbean();
 					benDiMBbean.setId(System.currentTimeMillis());
-					benDiMBbean.setBottemImageUrl(renShu.getContent().getBottemImageUrl());
-					benDiMBbean.setPopupImageUrl(renShu.getContent().getPopupImageUrl());
+					benDiMBbean.setBottemImageUrl(p1);
+					benDiMBbean.setPopupImageUrl(p2);
 					benDiMBbean.setWelcomeSpeak(renShu.getContent().getWelcomeSpeak());
 					benDiMBbean.setSubType(renShu.getContent().getSubType());
 					benDiMBbean.setPhoto_index(renShu.getContent().getPhoto_index());
@@ -160,10 +163,12 @@ public class MyReceiver extends BroadcastReceiver {
 					for (BenDiMBbean ll:f){
 						Log.d(TAG, "ll.getPhoto_index():" + ll.getPhoto_index()+ll.getSubType());
 					}
-
+					baoCunBean.setWenzi(p1);
+					baoCunBeanDao.update(baoCunBean);
 					Intent intent2=new Intent("gxshipingdizhi");
-					intent2.putExtra("bgPath",renShu.getContent().getBottemImageUrl());
+					intent2.putExtra("bgPath",p1);
 					context.sendBroadcast(intent2);
+					Log.d(TAG, "推送过去");
 				}
 				if (jsonObject.get("title").getAsString().equals("zip包下载地址")){
 					FileDownloader.setup(context);
@@ -202,7 +207,7 @@ public class MyReceiver extends BroadcastReceiver {
 										//进度
 										isDW=false;
 										if (task.getUrl().equals(path2)){
-											showNotifictionIcon(context,soFarBytes,"下载中","下载人脸库中");
+											showNotifictionIcon(context,soFarBytes,"下载中","下载人脸库中"+(soFarBytes/totalBytes)+"%");
 										}
 									}
 
@@ -571,8 +576,10 @@ public class MyReceiver extends BroadcastReceiver {
 								try {
 									Thread.sleep(50);
 									t++;
+									// 获取后缀名
+									//String sname = name.substring(name.lastIindexOf("."));
 									filePath=trg+File.separator+subjectList.get(j).getId()+(subjectList.get(j).getPhoto().
-											substring(subjectList.get(j).getPhoto().length()-4,subjectList.get(j).getPhoto().length()));
+											substring(subjectList.get(j).getPhoto().lastIndexOf(".")));
 									File file=new File(filePath);
 									if (file.isFile()|| t==200){
 										t=0;
@@ -590,7 +597,7 @@ public class MyReceiver extends BroadcastReceiver {
 
 							//  Log.d("SheZhiActivity", "循环到"+j);
 
-							showNotifictionIcon(context, (int) ((j / (float) size) * 100),"入库中","入库中。。。");
+							showNotifictionIcon(context, (int) ((j / (float) size) * 100),"入库中","入库中"+(int) ((j / (float) size) * 100)+"%");
 
 							//查询旷视
 							synchronized (subjectList.get(j)) {
@@ -1436,9 +1443,16 @@ public class MyReceiver extends BroadcastReceiver {
 
 				@Override
 				public void onResponse(Call call, Response response) throws IOException {
-					String s=response.body().string();
-					//Log.d(TAG, "123   "+s);
-					JsonObject jsonObject= GsonUtil.parse(s).getAsJsonObject();
+					JsonObject jsonObject=null;
+					try {
+						String s=response.body().string();
+						Log.d(TAG, "123   "+s);
+						 jsonObject= GsonUtil.parse(s).getAsJsonObject();
+					}catch (Exception e){
+
+						Log.d(TAG, e.getMessage()+"");
+						return;
+					}
 					int i=1;
 					i=jsonObject.get("code").getAsInt();
 					if (i==0){

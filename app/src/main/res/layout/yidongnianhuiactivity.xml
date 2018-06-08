@@ -4,9 +4,6 @@
     android:layout_height="match_parent">
 
 
-
-
-
     <ImageView
         android:background="@drawable/thetwo"
         android:layout_width="match_parent"
@@ -32,6 +29,7 @@
                 android:id="@+id/t1"
                 android:textColor="@color/colorBar_bg2"
                 android:textSize="110sp"
+                android:visibility="gone"
                 android:gravity="center"
                 android:layout_marginLeft="40dp"
                 android:layout_marginRight="40dp"
@@ -43,6 +41,7 @@
                 android:id="@+id/t2"
                 android:textColor="@color/colorBar_bg2"
                 android:textSize="70sp"
+                android:visibility="gone"
                 android:gravity="center"
                 android:layout_marginLeft="40dp"
                 android:layout_marginRight="40dp"

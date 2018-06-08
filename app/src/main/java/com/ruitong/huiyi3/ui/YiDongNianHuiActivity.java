@@ -52,8 +52,6 @@ import com.ruitong.huiyi3.beans.BenDiQianDao;
 import com.ruitong.huiyi3.beans.BenDiQianDaoDao;
 import com.ruitong.huiyi3.beans.BenDiRenShuBean;
 import com.ruitong.huiyi3.beans.BenDiRenShuBeanDao;
-
-import com.ruitong.huiyi3.beans.HuanYinYuBeanDao;
 import com.ruitong.huiyi3.beans.HuiYiInFoBean;
 
 import com.ruitong.huiyi3.beans.MoShengRenBean;
@@ -98,7 +96,6 @@ import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URLEncoder;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -2633,11 +2630,12 @@ public class YiDongNianHuiActivity extends Activity implements RecytviewCash {
 						mbLeiXingBeanList.clear();
 					mbLeiXingBeanList= benDiMBbeanDao.loadAll();
 
-
 					String ss=intent.getStringExtra("bgPath");
 					if (ss!=null){
+						Log.d(TAG, "换底图图片"+ss);
+
 						Glide.with(YiDongNianHuiActivity.this)
-								//	.load(R.drawable.vvv)
+								//.load(R.drawable.vvv)
 								.load(ss)
 								//	.load(zhuji+item.getTouxiang())
 								//.apply(myOptions)
@@ -2718,10 +2716,9 @@ public class YiDongNianHuiActivity extends Activity implements RecytviewCash {
 			//	intlist.addAll(moShengRenBean2List);
 				try {
 
-
 				ResponseBody body = response.body();
 				String ss=body.string();
-				  Log.d("AllConnects", "保存老黄"+ss);
+				  Log.d("AllConnects", "签到返回"+ss);
 				  link_shishi_renshu();
 
 //					JsonObject jsonObject= GsonUtil.parse(body.string()).getAsJsonObject();
@@ -2813,11 +2810,11 @@ public class YiDongNianHuiActivity extends Activity implements RecytviewCash {
 
 		if (benDiMBbeanDao!=null && benDiMBbeanDao.loadAll().size()>0){
 
-			List<BenDiMBbean> bbeans=benDiMBbeanDao.loadAll();
-			Log.d(TAG, bbeans.get(0).getBottemImageUrl());
+			String ppp =baoCunBean.getWenzi();
+			if (ppp!=null && !ppp.equals(""))
 			Glide.with(YiDongNianHuiActivity.this)
 					//	.load(R.drawable.vvv)
-					.load(bbeans.get(0).getBottemImageUrl())
+					.load(ppp)
 					//	.load(zhuji+item.getTouxiang())
 					//.apply(myOptions)
 					//.transform(new GlideRoundTransform(MyApplication.getAppContext(), 20))
@@ -3701,8 +3698,9 @@ public class YiDongNianHuiActivity extends Activity implements RecytviewCash {
 		OkHttpClient okHttpClient= MyApplication.getOkHttpClient();
 		//RequestBody requestBody = RequestBody.create(JSON, json);
 		RequestBody body = new FormBody.Builder()
-				.add("accountId",baoCunBean.getZhanghuId())
-			//	.add("conferenceId",baoCunBean.getHuiyiId())
+				.add("meetingId",baoCunBean.getZhanhuiId())
+				.add("signInChannel","1")
+				.add("machineCode", Utils.getSerialNumber(this)==null?Utils.getIMSI():Utils.getSerialNumber(this))
 				.build();
 
 		Request.Builder requestBuilder = new Request.Builder()
@@ -3711,7 +3709,7 @@ public class YiDongNianHuiActivity extends Activity implements RecytviewCash {
 				//.post(requestBody)
 				//.get()
 				.post(body)
-				.url(baoCunBean.getHoutaiDiZhi()+"/appQueryPeople.do");
+				.url(baoCunBean.getHoutaiDiZhi()+"/querySignSubjectMeetingPeoples.do");
 
 		// step 3：创建 Call 对象
 		Call call = okHttpClient.newCall(requestBuilder.build());
@@ -3730,7 +3728,7 @@ public class YiDongNianHuiActivity extends Activity implements RecytviewCash {
 
 					ResponseBody body = response.body();
 					String ss=body.string().trim();
-					//Log.d("AllConnects", "获取实时人数"+ss);
+					Log.d("AllConnects", "获取实时人数"+ss);
 
 					JsonArray jsonArray= GsonUtil.parse(ss).getAsJsonArray();
 
