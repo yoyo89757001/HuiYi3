@@ -61,7 +61,7 @@ public class Utils {
 
         try {
 
-            serial = Settings.System.getString(context.getContentResolver(), Settings.System.ANDROID_ID);
+            serial = Settings.System.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
 
         } catch (Exception e) {
 

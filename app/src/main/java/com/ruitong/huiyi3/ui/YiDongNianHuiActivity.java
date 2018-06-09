@@ -3034,8 +3034,22 @@ public class YiDongNianHuiActivity extends Activity implements RecytviewCash {
 										//QianDaoId qianDaoId=qianDaoIdDao.load(Long.parseLong(dataBean.getPerson().getJob_number()));
 
 										if (baoCunBean.getHoutaiDiZhi()!=null && !baoCunBean.getHoutaiDiZhi().equals("") && zhanghuID!=null && !zhanghuID.equals("") && huiyiID!=null && !huiyiID.equals("")){
-											link_fasong(dataBean.getData().getTimestamp()
-													,dataBean.getPerson().getJob_number());
+											if (dataBean.getPerson().getDescription().contains(baoCunBean.getZhanhuiBianMa())){
+												link_fasong(dataBean.getData().getTimestamp(),dataBean.getPerson().getJob_number());
+												Message message2 = Message.obtain();
+												message2.arg1 = 1;
+												message2.obj = dataBean.getPerson();
+												handler.sendMessage(message2);
+											}else {
+
+												runOnUiThread(new Runnable() {
+													@Override
+													public void run() {
+														TastyToast.makeText(YiDongNianHuiActivity.this,"非当前展会人员",TastyToast.LENGTH_SHORT,TastyToast.INFO).show();
+													}
+												});
+											}
+
 											//link_getAll_User(dataBean.getPerson().getJob_number());
 
 //										switch (dataBean.getPerson().getDepartment()) {
@@ -3072,7 +3086,15 @@ public class YiDongNianHuiActivity extends Activity implements RecytviewCash {
 //										}
 //										qianDaoId.setIsQd(true);
 //										qianDaoIdDao.update(qianDaoId)
-									}
+									}else {
+											runOnUiThread(new Runnable() {
+												@Override
+												public void run() {
+													TastyToast.makeText(YiDongNianHuiActivity.this,"参数不全",TastyToast.LENGTH_SHORT,TastyToast.INFO).show();
+												}
+											});
+
+										}
 								//daoSession.insert(bean);
 								//Log.d(TAG, "111");
 
@@ -3080,20 +3102,15 @@ public class YiDongNianHuiActivity extends Activity implements RecytviewCash {
 								Log.d("WebsocketPushMsg", e.getMessage()+"aaa");
 							}
 
-						Message message2 = Message.obtain();
-						message2.arg1 = 1;
-						message2.obj = dataBean.getPerson();
-						handler.sendMessage(message2);
-
-						BenDiQianDao qianDao=new BenDiQianDao();
-						qianDao.setId(Long.parseLong(dataBean.getPerson().getJob_number()));
-						qianDao.setName(dataBean.getPerson().getName());
-						qianDao.setPhone(DateUtils.time(System.currentTimeMillis()+""));
-						try {
-							benDiQianDaoDao.insert(qianDao);
-						}catch (Exception e){
-							e.printStackTrace();
-						}
+//						BenDiQianDao qianDao=new BenDiQianDao();
+//						qianDao.setId(Long.parseLong(dataBean.getPerson().getJob_number()));
+//						qianDao.setName(dataBean.getPerson().getName());
+//						qianDao.setPhone(DateUtils.time(System.currentTimeMillis()+""));
+//						try {
+//							benDiQianDaoDao.insert(qianDao);
+//						}catch (Exception e){
+//							e.printStackTrace();
+//						}
 
 					}
              else if (wbBean.getType().equals("unrecognized")) {
