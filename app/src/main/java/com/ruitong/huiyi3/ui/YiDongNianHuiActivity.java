@@ -297,6 +297,7 @@ public class YiDongNianHuiActivity extends Activity implements RecytviewCash {
 											zhiwei.setText(bean.getBumen());
 											TextView huanyinyu = (TextView) view1.findViewById(R.id.huanyinyu);
 											huanyinyu.setText(hyy);
+											synthesizer.speak(hyy==null?"":hyy);
 
 											Glide.with(YiDongNianHuiActivity.this)
 													//	.load(R.drawable.vvv)
@@ -356,6 +357,7 @@ public class YiDongNianHuiActivity extends Activity implements RecytviewCash {
 											zhiwei.setText(bean.getBumen());
 											TextView huanyinyu = (TextView) view2.findViewById(R.id.huanyinyu);
 											huanyinyu.setText(hyy);
+											synthesizer.speak(hyy==null?"":hyy);
 
 											Glide.with(YiDongNianHuiActivity.this)
 													//	.load(R.drawable.vvv)
@@ -414,6 +416,7 @@ public class YiDongNianHuiActivity extends Activity implements RecytviewCash {
 											zhiwei.setText(bean.getBumen());
 											TextView huanyinyu = (TextView) view3.findViewById(R.id.huanyinyu);
 											huanyinyu.setText(hyy);
+											synthesizer.speak(hyy==null?"":hyy);
 
 											Glide.with(YiDongNianHuiActivity.this)
 													//	.load(R.drawable.vvv)
@@ -472,6 +475,7 @@ public class YiDongNianHuiActivity extends Activity implements RecytviewCash {
 											zhiwei.setText(bean.getBumen());
 											TextView huanyinyu = (TextView) view3.findViewById(R.id.huanyinyu);
 											huanyinyu.setText(hyy);
+											synthesizer.speak(hyy==null?"":hyy);
 
 											Glide.with(YiDongNianHuiActivity.this)
 													//	.load(R.drawable.vvv)
@@ -530,6 +534,7 @@ public class YiDongNianHuiActivity extends Activity implements RecytviewCash {
 											zhiwei.setText(bean.getBumen());
 											TextView huanyinyu = (TextView) view3.findViewById(R.id.huanyinyu);
 											huanyinyu.setText(hyy);
+											synthesizer.speak(hyy==null?"":hyy);
 
 											Glide.with(YiDongNianHuiActivity.this)
 													//	.load(R.drawable.vvv)
@@ -588,6 +593,7 @@ public class YiDongNianHuiActivity extends Activity implements RecytviewCash {
 											zhiwei.setText(bean.getBumen());
 											TextView huanyinyu = (TextView) view3.findViewById(R.id.huanyinyu);
 											huanyinyu.setText(hyy);
+											synthesizer.speak(hyy==null?"":hyy);
 
 											Glide.with(YiDongNianHuiActivity.this)
 													//	.load(R.drawable.vvv)
@@ -646,6 +652,7 @@ public class YiDongNianHuiActivity extends Activity implements RecytviewCash {
 											name3.setText(bean.getName());
 											TextView zhiwei = (TextView) view3.findViewById(R.id.zhiwei);
 											zhiwei.setText(bean.getBumen());
+											synthesizer.speak(hyy==null?"":hyy);
 //
 											Glide.with(YiDongNianHuiActivity.this)
 													//	.load(R.drawable.vvv)
@@ -705,6 +712,7 @@ public class YiDongNianHuiActivity extends Activity implements RecytviewCash {
 											zhiwei.setText(bean.getBumen());
 											TextView huanyinyu = (TextView) view3.findViewById(R.id.huanyinyu);
 											huanyinyu.setText(hyy);
+											synthesizer.speak(hyy==null?"":hyy);
 
 											Glide.with(YiDongNianHuiActivity.this)
 													//	.load(R.drawable.vvv)
@@ -764,6 +772,7 @@ public class YiDongNianHuiActivity extends Activity implements RecytviewCash {
 											zhiwei.setText(bean.getBumen());
 											TextView huanyinyu = (TextView) view3.findViewById(R.id.huanyinyu);
 											huanyinyu.setText(hyy);
+											synthesizer.speak(hyy==null?"":hyy);
 
 											Glide.with(YiDongNianHuiActivity.this)
 													//	.load(R.drawable.vvv)
@@ -823,6 +832,7 @@ public class YiDongNianHuiActivity extends Activity implements RecytviewCash {
 											zhiwei.setText(bean.getBumen());
 											TextView huanyinyu = (TextView) view3.findViewById(R.id.huanyinyu);
 											huanyinyu.setText(hyy);
+											synthesizer.speak(hyy==null?"":hyy);
 
 											Glide.with(YiDongNianHuiActivity.this)
 													//	.load(R.drawable.vvv)
@@ -882,6 +892,7 @@ public class YiDongNianHuiActivity extends Activity implements RecytviewCash {
 											zhiwei.setText(bean.getBumen());
 											TextView huanyinyu = (TextView) view3.findViewById(R.id.huanyinyu);
 											huanyinyu.setText(hyy);
+											synthesizer.speak(hyy==null?"":hyy);
 
 											Glide.with(YiDongNianHuiActivity.this)
 													//	.load(R.drawable.vvv)
@@ -941,6 +952,7 @@ public class YiDongNianHuiActivity extends Activity implements RecytviewCash {
 											zhiwei.setText(bean.getBumen());
 											TextView huanyinyu = (TextView) view3.findViewById(R.id.huanyinyu);
 											huanyinyu.setText(hyy);
+											synthesizer.speak(hyy==null?"":hyy);
 
 											Glide.with(YiDongNianHuiActivity.this)
 													//	.load(R.drawable.vvv)
@@ -1000,6 +1012,7 @@ public class YiDongNianHuiActivity extends Activity implements RecytviewCash {
 											zhiwei.setText(bean.getBumen());
 											TextView huanyinyu = (TextView) view3.findViewById(R.id.huanyinyu);
 											huanyinyu.setText(hyy);
+											synthesizer.speak(hyy==null?"":hyy);
 
 											Glide.with(YiDongNianHuiActivity.this)
 													//	.load(R.drawable.vvv)
@@ -1059,6 +1072,7 @@ public class YiDongNianHuiActivity extends Activity implements RecytviewCash {
 											zhiwei.setText(bean.getBumen());
 											TextView huanyinyu = (TextView) view3.findViewById(R.id.huanyinyu);
 											huanyinyu.setText(hyy);
+											synthesizer.speak(hyy==null?"":hyy);
 
 											Glide.with(YiDongNianHuiActivity.this)
 													//	.load(R.drawable.vvv)
@@ -1118,6 +1132,7 @@ public class YiDongNianHuiActivity extends Activity implements RecytviewCash {
 											zhiwei.setText(bean.getBumen());
 											TextView huanyinyu = (TextView) view3.findViewById(R.id.huanyinyu);
 											huanyinyu.setText(hyy);
+											synthesizer.speak(hyy==null?"":hyy);
 
 											Glide.with(YiDongNianHuiActivity.this)
 													//	.load(R.drawable.vvv)
@@ -3747,15 +3762,15 @@ public class YiDongNianHuiActivity extends Activity implements RecytviewCash {
 					String ss=body.string().trim();
 					Log.d("AllConnects", "获取实时人数"+ss);
 
-					JsonArray jsonArray= GsonUtil.parse(ss).getAsJsonArray();
+					final JsonObject jsonArray= GsonUtil.parse(ss).getAsJsonObject();
 
-					Gson gson=new Gson();
-					final ShiShiRenShuBean renShu=gson.fromJson(jsonArray.get(0).getAsJsonObject(),ShiShiRenShuBean.class);
+				//	Gson gson=new Gson();
+					//final ShiShiRenShuBean renShu=gson.fromJson(jsonArray.get(""),ShiShiRenShuBean.class);
 					runOnUiThread(new Runnable() {
 						@Override
 						public void run() {
 
-							String str = String.format("%04d", renShu.getTjInPeople());
+							String str = String.format("%04d",jsonArray.get("dtoDesc").getAsString());
 							char s1[]=str.toCharArray();
 							StringBuilder cc=new StringBuilder();
 							for (char c:s1){
@@ -3763,14 +3778,13 @@ public class YiDongNianHuiActivity extends Activity implements RecytviewCash {
 							}
 							y1.setText(cc.toString());
 
-
-							String str2 = String.format("%04d", renShu.getTjOutPeople());
-							char s2[]=str2.toCharArray();
-							StringBuilder cc2=new StringBuilder();
-							for (char c:s2){
-								cc2.append(String.valueOf(c)).append(" ");
-							}
-							n1.setText(cc2.toString());
+//							String str2 = String.format("%04d", renShu.getTjOutPeople());
+//							char s2[]=str2.toCharArray();
+//							StringBuilder cc2=new StringBuilder();
+//							for (char c:s2){
+//								cc2.append(String.valueOf(c)).append(" ");
+//							}
+//							n1.setText(cc2.toString());
 
 						}
 					});
