@@ -3045,7 +3045,7 @@ public class YiDongNianHuiActivity extends Activity implements RecytviewCash {
 												runOnUiThread(new Runnable() {
 													@Override
 													public void run() {
-														TastyToast.makeText(YiDongNianHuiActivity.this,"非当前展会人员",TastyToast.LENGTH_SHORT,TastyToast.INFO).show();
+														TastyToast.makeText(YiDongNianHuiActivity.this,"非当前时段会议人员",TastyToast.LENGTH_SHORT,TastyToast.INFO).show();
 													}
 												});
 											}
