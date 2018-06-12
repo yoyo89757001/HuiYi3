@@ -193,21 +193,25 @@ public class MyReceiver extends BroadcastReceiver {
 								.setListener(new FileDownloadListener() {
 									@Override
 									protected void pending(BaseDownloadTask task, int soFarBytes, int totalBytes) {
+										Log.d(TAG, "pending"+soFarBytes);
 
 									}
 
 									@Override
 									protected void connected(BaseDownloadTask task, String etag, boolean isContinue, int soFarBytes, int totalBytes) {
 										//已经连接上
+										Log.d(TAG, "isContinue:" + isContinue);
 
 										}
 
 									@Override
 									protected void progress(BaseDownloadTask task, int soFarBytes, int totalBytes) {
+										Log.d(TAG, "soFarBytes:" + soFarBytes+task.getUrl());
 										//进度
 										isDW=false;
 										if (task.getUrl().equals(path2)){
-											showNotifictionIcon(context,soFarBytes,"下载中","下载人脸库中"+(soFarBytes/totalBytes)+"%");
+											Log.d(TAG, totalBytes+"KB");
+											showNotifictionIcon(context,(float)soFarBytes/(float) totalBytes,"下载中","下载人脸库中"+((float)soFarBytes/(float) totalBytes)*100+"%");
 										}
 									}
 
@@ -220,6 +224,7 @@ public class MyReceiver extends BroadcastReceiver {
 									@Override
 									protected void retry(final BaseDownloadTask task, final Throwable ex, final int retryingTimes, final int soFarBytes) {
 									//重试
+										Log.d(TAG, ex.getMessage()+"重试 "+retryingTimes);
 
 
 									}
@@ -423,7 +428,7 @@ public class MyReceiver extends BroadcastReceiver {
 
 
 
-	public static void showNotifictionIcon(Context context,int p,String title,String contextss) {
+	public static void showNotifictionIcon(Context context,float p,String title,String contextss) {
 		NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
 		//Intent intent = new Intent(context, XXXActivity.class);//将要跳转的界面
 		Intent intent = new Intent();//只显示通知，无页面跳转
@@ -432,7 +437,7 @@ public class MyReceiver extends BroadcastReceiver {
 		//builder.setDefaults(NotificationCompat.DEFAULT_SOUND);//设置通知铃声
 		builder.setContentTitle(title);
 		builder.setContentText(contextss);
-		builder.setProgress(100,p,false);
+		builder.setProgress(100, (int) p,false);
 		builder.setDefaults(Notification.DEFAULT_LIGHTS); //设置通知的提醒方式： 呼吸灯
 		builder.setPriority(NotificationCompat.PRIORITY_MAX); //设置通知的优先级：最大
 		//利用PendingIntent来包装我们的intent对象,使其延迟跳转

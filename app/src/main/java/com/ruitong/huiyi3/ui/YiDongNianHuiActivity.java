@@ -2751,7 +2751,7 @@ public class YiDongNianHuiActivity extends Activity implements RecytviewCash {
 				//	}
 
 				}catch (Exception e){
-					Log.d("WebsocketPushMsg", e.getMessage());
+					Log.d("WebsocketPushMsg", e.getMessage()+"签到返回异常");
 				}
 
 			}
@@ -3011,7 +3011,7 @@ public class YiDongNianHuiActivity extends Activity implements RecytviewCash {
 
 				uri = URI.create(wsUrl + "?url=" + rtspUrl);
 
-		//	Log.d("WebsocketPushMsg", "url="+uri);
+			Log.d("WebsocketPushMsg", "url="+uri);
 			  webSocketClient = new WebSocketClient(uri) {
 			//	private Vector vector=new Vector();
 
@@ -3049,14 +3049,25 @@ public class YiDongNianHuiActivity extends Activity implements RecytviewCash {
 										//QianDaoId qianDaoId=qianDaoIdDao.load(Long.parseLong(dataBean.getPerson().getJob_number()));
 
 										if (baoCunBean.getHoutaiDiZhi()!=null && !baoCunBean.getHoutaiDiZhi().equals("") && zhanghuID!=null && !zhanghuID.equals("") && huiyiID!=null && !huiyiID.equals("")){
-											if (dataBean.getPerson().getDescription().contains(baoCunBean.getZhanhuiBianMa())){
-												link_fasong(dataBean.getData().getTimestamp(),dataBean.getPerson().getJob_number());
-												Message message2 = Message.obtain();
-												message2.arg1 = 1;
-												message2.obj = dataBean.getPerson();
-												handler.sendMessage(message2);
-											}else {
+//											Log.d("WebsocketPushMsg", dataBean.getPerson().getDescription()+"的");
+//											Log.d("WebsocketPushMsg", baoCunBean.getZhanhuiBianMa()+"方法");
+											int po=1;
+											String bm[]= dataBean.getPerson().getDescription().split(",");
+											for (String s:bm){
+												if (baoCunBean.getZhanhuiBianMa().contains(s)){
+													Message message2 = Message.obtain();
+													message2.arg1 = 1;
+													message2.obj = dataBean.getPerson();
+													handler.sendMessage(message2);
+													link_fasong(dataBean.getData().getTimestamp(),dataBean.getPerson().getJob_number());
 
+													break;
+												}else {
+													po=2;
+													Log.d("WebsocketPushMsg", "33333333333333");
+												}
+											}
+											if (po==2){
 												runOnUiThread(new Runnable() {
 													@Override
 													public void run() {
@@ -3114,7 +3125,7 @@ public class YiDongNianHuiActivity extends Activity implements RecytviewCash {
 								//Log.d(TAG, "111");
 
 							}catch (Exception e){
-								Log.d("WebsocketPushMsg", e.getMessage()+"aaa");
+								Log.d("WebsocketPushMsg", e.getMessage()+"aaajjjj");
 							}
 
 //						BenDiQianDao qianDao=new BenDiQianDao();
@@ -3170,7 +3181,7 @@ public class YiDongNianHuiActivity extends Activity implements RecytviewCash {
 				@Override
 				public void onClose(int i, String s, boolean b) {
 					isLianJie=false;
-					//Log.d("WebsocketPushMsg", "onClose"+i);
+					Log.d("WebsocketPushMsg", "onClose"+i);
 					runOnUiThread( new Runnable() {
 						@Override
 						public void run() {
@@ -3702,19 +3713,18 @@ public class YiDongNianHuiActivity extends Activity implements RecytviewCash {
 					final HuiYiInFoBean renShu=gson.fromJson(jsonObject,HuiYiInFoBean.class);
 					List<HuiYiInFoBean.ObjectsBean> gg= renShu.getObjects();
 					int si=gg.size();
+					StringBuilder stringBuilder=new StringBuilder();
 					for (int i=0;i<si;i++){
-						if (DateUtils.datas(System.currentTimeMillis()+"").equals(DateUtils.datas(gg.get(i).getStartTime()+""))){
 
-							//baoCunBean.setZhanhuiId(gg.get(i).getExhibitionId()+"");
-							baoCunBean.setZhanhuiBianMa(gg.get(i).getSubConferenceCode()+"");
-							baoCunBeanDao.update(baoCunBean);
-							break;
+						if (gg.get(i).getMachineCode().contains(Utils.getSerialNumber(YiDongNianHuiActivity.this)==null?Utils.getIMSI():Utils.getSerialNumber(YiDongNianHuiActivity.this))){
+							stringBuilder.append(gg.get(i).getSubConferenceCode());
+							stringBuilder.append(",");
 						}
-
 					}
-					if (baoCunBean.getZhanhuiId()==null){
 
-					}
+					baoCunBean.setZhanhuiBianMa(stringBuilder.toString());
+					baoCunBeanDao.update(baoCunBean);
+					Log.d("YiDongNianHuiActivity", baoCunBean.getZhanhuiBianMa()+"d");
 
 				}catch (Exception e){
 					Log.d("WebsocketPushMsg", e.getMessage()+"ttttt");
@@ -3769,14 +3779,18 @@ public class YiDongNianHuiActivity extends Activity implements RecytviewCash {
 					runOnUiThread(new Runnable() {
 						@Override
 						public void run() {
+							try {
+								String str = String.format("%04d",jsonArray.get("dtoDesc").getAsInt());
+								char s1[]=str.toCharArray();
+								StringBuilder cc=new StringBuilder();
+								for (char c:s1){
+									cc.append(String.valueOf(c)).append(" ");
+								}
+								y1.setText(cc.toString());
 
-							String str = String.format("%04d",jsonArray.get("dtoDesc").getAsString());
-							char s1[]=str.toCharArray();
-							StringBuilder cc=new StringBuilder();
-							for (char c:s1){
-								cc.append(String.valueOf(c)).append(" ");
+							}catch (Exception e){
+								Log.d("YiDongNianHuiActivity", e.getMessage()+"获取实时人数异常");
 							}
-							y1.setText(cc.toString());
 
 //							String str2 = String.format("%04d", renShu.getTjOutPeople());
 //							char s2[]=str2.toCharArray();
@@ -3791,7 +3805,7 @@ public class YiDongNianHuiActivity extends Activity implements RecytviewCash {
 
 
 				}catch (Exception e){
-					Log.d("WebsocketPushMsg", e.getMessage()+"ttttt");
+					Log.d("WebsocketPushMsg", e.getMessage()+"tttttiiii");
 				}
 
 			}
