@@ -67,6 +67,8 @@ import com.ruitong.huiyi3.beans.WBBean;
 import com.ruitong.huiyi3.beans.WeiShiBieBean;
 import com.ruitong.huiyi3.beans.ZhuJiBeanH;
 import com.ruitong.huiyi3.beans.ZhuJiBeanHDao;
+import com.ruitong.huiyi3.huiyixinxi.HuiYiID;
+import com.ruitong.huiyi3.huiyixinxi.HuiYiIDDao;
 import com.ruitong.huiyi3.interfaces.RecytviewCash;
 import com.ruitong.huiyi3.service.AlarmReceiver;
 import com.ruitong.huiyi3.tts.control.InitConfig;
@@ -181,6 +183,8 @@ public class YiDongNianHuiActivity extends Activity implements RecytviewCash {
 	private LinearLayout rootLayout2;
 	private String touxiangPath=null;
 	private ZhuJiBeanHDao zhuJiBeanHDao=null;
+	private HuiYiID huiYiID=null;
+	private HuiYiIDDao huiYiIDDao=null;
 
 
 	public  Handler handler=new Handler(new Handler.Callback() {
@@ -1466,6 +1470,7 @@ public class YiDongNianHuiActivity extends Activity implements RecytviewCash {
 		//tanChuangBeanDao=MyApplication.myApplication.getDaoSession().getTanChuangBeanDao();
 		baoCunBeanDao = MyApplication.myApplication.getDaoSession().getBaoCunBeanDao();
 		zhuJiBeanHDao = MyApplication.myApplication.getDaoSession().getZhuJiBeanHDao();
+		huiYiIDDao=MyApplication.myApplication.getDaoSession().getHuiYiIDDao();
 		baoCunBean = baoCunBeanDao.load(123456L);
 		if (baoCunBean == null) {
 			BaoCunBean baoCunBea = new BaoCunBean();
@@ -1543,7 +1548,8 @@ public class YiDongNianHuiActivity extends Activity implements RecytviewCash {
 						&& baoCunBean.getZhanhuiId()!=null && !baoCunBean.getZhanhuiId().equals("") ){
 					//link_login();
 					link_bg();
-					link_shishi_renshu();
+				//	link_shishi_renshu();
+
 				}else {
 					TastyToast.makeText(YiDongNianHuiActivity.this,"请先设置账户id",TastyToast.LENGTH_SHORT,TastyToast.INFO).show();
 				}
@@ -2659,6 +2665,15 @@ public class YiDongNianHuiActivity extends Activity implements RecytviewCash {
 								.into(dabg);
 					}
 
+					if (baoCunBean.getHoutaiDiZhi()!=null && !baoCunBean.getHoutaiDiZhi().equals("")
+							&& baoCunBean.getZhanghuId()!=null && !baoCunBean.getZhanghuId().equals("")
+							&& baoCunBean.getZhanhuiId()!=null && !baoCunBean.getZhanhuiId().equals("") ){
+						//link_login();
+
+						link_bg();
+
+					}
+
 				}
 				if (intent.getAction().equals("shoudongshuaxin")) {
 
@@ -2691,20 +2706,23 @@ public class YiDongNianHuiActivity extends Activity implements RecytviewCash {
 		}
 	}
 
-	private void link_fasong(int timestamp,String id) {
+	private void link_fasong(int timestamp,String id,String bianma) {
 		//Log.d(TAG, DateUtils.time(timestamp + "000"));
+		final long huiyi=huiYiIDDao.queryBuilder().where(HuiYiIDDao.Properties.SubConferenceCode.eq(bianma)).unique().getId();
 		OkHttpClient okHttpClient= MyApplication.getOkHttpClient();
 		RequestBody body = new FormBody.Builder()
-				//.add("accountId",baoCunBean.getZhanghuId())
-               // .add("snapshotPhoto","")
+				.add("machineName",baoCunBean.getGuanggaojiMing())
+               	 .add("machineCode",Utils.getSerialNumber(this)==null?Utils.getIMSI():Utils.getSerialNumber(this))
                  .add("exhibition_id",baoCunBean.getZhanhuiId())
 				.add("timestamp",DateUtils.time(timestamp+"000"))
 				.add("subjectId",id+"")
 				.add("screenId",baoCunBean.getGonggao())
 				//.add("conferenceName",huiYiName)
 			//	.add("screenPosition",weizhi)
-				.add("conference_id",baoCunBean.getZhanghuId())
+				.add("conference_id",huiyi+"")
 				.build();
+
+		//Log.d(TAG, baoCunBean.getZhanghuId()+"hhhhhhhhhhhhhhhh");
 		Request.Builder requestBuilder = new Request.Builder()
 				//.header("Content-Type", "application/json")
 				.post(body)
@@ -2734,7 +2752,7 @@ public class YiDongNianHuiActivity extends Activity implements RecytviewCash {
 				ResponseBody body = response.body();
 				String ss=body.string();
 				  Log.d("AllConnects", "签到返回"+ss);
-				  link_shishi_renshu();
+				  link_shishi_renshu(huiyi);
 
 //					JsonObject jsonObject= GsonUtil.parse(body.string()).getAsJsonObject();
 //					Gson gson=new Gson();
@@ -2788,7 +2806,7 @@ public class YiDongNianHuiActivity extends Activity implements RecytviewCash {
 				&& baoCunBean.getZhanghuId()!=null && !baoCunBean.getZhanghuId().equals("")
 				&& baoCunBean.getZhanhuiId()!=null && !baoCunBean.getZhanhuiId().equals("")){
 			link_bg();
-			link_shishi_renshu();
+			//link_shishi_renshu();
 		}
 
 		List<ZhuJiBeanH> hh=zhuJiBeanHDao.loadAll();
@@ -3059,7 +3077,7 @@ public class YiDongNianHuiActivity extends Activity implements RecytviewCash {
 													message2.arg1 = 1;
 													message2.obj = dataBean.getPerson();
 													handler.sendMessage(message2);
-													link_fasong(dataBean.getData().getTimestamp(),dataBean.getPerson().getJob_number());
+													link_fasong(dataBean.getData().getTimestamp(),dataBean.getPerson().getJob_number(),s);
 
 													break;
 												}else {
@@ -3674,6 +3692,8 @@ public class YiDongNianHuiActivity extends Activity implements RecytviewCash {
 	}
 
 	private void link_bg(){
+		if (huiYiIDDao!=null)
+			huiYiIDDao.deleteAll();
 	//	final MediaType JSON=MediaType.parse("application/json; charset=utf-8");
 		OkHttpClient okHttpClient= MyApplication.getOkHttpClient();
 			//RequestBody requestBody = RequestBody.create(JSON, json);
@@ -3687,7 +3707,7 @@ public class YiDongNianHuiActivity extends Activity implements RecytviewCash {
 				//.post(requestBody)
 				//.get()
 				.post(body)
-				.url(baoCunBean.getHoutaiDiZhi()+"/findSubConference.do");
+					.url(baoCunBean.getHoutaiDiZhi()+"/findSubConference.do");
 
 		// step 3：创建 Call 对象
 		Call call = okHttpClient.newCall(requestBuilder.build());
@@ -3719,6 +3739,15 @@ public class YiDongNianHuiActivity extends Activity implements RecytviewCash {
 						if (gg.get(i).getMachineCode().contains(Utils.getSerialNumber(YiDongNianHuiActivity.this)==null?Utils.getIMSI():Utils.getSerialNumber(YiDongNianHuiActivity.this))){
 							stringBuilder.append(gg.get(i).getSubConferenceCode());
 							stringBuilder.append(",");
+							try {
+								HuiYiID huiYiID=new HuiYiID();
+								huiYiID.setId((long) gg.get(i).getId());
+								huiYiID.setSubConferenceCode(gg.get(i).getSubConferenceCode());
+								huiYiIDDao.insert(huiYiID);
+							}catch (Exception e){
+								Log.d("YiDongNianHuiActivity", e.getMessage()+"");
+							}
+
 						}
 					}
 
@@ -3734,13 +3763,13 @@ public class YiDongNianHuiActivity extends Activity implements RecytviewCash {
 		});
 	}
 
-	private void link_shishi_renshu(){
+	private void link_shishi_renshu(long huiyi){
 
 		//	final MediaType JSON=MediaType.parse("application/json; charset=utf-8");
 		OkHttpClient okHttpClient= MyApplication.getOkHttpClient();
 		//RequestBody requestBody = RequestBody.create(JSON, json);
 		RequestBody body = new FormBody.Builder()
-				.add("meetingId",baoCunBean.getZhanhuiId())
+				.add("meetingId",huiyi+"")
 				.add("signInChannel","1")
 				.add("machineCode", Utils.getSerialNumber(this)==null?Utils.getIMSI():Utils.getSerialNumber(this))
 				.build();

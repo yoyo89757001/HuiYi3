@@ -179,6 +179,9 @@ public class MyReceiver extends BroadcastReceiver {
 					baoCunBean.setGonggao(jsonObject.get("content").getAsJsonObject().get("screenId").getAsInt()+"");
 					baoCunBeanDao.update(baoCunBean);
 
+					Intent intent2=new Intent("gxshipingdizhi");
+					context.sendBroadcast(intent2);
+
 					path2 =baoCunBean.getHoutaiDiZhi()+jsonObject.get("content").getAsJsonObject().get("zip_url").getAsString();
 					Log.d(TAG, path2);
 					File file = new File(SDPATH);
@@ -259,7 +262,7 @@ public class MyReceiver extends BroadcastReceiver {
 										if (task.getUrl().equals(path2)){
 											isDW=true;
 											showNotifictionIcon(context,0,"下载失败",""+e);
-											Log.d(TAG, "task.isRunning():" + task.getFilename()+"失败");
+											Log.d(TAG, "task.isRunning():" + task.getFilename()+"失败"+e);
 										}
 									}
 

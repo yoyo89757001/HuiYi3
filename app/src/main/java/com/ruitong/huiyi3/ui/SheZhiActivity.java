@@ -638,7 +638,7 @@ public class SheZhiActivity extends Activity implements View.OnClickListener, Vi
                         //弹窗
                         final XiuGaiHouTaiDialog dialog=new XiuGaiHouTaiDialog(SheZhiActivity.this);
                         if (baoCunBean.getHoutaiDiZhi()==null && baoCunBean.getGuanggaojiMing()==null){
-                            dialog.setContents("http://192.168.2.161:8080","广告机1","10000032");
+                            dialog.setContents("http://47.106.200.182","广告机1","10000038");
                         }else {
                             dialog.setContents(baoCunBean.getHoutaiDiZhi(),baoCunBean.getGuanggaojiMing(),baoCunBean.getZhanghuId());
                         }
