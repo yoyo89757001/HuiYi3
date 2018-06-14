@@ -2607,9 +2607,9 @@ public class YiDongNianHuiActivity extends Activity implements RecytviewCash {
 		}
 	}
 
-	private void link_fasong(int timestamp,String id,String bianma) {
+	private void link_fasong(int timestamp,String id,long huiyi) {
 		//Log.d(TAG, DateUtils.time(timestamp + "000"));
-		final long huiyi=huiYiIDDao.queryBuilder().where(HuiYiIDDao.Properties.SubConferenceCode.eq(bianma)).unique().getId();
+
 		OkHttpClient okHttpClient= MyApplication.getOkHttpClient();
 		RequestBody body = new FormBody.Builder()
 				.add("machineName",baoCunBean.getGuanggaojiMing())
@@ -2991,26 +2991,35 @@ public class YiDongNianHuiActivity extends Activity implements RecytviewCash {
 
 							try {
 
+										if (baoCunBean.getHoutaiDiZhi()!=null
+												&& !baoCunBean.getHoutaiDiZhi().equals("")
+												&& zhanghuID!=null && !zhanghuID.equals("")
+												&& huiyiID!=null && !huiyiID.equals("")){
 
-
-										if (baoCunBean.getHoutaiDiZhi()!=null && !baoCunBean.getHoutaiDiZhi().equals("") && zhanghuID!=null && !zhanghuID.equals("") && huiyiID!=null && !huiyiID.equals("")){
-//											Log.d("WebsocketPushMsg", dataBean.getPerson().getDescription()+"的");
-//											Log.d("WebsocketPushMsg", baoCunBean.getZhanhuiBianMa()+"方法");
 											int po=1;
 											String bm[]= dataBean.getPerson().getDescription().split(",");
-											for (String s:bm){
-												if (baoCunBean.getZhanhuiBianMa().contains(s)){
-													Message message2 = Message.obtain();
-													message2.arg1 = 1;
-													message2.obj = dataBean.getPerson();
-													handler.sendMessage(message2);
-													link_fasong(dataBean.getData().getTimestamp(),dataBean.getPerson().getJob_number(),s);
 
-													break;
-												}else {
-													po=2;
-													Log.d("WebsocketPushMsg", "33333333333333");
+											for (String s:bm){
+												try {
+													HuiYiID  huiyi=huiYiIDDao.queryBuilder().where(HuiYiIDDao.Properties.SubConferenceCode.eq(s)).unique();
+													if (baoCunBean.getZhanhuiBianMa().contains(s)
+															&& (huiyi.getStartTime()<System.currentTimeMillis())
+															&& (huiyi.getEndTime()<System.currentTimeMillis())){
+														Message message2 = Message.obtain();
+														message2.arg1 = 1;
+														message2.obj = dataBean.getPerson();
+														handler.sendMessage(message2);
+														link_fasong(dataBean.getData().getTimestamp(),dataBean.getPerson().getJob_number(),huiyi.getId());
+														break;
+
+													}else {
+														po=2;
+														Log.d("WebsocketPushMsg", "33333333333333");
+													}
+												}catch (Exception e){
+													Log.d("WebsocketPushMsg", e.getMessage());
 												}
+
 											}
 											if (po==2){
 												runOnUiThread(new Runnable() {
@@ -3665,10 +3674,13 @@ public class YiDongNianHuiActivity extends Activity implements RecytviewCash {
 						if (gg.get(i).getMachineCode().contains(Utils.getSerialNumber(YiDongNianHuiActivity.this)==null?Utils.getIMSI():Utils.getSerialNumber(YiDongNianHuiActivity.this))){
 							stringBuilder.append(gg.get(i).getSubConferenceCode());
 							stringBuilder.append(",");
+							//所有展会编码已逗号分开保存
 							try {
 								HuiYiID huiYiID=new HuiYiID();
 								huiYiID.setId((long) gg.get(i).getId());
 								huiYiID.setSubConferenceCode(gg.get(i).getSubConferenceCode());
+								huiYiID.setStartTime(gg.get(i).getStartTime());
+								huiYiID.setEndTime(gg.get(i).getEndTime());
 								huiYiIDDao.insert(huiYiID);
 							}catch (Exception e){
 								Log.d("YiDongNianHuiActivity", e.getMessage()+"");
