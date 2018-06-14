@@ -1939,7 +1939,9 @@ public class SheZhiActivity extends Activity implements View.OnClickListener, Vi
             json.put("subject_type","0");
             json.put("name",renYuanInFo.getName());
             json.put("remark",renYuanInFo.getRemark());
-            json.put("photo_ids",jsonArray);
+            if (i!=0){
+                json.put("photo_ids",jsonArray);
+            }
             json.put("phone",renYuanInFo.getPhone());
             json.put("department",renYuanInFo.getDepartment());
             json.put("title",renYuanInFo.getTitle());

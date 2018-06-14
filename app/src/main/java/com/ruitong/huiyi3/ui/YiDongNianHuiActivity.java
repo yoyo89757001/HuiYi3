@@ -277,7 +277,7 @@ public class YiDongNianHuiActivity extends Activity implements RecytviewCash {
 							}
 
 								if (a==0){
-								int mbtype=13;
+								int mbtype=1;
 								String hyy="";
 									yuangongList.add(bean);
 									int i1 = yuangongList.size();
