@@ -24,6 +24,15 @@ public class Subject implements Comparator<Subject> {
     private String assemblyId;
     private String sourceMeeting;
     private String photo;
+    private int  lingshiZPID;
+
+    public int getLingshiZPID() {
+        return lingshiZPID;
+    }
+
+    public void setLingshiZPID(int  lingshiZPID) {
+        this.lingshiZPID = lingshiZPID;
+    }
 
     public String getId() {
         return id;

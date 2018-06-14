@@ -782,7 +782,7 @@ public class MyReceiver extends BroadcastReceiver {
 		});
 	}
 
-	//查询人员
+	//查询人员//批量的
 	private void link_chaXunRenYuan(final OkHttpClient okHttpClient, final Subject subject, final String trg, final String filePath){
 
 		//	Log.d("MyReceivereee", "进来");
@@ -848,14 +848,16 @@ public class MyReceiver extends BroadcastReceiver {
 							if (!zhaoPianBean.getData().get(i).getJob_number().equals(subject.getId()+"")){
 								//跟所有人都不同， 再新增
 								pp=0;
-								Log.d("MyReceiver", "222");
+								//Log.d("MyReceiver", "222");
 							}
 							else {
 								//相同就不需要再往下比对了，跳出当前循环
 								pp=1;
 								//更新旷视人员信息//先传图片
+							//	Log.d("MyReceiver", "jjjj:" + zhaoPianBean.getData().get(i).getPhotos().get(0).getIdX());
+								subject.setLingshiZPID(zhaoPianBean.getData().get(i).getPhotos().get(0).getIdX());
 								link_P1(zhuJiBeanH,filePath,subject,zhaoPianBean.getData().get(i).getId());
-								Log.d("MyReceiver", "333");
+								//Log.d("MyReceiver", "333");
 								break;
 							}
 						}
@@ -988,7 +990,7 @@ public class MyReceiver extends BroadcastReceiver {
 	//修改人员
 	private void link_XiuGaiRenYuan(final OkHttpClient okHttpClient, final Subject renYuanInFo, int i, int id){
 		final MediaType JSON=MediaType.parse("application/json; charset=utf-8");
-		Log.d("hhhhhhhhhhh", renYuanInFo.toString());
+		//Log.d("hhhhhhhhhhh", renYuanInFo.toString());
 		JSONObject json = new JSONObject();
 		try {
 			JSONArray jsonArray= new JSONArray();
@@ -997,7 +999,13 @@ public class MyReceiver extends BroadcastReceiver {
 			json.put("name",renYuanInFo.getName());
 			json.put("remark",renYuanInFo.getRemark());
 			if (i!=0){
+				Log.d(TAG, "i:" + i);
 				json.put("photo_ids",jsonArray);
+			}else {
+				JSONArray jsonArray2= new JSONArray();
+				jsonArray2.put(renYuanInFo.getLingshiZPID());
+				json.put("photo_ids",jsonArray2);
+				//Log.d(TAG, "renYuanInFo.getLingshiZPID():" + renYuanInFo.getLingshiZPID());
 			}
 			json.put("phone",renYuanInFo.getPhone());
 			json.put("department",renYuanInFo.getDepartment());
@@ -1079,7 +1087,7 @@ public class MyReceiver extends BroadcastReceiver {
 
 	//创建批量人员
 	private void link_addPiLiangRenYuan(final OkHttpClient okHttpClient, final Subject subject, int ii){
-		Log.d("hhhhhhhhhh", subject.toString());
+		//Log.d("hhhhhhhhhh", subject.toString());
 		final MediaType JSON=MediaType.parse("application/json; charset=utf-8");
 
 		JSONObject json = new JSONObject();
@@ -1884,9 +1892,7 @@ public class MyReceiver extends BroadcastReceiver {
 			json.put("subject_type","0");
 			json.put("name",renYuanInFo.getName());
 			json.put("remark",renYuanInFo.getRemark());
-			if (i!=0){
-				json.put("photo_ids",jsonArray);
-			}
+			json.put("photo_ids",jsonArray);
 			json.put("phone",renYuanInFo.getPhone());
 			json.put("department",renYuanInFo.getDepartment());
 			json.put("title",renYuanInFo.getTitle());
