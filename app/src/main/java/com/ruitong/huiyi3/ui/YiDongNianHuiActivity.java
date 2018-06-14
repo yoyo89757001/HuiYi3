@@ -2607,7 +2607,7 @@ public class YiDongNianHuiActivity extends Activity implements RecytviewCash {
 		}
 	}
 
-	private void link_fasong(int timestamp,String id,long huiyi) {
+	private void link_fasong(int timestamp, String id, final long huiyi) {
 		//Log.d(TAG, DateUtils.time(timestamp + "000"));
 
 		OkHttpClient okHttpClient= MyApplication.getOkHttpClient();
@@ -3002,9 +3002,18 @@ public class YiDongNianHuiActivity extends Activity implements RecytviewCash {
 											for (String s:bm){
 												try {
 													HuiYiID  huiyi=huiYiIDDao.queryBuilder().where(HuiYiIDDao.Properties.SubConferenceCode.eq(s)).unique();
+													if (huiyi==null){
+														runOnUiThread(new Runnable() {
+															@Override
+															public void run() {
+																TastyToast.makeText(YiDongNianHuiActivity.this,"查询不到展会编码",TastyToast.LENGTH_SHORT,TastyToast.INFO).show();
+															}
+														});
+													}
+
 													if (baoCunBean.getZhanhuiBianMa().contains(s)
 															&& (huiyi.getStartTime()<System.currentTimeMillis())
-															&& (huiyi.getEndTime()<System.currentTimeMillis())){
+															&& (huiyi.getEndTime()>System.currentTimeMillis())){
 														Message message2 = Message.obtain();
 														message2.arg1 = 1;
 														message2.obj = dataBean.getPerson();

@@ -183,7 +183,6 @@ public class MyReceiver extends BroadcastReceiver {
 					FileDownloader.setup(context);
 					isDW=true;
 					Thread.sleep(1200);
-
 					baoCunBean.setZhanhuiId(jsonObject.get("content").getAsJsonObject().get("id").getAsInt()+"");
 					baoCunBean.setGonggao(jsonObject.get("content").getAsJsonObject().get("screenId").getAsInt()+"");
 					baoCunBeanDao.update(baoCunBean);
