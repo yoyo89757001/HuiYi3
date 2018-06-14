@@ -10,7 +10,8 @@ import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.SystemClock;
-import android.support.v7.app.NotificationCompat;
+
+import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import android.util.Xml;
 
@@ -138,32 +139,40 @@ public class MyReceiver extends BroadcastReceiver {
 				Logger.d(TAG, "[MyReceiver] 接收到推送下来的自定义消息: " + bundle.getString(JPushInterface.EXTRA_MESSAGE));
 				JsonObject jsonObject= GsonUtil.parse(bundle.getString(JPushInterface.EXTRA_MESSAGE)).getAsJsonObject();
 				if (jsonObject.get("title").getAsString().equals("迎宾设置")){
+					String p1=null;
 					Gson gson=new Gson();
 					MOBan renShu=gson.fromJson(jsonObject,MOBan.class);
-					List<BenDiMBbean> bb=benDiMBbeanDao.queryBuilder().where(BenDiMBbeanDao.Properties.SubType.eq(renShu.getContent().getSubType())).list();
-					if (bb!=null ){
-						int size=bb.size();
-						for (int i=0;i<size;i++){
-							//删掉相同身份的，保证只有一种最新的身份
-							benDiMBbeanDao.delete(bb.get(i));
-						}
-					}
-					String p1=renShu.getContent().getBottemImageUrl().substring(1,renShu.getContent().getBottemImageUrl().length()-1);
-					String p2=renShu.getContent().getPopupImageUrl().substring(1,renShu.getContent().getPopupImageUrl().length()-1);
+					String tp[]= renShu.getContent().getSubType().split("-");
+					for (String typee : tp) {
 
-					BenDiMBbean benDiMBbean=new BenDiMBbean();
-					benDiMBbean.setId(System.currentTimeMillis());
-					benDiMBbean.setBottemImageUrl(p1);
-					benDiMBbean.setPopupImageUrl(p2);
-					benDiMBbean.setWelcomeSpeak(renShu.getContent().getWelcomeSpeak());
-					benDiMBbean.setSubType(renShu.getContent().getSubType());
-					benDiMBbean.setPhoto_index(renShu.getContent().getPhoto_index());
-					benDiMBbeanDao.insert(benDiMBbean);
+						List<BenDiMBbean> bb = benDiMBbeanDao.queryBuilder().where(BenDiMBbeanDao.Properties.SubType.eq(typee)).list();
+						if (bb != null) {
+							int size = bb.size();
+							for (int i = 0; i < size; i++) {
+								//删掉相同身份的，保证只有一种最新的身份
+								benDiMBbeanDao.delete(bb.get(i));
+							}
+						}
+
+						p1=renShu.getContent().getBottemImageUrl().substring(1,renShu.getContent().getBottemImageUrl().length()-1);
+						String p2=renShu.getContent().getPopupImageUrl().substring(1,renShu.getContent().getPopupImageUrl().length()-1);
+
+						BenDiMBbean benDiMBbean=new BenDiMBbean();
+						benDiMBbean.setId(System.currentTimeMillis());
+						benDiMBbean.setBottemImageUrl(p1);
+						benDiMBbean.setPopupImageUrl(p2);
+						benDiMBbean.setWelcomeSpeak(renShu.getContent().getWelcomeSpeak());
+						benDiMBbean.setSubType(typee);
+						benDiMBbean.setPhoto_index(renShu.getContent().getPhoto_index());
+						benDiMBbeanDao.insert(benDiMBbean);
+						baoCunBean.setWenzi(p1);
+					}
+
 					List<BenDiMBbean> f=  benDiMBbeanDao.loadAll();
 					for (BenDiMBbean ll:f){
 						Log.d(TAG, "ll.getPhoto_index():" + ll.getPhoto_index()+ll.getSubType());
 					}
-					baoCunBean.setWenzi(p1);
+
 					baoCunBeanDao.update(baoCunBean);
 					Intent intent2=new Intent("gxshipingdizhi");
 					intent2.putExtra("bgPath",p1);
@@ -555,7 +564,6 @@ public class MyReceiver extends BroadcastReceiver {
 		mcall.enqueue(new Callback() {
 			@Override
 			public void onFailure(Call call, IOException e) {
-
 
 				Log.d("ffffff", "登陆失败" + e.getMessage());
 
@@ -995,7 +1003,7 @@ public class MyReceiver extends BroadcastReceiver {
 			json.put("department",renYuanInFo.getDepartment());
 			json.put("title",renYuanInFo.getTitle());
 			json.put("job_number", renYuanInFo.getId());
-			json.put("department", renYuanInFo.getSourceMeeting());
+			json.put("description", renYuanInFo.getSourceMeeting());
 
 		} catch (JSONException e) {
 			e.printStackTrace();

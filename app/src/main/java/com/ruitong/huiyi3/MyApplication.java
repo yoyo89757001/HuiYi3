@@ -3,6 +3,7 @@ package com.ruitong.huiyi3;
 
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.content.res.Configuration;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Environment;
 import android.support.multidex.MultiDexApplication;
@@ -12,6 +13,7 @@ import com.ruitong.huiyi3.beans.DaoSession;
 import com.ruitong.huiyi3.cookies.CookiesManager;
 import com.tencent.bugly.Bugly;
 import com.ruitong.huiyi3.utils.Utils;
+import com.yatoooon.screenadaptation.ScreenAdapterTools;
 
 import java.io.File;
 import java.util.concurrent.TimeUnit;
@@ -43,6 +45,8 @@ public class MyApplication extends MultiDexApplication {
 
 
 				try {
+					ScreenAdapterTools.init(this);
+
 					setDatabase();
 			//	JPushInterface.init(getApplicationContext());
 
@@ -118,6 +122,12 @@ public class MyApplication extends MultiDexApplication {
 
 	}
 
+//	//旋转适配,如果应用屏幕固定了某个方向不旋转的话(比如qq和微信),下面可不写.
+//	@Override
+//	public void onConfigurationChanged(Configuration newConfig) {
+//		super.onConfigurationChanged(newConfig);
+//		ScreenAdapterTools.getInstance().reset(this);
+//	}
 
 	public static MyApplication getAppContext() {
 		return myApplication;
