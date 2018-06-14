@@ -965,7 +965,6 @@ public class MyReceiver extends BroadcastReceiver {
 						}
 						if (pp==0){
 							//跟所有人都不同， 再新增
-							//先传图片
 							link_XiuGaiRenYuan(MyApplication.okHttpClient,context,zhuJiBeanH,renYuanInFo,ii);
 						}
 
@@ -990,7 +989,7 @@ public class MyReceiver extends BroadcastReceiver {
 	//修改人员
 	private void link_XiuGaiRenYuan(final OkHttpClient okHttpClient, final Subject renYuanInFo, int i, int id){
 		final MediaType JSON=MediaType.parse("application/json; charset=utf-8");
-
+		Log.d("hhhhhhhhhhh", renYuanInFo.toString());
 		JSONObject json = new JSONObject();
 		try {
 			JSONArray jsonArray= new JSONArray();
@@ -1079,7 +1078,7 @@ public class MyReceiver extends BroadcastReceiver {
 
 	//创建批量人员
 	private void link_addPiLiangRenYuan(final OkHttpClient okHttpClient, final Subject subject, int ii){
-
+		Log.d("hhhhhhhhhh", subject.toString());
 		final MediaType JSON=MediaType.parse("application/json; charset=utf-8");
 
 		JSONObject json = new JSONObject();
@@ -1876,7 +1875,7 @@ public class MyReceiver extends BroadcastReceiver {
 	//修改人员
 	private void link_XiuGaiRenYuan(final OkHttpClient okHttpClient, final Context contex, final ZhuJiBeanH zhuJiBeanH, final RenYuanInFo renYuanInFo, int i){
 		final MediaType JSON=MediaType.parse("application/json; charset=utf-8");
-
+		Log.d("ggggggggggg", renYuanInFo.toString());
 		JSONObject json = new JSONObject();
 		try {
 			JSONArray jsonArray= new JSONArray();

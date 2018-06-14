@@ -308,7 +308,40 @@ public class RenYuanInFo {
         this.title = title;
     }
 
-
-
-
+    @Override
+    public String toString() {
+        return "RenYuanInFo{" +
+                "accountId=" + accountId +
+                ", assemblyId='" + assemblyId + '\'' +
+                ", channel=" + channel +
+                ", come_from='" + come_from + '\'' +
+                ", companyName='" + companyName + '\'' +
+                ", country='" + country + '\'' +
+                ", createTime=" + createTime +
+                ", department='" + department + '\'' +
+                ", dtoResult=" + dtoResult +
+                ", gender=" + gender +
+                ", id=" + id +
+                ", identity='" + identity + '\'' +
+                ", jobStatus=" + jobStatus +
+                ", location='" + location + '\'' +
+                ", meetingId=" + meetingId +
+                ", modifyTime=" + modifyTime +
+                ", name='" + name + '\'' +
+                ", namePinyin='" + namePinyin + '\'' +
+                ", num=" + num +
+                ", pageNum=" + pageNum +
+                ", pageSize=" + pageSize +
+                ", phone='" + phone + '\'' +
+                ", photo_ids='" + photo_ids + '\'' +
+                ", province='" + province + '\'' +
+                ", remark='" + remark + '\'' +
+                ", sid=" + sid +
+                ", sourceMeeting='" + sourceMeeting + '\'' +
+                ", sourceQuestionJson='" + sourceQuestionJson + '\'' +
+                ", status=" + status +
+                ", subject_type=" + subject_type +
+                ", title='" + title + '\'' +
+                '}';
+    }
 }

@@ -277,7 +277,7 @@ public class YiDongNianHuiActivity extends Activity implements RecytviewCash {
 							}
 
 								if (a==0){
-								int mbtype=6;
+								int mbtype=13;
 								String hyy="";
 									yuangongList.add(bean);
 									int i1 = yuangongList.size();
@@ -641,6 +641,7 @@ public class YiDongNianHuiActivity extends Activity implements RecytviewCash {
 											break;
 										case 7: {
 											final View view3 = View.inflate(YiDongNianHuiActivity.this, R.layout.item7, null);
+											ScreenAdapterTools.getInstance().loadView(view3);
 											TextView name3 = (TextView) view3.findViewById(R.id.name);
 											TextView huanyinyu = (TextView) view3.findViewById(R.id.huanyinyu);
 											huanyinyu.setText(hyy);
@@ -654,7 +655,7 @@ public class YiDongNianHuiActivity extends Activity implements RecytviewCash {
 											Glide.with(YiDongNianHuiActivity.this)
 													//	.load(R.drawable.vvv)
 													.load(touxiangPath+bean.getTouxiang())
-													//	.load(zhuji+item.getTouxiang())
+													.error(R.drawable.erroy_bg)
 													//.apply(myOptions)
 													//.transform(new GlideRoundTransform(MyApplication.getAppContext(), 20))
 													.transform(new GlideCircleTransform(MyApplication.getAppContext(),2,Color.parseColor("#ffffffff")))
@@ -662,10 +663,6 @@ public class YiDongNianHuiActivity extends Activity implements RecytviewCash {
 
 											rootLayout.addView(view3);
 
-											ViewGroup.LayoutParams params3 = root_rl3.getLayoutParams();
-											params3.height = dh / 4;
-											root_rl3.setLayoutParams(params3);
-											root_rl3.invalidate();
 
 											new Handler().post(new Runnable() {
 												@Override
@@ -700,7 +697,7 @@ public class YiDongNianHuiActivity extends Activity implements RecytviewCash {
 											break;
 										case 8: {
 											final View view3 = View.inflate(YiDongNianHuiActivity.this, R.layout.item8, null);
-
+											ScreenAdapterTools.getInstance().loadView(view3);
 											TextView name3 = (TextView) view3.findViewById(R.id.name);
 											ImageView touxiang = (ImageView) view3.findViewById(R.id.touxiang);
 											RelativeLayout root_rl3 = (RelativeLayout) view3.findViewById(R.id.root_rl);
@@ -714,7 +711,7 @@ public class YiDongNianHuiActivity extends Activity implements RecytviewCash {
 											Glide.with(YiDongNianHuiActivity.this)
 													//	.load(R.drawable.vvv)
 													.load(touxiangPath+bean.getTouxiang())
-													//	.load(zhuji+item.getTouxiang())
+													.error(R.drawable.erroy_bg)
 													//.apply(myOptions)
 													//.transform(new GlideRoundTransform(MyApplication.getAppContext(), 20))
 													.transform(new GlideCircleTransform(MyApplication.getAppContext(),2,Color.parseColor("#ffffffff")))
@@ -722,10 +719,7 @@ public class YiDongNianHuiActivity extends Activity implements RecytviewCash {
 
 											rootLayout.addView(view3);
 
-											ViewGroup.LayoutParams params3 = root_rl3.getLayoutParams();
-											params3.width = dw / 3;
-											root_rl3.setLayoutParams(params3);
-											root_rl3.invalidate();
+
 
 											new Handler().post(new Runnable() {
 												@Override
@@ -760,7 +754,7 @@ public class YiDongNianHuiActivity extends Activity implements RecytviewCash {
 											break;
 										case 9: {
 											final View view3 = View.inflate(YiDongNianHuiActivity.this, R.layout.item9, null);
-
+											ScreenAdapterTools.getInstance().loadView(view3);
 											TextView name3 = (TextView) view3.findViewById(R.id.name);
 											ImageView touxiang = (ImageView) view3.findViewById(R.id.touxiang);
 											RelativeLayout root_rl3 = (RelativeLayout) view3.findViewById(R.id.root_rl);
@@ -774,7 +768,7 @@ public class YiDongNianHuiActivity extends Activity implements RecytviewCash {
 											Glide.with(YiDongNianHuiActivity.this)
 													//	.load(R.drawable.vvv)
 													.load(touxiangPath+bean.getTouxiang())
-													//	.load(zhuji+item.getTouxiang())
+													.error(R.drawable.erroy_bg)
 													//.apply(myOptions)
 													//.transform(new GlideRoundTransform(MyApplication.getAppContext(), 20))
 													.transform(new GlideCircleTransform(MyApplication.getAppContext(),2,Color.parseColor("#ffffffff")))
@@ -782,10 +776,6 @@ public class YiDongNianHuiActivity extends Activity implements RecytviewCash {
 
 											rootLayout.addView(view3);
 
-											ViewGroup.LayoutParams params3 = root_rl3.getLayoutParams();
-											params3.width = dw / 3;
-											root_rl3.setLayoutParams(params3);
-											root_rl3.invalidate();
 
 											new Handler().post(new Runnable() {
 												@Override
@@ -820,7 +810,7 @@ public class YiDongNianHuiActivity extends Activity implements RecytviewCash {
 										break;
 										case 10: {
 											final View view3 = View.inflate(YiDongNianHuiActivity.this, R.layout.item10, null);
-
+											ScreenAdapterTools.getInstance().loadView(view3);
 											TextView name3 = (TextView) view3.findViewById(R.id.name);
 											ImageView touxiang = (ImageView) view3.findViewById(R.id.touxiang);
 											RelativeLayout root_rl3 = (RelativeLayout) view3.findViewById(R.id.root_rl);
@@ -834,7 +824,7 @@ public class YiDongNianHuiActivity extends Activity implements RecytviewCash {
 											Glide.with(YiDongNianHuiActivity.this)
 													//	.load(R.drawable.vvv)
 													.load(touxiangPath+bean.getTouxiang())
-													//	.load(zhuji+item.getTouxiang())
+													.error(R.drawable.erroy_bg)
 													//.apply(myOptions)
 													.transform(new GlideRoundTransform(MyApplication.getAppContext(), 20))
 													//.transform(new GlideCircleTransform(MyApplication.getAppContext(),2,Color.parseColor("#ffffffff")))
@@ -842,10 +832,6 @@ public class YiDongNianHuiActivity extends Activity implements RecytviewCash {
 
 											rootLayout.addView(view3);
 
-											ViewGroup.LayoutParams params3 = root_rl3.getLayoutParams();
-											params3.width = dw / 2;
-											root_rl3.setLayoutParams(params3);
-											root_rl3.invalidate();
 
 											new Handler().post(new Runnable() {
 												@Override
@@ -880,7 +866,7 @@ public class YiDongNianHuiActivity extends Activity implements RecytviewCash {
 										break;
 										case 11: {
 											final View view3 = View.inflate(YiDongNianHuiActivity.this, R.layout.item11, null);
-
+											ScreenAdapterTools.getInstance().loadView(view3);
 											TextView name3 = (TextView) view3.findViewById(R.id.name);
 											ImageView touxiang = (ImageView) view3.findViewById(R.id.touxiang);
 											RelativeLayout root_rl3 = (RelativeLayout) view3.findViewById(R.id.root_rl);
@@ -894,18 +880,13 @@ public class YiDongNianHuiActivity extends Activity implements RecytviewCash {
 											Glide.with(YiDongNianHuiActivity.this)
 													//	.load(R.drawable.vvv)
 													.load(touxiangPath+bean.getTouxiang())
-													//	.load(zhuji+item.getTouxiang())
+													.error(R.drawable.erroy_bg)
 													//.apply(myOptions)
 													.transform(new GlideRoundTransform(MyApplication.getAppContext(), 20))
 													//.transform(new GlideCircleTransform(MyApplication.getAppContext(),2,Color.parseColor("#ffffffff")))
 													.into(touxiang);
 
 											rootLayout.addView(view3);
-
-											ViewGroup.LayoutParams params3 = root_rl3.getLayoutParams();
-											params3.width = dw / 2;
-											root_rl3.setLayoutParams(params3);
-											root_rl3.invalidate();
 
 											new Handler().post(new Runnable() {
 												@Override
@@ -940,7 +921,7 @@ public class YiDongNianHuiActivity extends Activity implements RecytviewCash {
 										break;
 										case 12: {
 											final View view3 = View.inflate(YiDongNianHuiActivity.this, R.layout.item12, null);
-
+											ScreenAdapterTools.getInstance().loadView(view3);
 											TextView name3 = (TextView) view3.findViewById(R.id.name);
 											ImageView touxiang = (ImageView) view3.findViewById(R.id.touxiang);
 											RelativeLayout root_rl3 = (RelativeLayout) view3.findViewById(R.id.root_rl);
@@ -954,7 +935,7 @@ public class YiDongNianHuiActivity extends Activity implements RecytviewCash {
 											Glide.with(YiDongNianHuiActivity.this)
 													//	.load(R.drawable.vvv)
 													.load(touxiangPath+bean.getTouxiang())
-													//	.load(zhuji+item.getTouxiang())
+													.error(R.drawable.erroy_bg)
 													//.apply(myOptions)
 													.transform(new GlideRoundTransform(MyApplication.getAppContext(), 20))
 													//.transform(new GlideCircleTransform(MyApplication.getAppContext(),2,Color.parseColor("#ffffffff")))
@@ -962,10 +943,7 @@ public class YiDongNianHuiActivity extends Activity implements RecytviewCash {
 
 											rootLayout.addView(view3);
 
-											ViewGroup.LayoutParams params3 = root_rl3.getLayoutParams();
-											params3.width = dw / 2;
-											root_rl3.setLayoutParams(params3);
-											root_rl3.invalidate();
+
 
 											new Handler().post(new Runnable() {
 												@Override
@@ -1000,7 +978,7 @@ public class YiDongNianHuiActivity extends Activity implements RecytviewCash {
 										break;
 										case 13: {
 											final View view3 = View.inflate(YiDongNianHuiActivity.this, R.layout.item13, null);
-
+											ScreenAdapterTools.getInstance().loadView(view3);
 											TextView name3 = (TextView) view3.findViewById(R.id.name);
 											ImageView touxiang = (ImageView) view3.findViewById(R.id.touxiang);
 											RelativeLayout root_rl3 = (RelativeLayout) view3.findViewById(R.id.root_rl);
@@ -1014,18 +992,13 @@ public class YiDongNianHuiActivity extends Activity implements RecytviewCash {
 											Glide.with(YiDongNianHuiActivity.this)
 													//	.load(R.drawable.vvv)
 													.load(touxiangPath+bean.getTouxiang())
-													//	.load(zhuji+item.getTouxiang())
+													.error(R.drawable.erroy_bg)
 													//.apply(myOptions)
 													.transform(new GlideRoundTransform(MyApplication.getAppContext(), 20))
 													//.transform(new GlideCircleTransform(MyApplication.getAppContext(),2,Color.parseColor("#ffffffff")))
 													.into(touxiang);
 
 											rootLayout.addView(view3);
-
-											ViewGroup.LayoutParams params3 = root_rl3.getLayoutParams();
-											params3.width = dw / 2;
-											root_rl3.setLayoutParams(params3);
-											root_rl3.invalidate();
 
 											new Handler().post(new Runnable() {
 												@Override
@@ -1060,7 +1033,7 @@ public class YiDongNianHuiActivity extends Activity implements RecytviewCash {
 										break;
 										case 14: {
 											final View view3 = View.inflate(YiDongNianHuiActivity.this, R.layout.item14, null);
-
+											ScreenAdapterTools.getInstance().loadView(view3);
 											TextView name3 = (TextView) view3.findViewById(R.id.name);
 											ImageView touxiang = (ImageView) view3.findViewById(R.id.touxiang);
 											RelativeLayout root_rl3 = (RelativeLayout) view3.findViewById(R.id.root_rl);
@@ -1074,18 +1047,13 @@ public class YiDongNianHuiActivity extends Activity implements RecytviewCash {
 											Glide.with(YiDongNianHuiActivity.this)
 													//	.load(R.drawable.vvv)
 													.load(touxiangPath+bean.getTouxiang())
-													//	.load(zhuji+item.getTouxiang())
+													.error(R.drawable.erroy_bg)
 													//.apply(myOptions)
 													.transform(new GlideRoundTransform(MyApplication.getAppContext(), 20))
 													//.transform(new GlideCircleTransform(MyApplication.getAppContext(),2,Color.parseColor("#ffffffff")))
 													.into(touxiang);
 
 											rootLayout.addView(view3);
-
-											ViewGroup.LayoutParams params3 = root_rl3.getLayoutParams();
-											params3.width = dw / 2;
-											root_rl3.setLayoutParams(params3);
-											root_rl3.invalidate();
 
 											new Handler().post(new Runnable() {
 												@Override
@@ -1120,7 +1088,7 @@ public class YiDongNianHuiActivity extends Activity implements RecytviewCash {
 										break;
 										case 15: {
 											final View view3 = View.inflate(YiDongNianHuiActivity.this, R.layout.item15, null);
-
+											ScreenAdapterTools.getInstance().loadView(view3);
 											TextView name3 = (TextView) view3.findViewById(R.id.name);
 											ImageView touxiang = (ImageView) view3.findViewById(R.id.touxiang);
 											RelativeLayout root_rl3 = (RelativeLayout) view3.findViewById(R.id.root_rl);
@@ -1134,18 +1102,13 @@ public class YiDongNianHuiActivity extends Activity implements RecytviewCash {
 											Glide.with(YiDongNianHuiActivity.this)
 													//	.load(R.drawable.vvv)
 													.load(touxiangPath+bean.getTouxiang())
-													//	.load(zhuji+item.getTouxiang())
+													.error(R.drawable.erroy_bg)
 													//.apply(myOptions)
 													.transform(new GlideRoundTransform(MyApplication.getAppContext(), 20))
 													//.transform(new GlideCircleTransform(MyApplication.getAppContext(),2,Color.parseColor("#ffffffff")))
 													.into(touxiang);
 
 											rootLayout.addView(view3);
-
-											ViewGroup.LayoutParams params3 = root_rl3.getLayoutParams();
-											params3.width = dw / 2;
-											root_rl3.setLayoutParams(params3);
-											root_rl3.invalidate();
 
 											new Handler().post(new Runnable() {
 												@Override
@@ -1186,6 +1149,7 @@ public class YiDongNianHuiActivity extends Activity implements RecytviewCash {
 										lingdaoList.add(bean);
 										//int i2 = lingdaoList.size();
 										final View view3= View.inflate(YiDongNianHuiActivity.this, R.layout.tanchuang_item7, null);
+										ScreenAdapterTools.getInstance().loadView(view3);
 										ImageView touxiang = (ImageView) view3.findViewById(R.id.touxiang);
 										TextView name3 = (TextView) view3.findViewById(R.id.test2);
 										TextView time = (TextView) view3.findViewById(R.id.test3);
@@ -1198,7 +1162,7 @@ public class YiDongNianHuiActivity extends Activity implements RecytviewCash {
 										Glide.with(YiDongNianHuiActivity.this)
 												//	.load(R.drawable.vvv)
 												.load(touxiangPath+bean.getTouxiang())
-												//	.load(zhuji+item.getTouxiang())
+												.error(R.drawable.erroy_bg)
 												//.apply(myOptions)
 												//.transform(new GlideRoundTransform(MyApplication.getAppContext(), 20))
 												.transform(new GlideCircleTransform(MyApplication.getAppContext(),2,Color.parseColor("#ffffffff")))
@@ -1206,11 +1170,6 @@ public class YiDongNianHuiActivity extends Activity implements RecytviewCash {
 
 										rootLayout2.addView(view3);
 
-										RelativeLayout.LayoutParams  ll= (RelativeLayout.LayoutParams) touxiang.getLayoutParams();
-										ll.width=(dw/12);
-										ll.height=(dw/12);
-										touxiang.setLayoutParams(ll);
-										touxiang.invalidate();
 
 										new Handler().post(new Runnable() {
 											@Override
@@ -1368,8 +1327,6 @@ public class YiDongNianHuiActivity extends Activity implements RecytviewCash {
 //							Message message = Message.obtain();
 //							message.what = 999;
 //							handler.sendMessage(message);
-
-
 						} catch (Exception e) {
 
 							Log.d(TAG, e.getMessage() + "陌生人解码");
@@ -2527,7 +2484,7 @@ public class YiDongNianHuiActivity extends Activity implements RecytviewCash {
 	private class MyReceiver  extends BroadcastReceiver {
 
 		@Override
-		public void onReceive(Context context, final Intent intent) {
+		public void onReceive(final Context context, final Intent intent) {
 			//Log.d(TAG, "intent:" + intent.getAction());
 
 			if (intent.getAction().equals(Intent.ACTION_TIME_TICK)) {
@@ -2544,7 +2501,7 @@ public class YiDongNianHuiActivity extends Activity implements RecytviewCash {
 
 					//断线重连
 					if (webSocketClient!=null){
-						Log.d(TAG, "刷脸监听");
+					//	Log.d(TAG, "刷脸监听");
 						if (!isLianJie){
 						//	Log.d(TAG, "进来2");
 					try {
@@ -2581,11 +2538,23 @@ public class YiDongNianHuiActivity extends Activity implements RecytviewCash {
 					if (mbLeiXingBeanList!=null && mbLeiXingBeanList.size()>0)
 						mbLeiXingBeanList.clear();
 					mbLeiXingBeanList= benDiMBbeanDao.loadAll();
+					new Thread(new Runnable() {
+						@Override
+						public void run() {
 
-					String ss=intent.getStringExtra("bgPath");
+							Glide.get(YiDongNianHuiActivity.this).clearDiskCache();
+
+						}
+					}).start();
+
+					final String ss=intent.getStringExtra("bgPath");
 					if (ss!=null){
 						Log.d(TAG, "换底图图片"+ss);
-
+						try {
+							Thread.sleep(1000);
+						} catch (InterruptedException e) {
+							e.printStackTrace();
+						}
 						Glide.with(YiDongNianHuiActivity.this)
 								//.load(R.drawable.vvv)
 								.load(ss)
@@ -2594,6 +2563,7 @@ public class YiDongNianHuiActivity extends Activity implements RecytviewCash {
 								//.transform(new GlideRoundTransform(MyApplication.getAppContext(), 20))
 								//.transform(new GlideCircleTransform(MyApplication.getAppContext(),2,Color.parseColor("#ffffffff")))
 								.into(dabg);
+
 					}
 
 					if (baoCunBean.getHoutaiDiZhi()!=null && !baoCunBean.getHoutaiDiZhi().equals("")
