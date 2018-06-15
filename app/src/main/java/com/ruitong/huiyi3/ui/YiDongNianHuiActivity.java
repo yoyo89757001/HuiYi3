@@ -2695,36 +2695,36 @@ public class YiDongNianHuiActivity extends Activity implements RecytviewCash {
 	@Override
 	protected void onResume() {
 
-		new Thread(new Runnable() {
-			@Override
-			public void run() {
-				try {
-					Thread.sleep(1000);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-
-				for ( int i=0;i<2;i++){
-					try {
-						Thread.sleep(1000);
-					} catch (InterruptedException e) {
-						e.printStackTrace();
-					}
-					ShiBieBean.PersonBeanSB sb=new ShiBieBean.PersonBeanSB();
-					sb.setId(1234567L);
-					sb.setDepartment("观众");
-					sb.setName("测试");
-
-					Message message3 = Message.obtain();
-					message3.arg1 = 1;
-					message3.obj = sb;
-					handler.sendMessage(message3);
-
-				}
-
-
-			}
-		}).start();
+//		new Thread(new Runnable() {
+//			@Override
+//			public void run() {
+//				try {
+//					Thread.sleep(1000);
+//				} catch (InterruptedException e) {
+//					e.printStackTrace();
+//				}
+//
+//				for ( int i=0;i<2;i++){
+//					try {
+//						Thread.sleep(1000);
+//					} catch (InterruptedException e) {
+//						e.printStackTrace();
+//					}
+//					ShiBieBean.PersonBeanSB sb=new ShiBieBean.PersonBeanSB();
+//					sb.setId(1234567L);
+//					sb.setDepartment("观众");
+//					sb.setName("测试");
+//
+//					Message message3 = Message.obtain();
+//					message3.arg1 = 1;
+//					message3.obj = sb;
+//					handler.sendMessage(message3);
+//
+//				}
+//
+//
+//			}
+//		}).start();
 
 		if (netWorkStateReceiver == null) {
 			netWorkStateReceiver = new NetWorkStateReceiver();
@@ -2770,7 +2770,7 @@ public class YiDongNianHuiActivity extends Activity implements RecytviewCash {
 
 			}
 		}else {
-			TastyToast.makeText(YiDongNianHuiActivity.this,"请先设置主机地址和摄像头IP",TastyToast.LENGTH_SHORT,TastyToast.INFO).show();
+			TastyToast.makeText(YiDongNianHuiActivity.this,"没有设置后台地址",TastyToast.LENGTH_SHORT,TastyToast.INFO).show();
 		}
 
 		if (benDiMBbeanDao!=null && benDiMBbeanDao.loadAll().size()>0){
