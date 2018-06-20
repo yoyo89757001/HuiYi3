@@ -855,6 +855,7 @@ public class MyReceiver extends BroadcastReceiver {
 								pp=1;
 								//更新旷视人员信息//先传图片
 							//	Log.d("MyReceiver", "jjjj:" + zhaoPianBean.getData().get(i).getPhotos().get(0).getIdX());
+								if (zhaoPianBean.getData().get(i).getPhotos().size()>0)
 								subject.setLingshiZPID(zhaoPianBean.getData().get(i).getPhotos().get(0).getIdX());
 								link_P1(zhuJiBeanH,filePath,subject,zhaoPianBean.getData().get(i).getId());
 								//Log.d("MyReceiver", "333");

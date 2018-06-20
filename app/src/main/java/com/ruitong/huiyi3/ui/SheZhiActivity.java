@@ -1891,9 +1891,10 @@ public class SheZhiActivity extends Activity implements View.OnClickListener, Vi
                                 //相同就不需要再往下比对了，跳出当前循环
                                 pp=1;
                                 //更新旷视人员信息//先传图片
+                                if (zhaoPianBean.getData().get(i).getPhotos().size()>0)
                                 subject.setLingshiZPID(zhaoPianBean.getData().get(i).getPhotos().get(0).getIdX());
                                 link_P1(zhuJiBeanH,filePath,subject,zhaoPianBean.getData().get(i).getId());
-                                Log.d("MyReceiver", "333");
+                               // Log.d("MyReceiver", "333");
                                 break;
                             }
                         }
