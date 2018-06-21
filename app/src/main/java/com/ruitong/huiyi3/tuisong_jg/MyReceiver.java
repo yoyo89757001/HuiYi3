@@ -39,6 +39,7 @@ import com.ruitong.huiyi3.beans.ZhuJiBeanH;
 import com.ruitong.huiyi3.beans.ZhuJiBeanHDao;
 import com.ruitong.huiyi3.cookies.CookiesManager;
 import com.ruitong.huiyi3.dialog.GaiNiMaBi;
+import com.ruitong.huiyi3.dialogall.ToastUtils;
 import com.ruitong.huiyi3.utils.DateUtils;
 import com.ruitong.huiyi3.utils.FileUtil;
 import com.ruitong.huiyi3.utils.GsonUtil;
@@ -221,8 +222,8 @@ public class MyReceiver extends BroadcastReceiver {
 										//进度
 										isDW=false;
 										if (task.getUrl().equals(path2)){
-											Log.d(TAG, totalBytes+"KB");
-											showNotifictionIcon(context,(float)soFarBytes/(float) totalBytes,"下载中","下载人脸库中"+((float)soFarBytes/(float) totalBytes)*100+"%");
+										//	Log.d(TAG, totalBytes+"KB");
+											showNotifictionIcon(context,((float)soFarBytes/(float) totalBytes)*100,"下载中","下载人脸库中"+((float)soFarBytes/(float) totalBytes)*100+"%");
 										}
 									}
 
@@ -440,22 +441,25 @@ public class MyReceiver extends BroadcastReceiver {
 
 
 	public static void showNotifictionIcon(Context context,float p,String title,String contextss) {
-		NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
-		//Intent intent = new Intent(context, XXXActivity.class);//将要跳转的界面
-		Intent intent = new Intent();//只显示通知，无页面跳转
-		builder.setAutoCancel(true);//点击后消失
-		builder.setSmallIcon(R.drawable.huiyi_logo);//设置通知栏消息标题的头像
-		//builder.setDefaults(NotificationCompat.DEFAULT_SOUND);//设置通知铃声
-		builder.setContentTitle(title);
-		builder.setContentText(contextss);
-		builder.setProgress(100, (int) p,false);
-		builder.setDefaults(Notification.DEFAULT_LIGHTS); //设置通知的提醒方式： 呼吸灯
-		builder.setPriority(NotificationCompat.PRIORITY_MAX); //设置通知的优先级：最大
-		//利用PendingIntent来包装我们的intent对象,使其延迟跳转
-		PendingIntent intentPend = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
-		builder.setContentIntent(intentPend);
-		NotificationManager manager = (NotificationManager) context.getSystemService(context.NOTIFICATION_SERVICE);
-		manager.notify(0, builder.build());
+		//Log.d(TAG, "尽量");
+		ToastUtils.getInstances().showDialog(title,contextss, (int) p);
+
+//		NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
+//		//Intent intent = new Intent(context, XXXActivity.class);//将要跳转的界面
+//		Intent intent = new Intent();//只显示通知，无页面跳转
+//		builder.setAutoCancel(true);//点击后消失
+//		builder.setSmallIcon(R.drawable.huiyi_logo);//设置通知栏消息标题的头像
+//		//builder.setDefaults(NotificationCompat.DEFAULT_SOUND);//设置通知铃声
+//		builder.setContentTitle(title);
+//		builder.setContentText(contextss);
+//		builder.setProgress(100, (int) p,false);
+//		builder.setDefaults(Notification.DEFAULT_LIGHTS); //设置通知的提醒方式： 呼吸灯
+//		builder.setPriority(NotificationCompat.PRIORITY_MAX); //设置通知的优先级：最大
+//		//利用PendingIntent来包装我们的intent对象,使其延迟跳转
+//		PendingIntent intentPend = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
+//		builder.setContentIntent(intentPend);
+//		NotificationManager manager = (NotificationManager) context.getSystemService(context.NOTIFICATION_SERVICE);
+//		manager.notify(0, builder.build());
 	}
 
 	private void jieya(String pathZip,String path222){

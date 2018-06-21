@@ -17,7 +17,7 @@ public class HuiYiID {
         private Long id;
         private String subConferenceCode;
         private long startTime;
-        private  long endTime;
+        private long endTime;
         @Generated(hash = 690645971)
         public HuiYiID(@NotNull Long id, String subConferenceCode, long startTime,
                 long endTime) {

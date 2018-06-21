@@ -2998,6 +2998,7 @@ public class YiDongNianHuiActivity extends Activity implements RecytviewCash {
 
 											int po=1;
 											String bm[]= dataBean.getPerson().getDescription().split(",");
+											Log.d("WebsocketPushMsg", "bm.length:" + bm.length);
 
 											for (String s:bm){
 												try {
@@ -3010,7 +3011,10 @@ public class YiDongNianHuiActivity extends Activity implements RecytviewCash {
 															}
 														});
 													}
-
+													Log.d("WebsocketPushMsg", baoCunBean.getZhanhuiBianMa()+"编码");
+													Log.d("WebsocketPushMsg", s+"编码2");
+													Log.d("WebsocketPushMsg", "huiyi.getStartTime():" + DateUtils.time(huiyi.getStartTime()+""));
+													Log.d("WebsocketPushMsg", "huiyi.getEndTime():" + DateUtils.time(huiyi.getEndTime()+""));
 													if (baoCunBean.getZhanhuiBianMa().contains(s)
 															&& (huiyi.getStartTime()<System.currentTimeMillis())
 															&& (huiyi.getEndTime()>System.currentTimeMillis())){
@@ -3019,6 +3023,7 @@ public class YiDongNianHuiActivity extends Activity implements RecytviewCash {
 														message2.obj = dataBean.getPerson();
 														handler.sendMessage(message2);
 														link_fasong(dataBean.getData().getTimestamp(),dataBean.getPerson().getJob_number(),huiyi.getId());
+														po=1;
 														break;
 
 													}else {
@@ -3026,7 +3031,7 @@ public class YiDongNianHuiActivity extends Activity implements RecytviewCash {
 														Log.d("WebsocketPushMsg", "33333333333333");
 													}
 												}catch (Exception e){
-													Log.d("WebsocketPushMsg", e.getMessage());
+													Log.d("WebsocketPushMsg", e.getMessage()+"666666666666666");
 												}
 
 											}
@@ -3692,6 +3697,7 @@ public class YiDongNianHuiActivity extends Activity implements RecytviewCash {
 								huiYiID.setEndTime(gg.get(i).getEndTime());
 								huiYiIDDao.insert(huiYiID);
 							}catch (Exception e){
+
 								Log.d("YiDongNianHuiActivity", e.getMessage()+"");
 							}
 

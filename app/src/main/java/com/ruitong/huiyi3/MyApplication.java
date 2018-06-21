@@ -1,16 +1,27 @@
 package com.ruitong.huiyi3;
 
 
+import android.app.Activity;
+import android.app.Application;
+import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.database.sqlite.SQLiteDatabase;
+import android.os.Bundle;
 import android.os.Environment;
 import android.support.multidex.MultiDexApplication;
+import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.WindowManager;
+
 import com.ruitong.huiyi3.beans.DaoMaster;
 import com.ruitong.huiyi3.beans.DaoSession;
 import com.ruitong.huiyi3.cookies.CookiesManager;
+import com.ruitong.huiyi3.dialogall.CommonData;
+import com.ruitong.huiyi3.dialogall.CommonDialogService;
+import com.ruitong.huiyi3.dialogall.ToastUtils;
 import com.tencent.bugly.Bugly;
 import com.ruitong.huiyi3.utils.Utils;
 import com.yatoooon.screenadaptation.ScreenAdapterTools;
@@ -27,7 +38,7 @@ import okhttp3.OkHttpClient;
 /**
  * Created by tangjun on 14-8-24.
  */
-public class MyApplication extends MultiDexApplication {
+public class MyApplication extends MultiDexApplication implements Application.ActivityLifecycleCallbacks  {
 	public static final MediaType JSON= MediaType.parse("application/json; charset=utf-8");
 	private final static String TAG = "CookiesManager";
 	public static MyApplication myApplication;
@@ -71,6 +82,16 @@ public class MyApplication extends MultiDexApplication {
 				Bugly.init(getApplicationContext(), "e37d57f536", false);
 					JPushInterface.init(getApplicationContext());
 					JPushInterface.setAlias(getApplicationContext(),1, Utils.getSerialNumber(this)==null?Utils.getIMSI():Utils.getSerialNumber(this));
+
+					this.registerActivityLifecycleCallbacks(this);//注册
+					CommonData.applicationContext = this;
+					DisplayMetrics metric = new DisplayMetrics();
+					WindowManager mWindowManager  = (WindowManager) this.getSystemService(Context.WINDOW_SERVICE);
+					mWindowManager.getDefaultDisplay().getMetrics(metric);
+					CommonData.ScreenWidth = metric.widthPixels; // 屏幕宽度（像素）
+					Intent dialogservice = new Intent(this, CommonDialogService.class);
+					startService(dialogservice);
+
 				} catch (Exception e) {
 					Log.d(TAG, e.getMessage()+"主程序");
 				}
@@ -188,6 +209,51 @@ public class MyApplication extends MultiDexApplication {
 				.retryOnConnectionFailure(true)
 				.build();
 		//okhttpclient.dispatcher().cancelAll();取消所有的请求
+	}
+
+
+	@Override
+	public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
+		if(activity.getParent()!=null){
+			CommonData.mNowContext = activity.getParent();
+		}else
+			CommonData.mNowContext = activity;
+	}
+
+	@Override
+	public void onActivityStarted(Activity activity) {
+		if(activity.getParent()!=null){
+			CommonData.mNowContext = activity.getParent();
+		}else
+			CommonData.mNowContext = activity;
+	}
+
+	@Override
+	public void onActivityResumed(Activity activity) {
+		if(activity.getParent()!=null){
+			CommonData.mNowContext = activity.getParent();
+		}else
+			CommonData.mNowContext = activity;
+	}
+
+	@Override
+	public void onActivityPaused(Activity activity) {
+		ToastUtils.getInstances().cancel();
+	}
+
+	@Override
+	public void onActivityStopped(Activity activity) {
+
+	}
+
+	@Override
+	public void onActivitySaveInstanceState(Activity activity, Bundle outState) {
+
+	}
+
+	@Override
+	public void onActivityDestroyed(Activity activity) {
+
 	}
 
 
