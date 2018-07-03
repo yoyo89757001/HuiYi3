@@ -6,6 +6,8 @@ import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.app.Activity;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -89,6 +91,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.Vector;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
@@ -131,8 +135,7 @@ public class BoAoHengActivity extends Activity {
 //	private static final String zhuji2="http://121.46.3.20";
 	private static Vector<TanChuangBean> yuangongList=null;//上面的弹窗
 	private static Vector<TanChuangBean> lingdaoList=null;//下面的弹窗
-	//private static Vector<TanChuangBean> lingdaoList2=null;//下面的弹窗
-
+	private static Vector<TanChuangBean> lingshiList=null;//下面的弹窗
 	private static Vector<View> viewList=new Vector<>();
 	private int dw,dh;
 	private ImageView dabg;
@@ -160,7 +163,7 @@ public class BoAoHengActivity extends Activity {
 	private String offlineVoice = OfflineResource.VOICE_FEMALE;
 	// 主控制类，所有合成控制方法从这个类开始
 	private MySyntherizer synthesizer;
-	private View dongHauView;
+	//private View dongHauView;
 	private GridLayoutManager gridLayoutManager;
 
 	private List<BenDiMBbean> mbLeiXingBeanList=null;
@@ -172,7 +175,8 @@ public class BoAoHengActivity extends Activity {
 	private ZhuJiBeanHDao zhuJiBeanHDao=null;
 	private HuiYiIDDao huiYiIDDao=null;
 	private static int isDS=0;
-
+	private final Timer timer = new Timer();
+	private TimerTask task;
 
 
 	public  Handler handler=new Handler(new Handler.Callback() {
@@ -182,81 +186,145 @@ public class BoAoHengActivity extends Activity {
 			switch (msg.what) {
 
 				case 999:
+					Log.d(TAG, "ddddddddddddddddddddddd");
+					//定义一个零时的数组，在最后一个view执行消失动画之前清掉数据，然后用这个零时的view来判断 是不是被覆盖。(在执行动画的时候 会有数据加进来，所以要用一个零时数组)
 
-					if (yuangongList.size()>0){
-						if (viewList.size()==1){
-							final View view=viewList.get(0);
-							List<Animator> animators =new ArrayList<>();//设置一个装动画的集合
+					//判断下面数组有没有这个人
+					int b = 0;
+					for (int i2 = 0; i2 < lingdaoList.size(); i2++) {
+						if (Objects.equals(lingdaoList.get(i2).getId(), yuangongList.get(0).getId())) {
+							b = 1;
+						}
+					}
+					lingshiList.remove(0);
+					if (b==0){
+						//不存在
+						final View view=yuangongList.get(0).getView();
+						List<Animator> animators =new ArrayList<>();//设置一个装动画的集合
+						ObjectAnimator alphaAnim0 = ObjectAnimator.ofFloat(view,"translationY",0,560f);//设置透明度改变
+						alphaAnim0.setDuration(1000);//设置持续时间
+						ObjectAnimator alphaAnim1 = ObjectAnimator.ofFloat(view,"translationX",0,-250f);//设置透明度改变
+						alphaAnim1.setDuration(1000);//设置持续时间
+						ObjectAnimator alphaAnim = ObjectAnimator.ofFloat(view,"scaleX",1f,0.1f);//设置透明度改变
+						alphaAnim.setDuration(1000);//设置持续时间
+						//alphaAnim.start();
+						ObjectAnimator alphaAnim2 = ObjectAnimator.ofFloat(view,"scaleY",1f,0.1f);//设置透明度改变
+						alphaAnim2.setDuration(1000);//设置持续时间
+						alphaAnim2.addListener(new Animator.AnimatorListener() {
+							@Override
+							public void onAnimationStart(Animator animation) {
+
+							}
+
+							@Override
+							public void onAnimationEnd(Animator animation) {
+								view.setVisibility(View.GONE);
+//									viewList.remove(0);
+//									if (viewList.size()>10){
+//										viewList.clear();
+//									}
+								rootLayout.removeViewAt(0);
+
+								//底部列表的
+
+								lingdaoList.add(0,yuangongList.get(0));
+								adapter.notifyItemInserted(0);
+								gridLayoutManager.scrollToPosition(0);
+								if (lingdaoList.size()>6){
+									int si=lingdaoList.size()-1;
+									lingdaoList.remove(si);
+									adapter.notifyItemRemoved(si);
+									//adapter.notifyItemChanged(1);
+									//adapter.notifyItemRangeChanged(1,tanchuangList.size());
+									//adapter.notifyDataSetChanged();
+									gridLayoutManager.scrollToPosition(0);
+								}
+
+								yuangongList.remove(0);
+								isOne=true;
+
+//									Log.d(TAG, "yuangongList.size(2):" + yuangongList.size());
+//									Log.d(TAG, "viewList.size(2):" + viewList.size());
+//									Log.d(TAG, "lingdaoList.size(2):" + lingdaoList.size());
+
+							}
+
+							@Override
+							public void onAnimationCancel(Animator animation) {
+
+							}
+
+							@Override
+							public void onAnimationRepeat(Animator animation) {
+
+							}
+						});
+						//alphaAnim.start();\
+						animators.add(alphaAnim0);
+						animators.add(alphaAnim1);
+						animators.add(alphaAnim);
+						animators.add(alphaAnim2);
+						AnimatorSet btnSexAnimatorSet =new AnimatorSet();//动画集
+						btnSexAnimatorSet.playTogether(animators);//设置一起播放
+						btnSexAnimatorSet.start();//开始播放
+					}else {
+						//存在
+						final View view=yuangongList.get(0).getView();
+						List<Animator> animators =new ArrayList<>();//设置一个装动画的集合
 //							ObjectAnimator alphaAnim0 = ObjectAnimator.ofFloat(view,"translationY",0,560f);//设置透明度改变
 //							alphaAnim0.setDuration(1000);//设置持续时间
 //							ObjectAnimator alphaAnim1 = ObjectAnimator.ofFloat(view,"translationX",0,-250f);//设置透明度改变
 //							alphaAnim1.setDuration(1000);//设置持续时间
-							ObjectAnimator alphaAnim = ObjectAnimator.ofFloat(view,"scaleX",1f,0.1f);//设置透明度改变
-							alphaAnim.setDuration(1000);//设置持续时间
-							//alphaAnim.start();
-							ObjectAnimator alphaAnim2 = ObjectAnimator.ofFloat(view,"scaleY",1f,0.1f);//设置透明度改变
-							alphaAnim2.setDuration(1000);//设置持续时间
-							alphaAnim2.addListener(new Animator.AnimatorListener() {
-								@Override
-								public void onAnimationStart(Animator animation) {
+						ObjectAnimator alphaAnim = ObjectAnimator.ofFloat(view,"scaleX",1f,0.1f);//设置透明度改变
+						alphaAnim.setDuration(1000);//设置持续时间
+						//alphaAnim.start();
+						ObjectAnimator alphaAnim2 = ObjectAnimator.ofFloat(view,"scaleY",1f,0.1f);//设置透明度改变
+						alphaAnim2.setDuration(1000);//设置持续时间
+						alphaAnim2.addListener(new Animator.AnimatorListener() {
+							@Override
+							public void onAnimationStart(Animator animation) {
 
-								}
+							}
 
-								@Override
-								public void onAnimationEnd(Animator animation) {
-									view.setVisibility(View.GONE);
-									viewList.remove(0);
-									if (viewList.size()>10){
-										viewList.clear();
-									}
-									rootLayout.removeViewAt(0);
-									yuangongList.remove(0);
-								}
+							@Override
+							public void onAnimationEnd(Animator animation) {
+								view.setVisibility(View.GONE);
+//									viewList.remove(0);
+//									if (viewList.size()>10){
+//										viewList.clear();
+//									}
+								rootLayout.removeViewAt(0);
+								yuangongList.remove(0);
+								isOne=true;
 
-								@Override
-								public void onAnimationCancel(Animator animation) {
+//									Log.d(TAG, "yuangongList.size(2):" + yuangongList.size());
+//									Log.d(TAG, "viewList.size(2):" + viewList.size());
+//									Log.d(TAG, "lingdaoList.size(2):" + lingdaoList.size());
 
-								}
+							}
 
-								@Override
-								public void onAnimationRepeat(Animator animation) {
+							@Override
+							public void onAnimationCancel(Animator animation) {
 
-								}
-							});
-							//alphaAnim.start();
-							animators.add(alphaAnim);
-							animators.add(alphaAnim2);
-							AnimatorSet btnSexAnimatorSet =new AnimatorSet();//动画集
-							btnSexAnimatorSet.playTogether(animators);//设置一起播放
-							btnSexAnimatorSet.start();//开始播放
+							}
 
-						}else {
+							@Override
+							public void onAnimationRepeat(Animator animation) {
 
-							rootLayout.removeViewAt(0);
-							yuangongList.remove(0);
-						}
+							}
+						});
+						//alphaAnim.start();
+						animators.add(alphaAnim);
+						animators.add(alphaAnim2);
+						AnimatorSet btnSexAnimatorSet =new AnimatorSet();//动画集
+						btnSexAnimatorSet.playTogether(animators);//设置一起播放
+						btnSexAnimatorSet.start();//开始播放
+					}
 
 						Log.d(TAG, "yuangongList.size():" + yuangongList.size());
 						Log.d(TAG, "viewList.size():" + viewList.size());
 						Log.d(TAG, "lingdaoList.size():" + lingdaoList.size());
-					}
 
-
-//					//下面1
-					if (lingdaoList.size()>6){
-						int si=lingdaoList.size()-1;
-						lingdaoList.remove(si);
-						adapter.notifyItemRemoved(si);
-						//adapter.notifyItemChanged(1);
-						//adapter.notifyItemRangeChanged(1,tanchuangList.size());
-						//adapter.notifyDataSetChanged();
-						gridLayoutManager.scrollToPosition(0);
-					}
-//					//下面2
-//					if (lingdaoList2.size()>3){
-//						rootLayout3.removeViewAt(lingdaoList2.size()-1);
-//						lingdaoList2.remove(lingdaoList2.size()-1);
-//					}
 
 					break;
 
@@ -266,7 +334,7 @@ public class BoAoHengActivity extends Activity {
 			if (msg.arg1==1){
 
 				//view1.setVisibility(View.GONE);
-				Log.d(TAG, "员工k22222");
+
 				ShiBieBean.PersonBeanSB dataBean= (ShiBieBean.PersonBeanSB) msg.obj;
 				Log.d(TAG, "dataBean.getId():" + dataBean.getId());
 				try {
@@ -284,39 +352,21 @@ public class BoAoHengActivity extends Activity {
 
 					switch (dataBean.getSubject_type()) {
 						case 0: //员工
-							Log.d(TAG, "员工k");
 
-								int a = 0;
-								for (int i2 = 0; i2 < yuangongList.size(); i2++) {
-									if (Objects.equals(yuangongList.get(i2).getId(), bean.getId())) {
-										a = 1;
-									}
-								}
+//								int a = 0;
+//								for (int i2 = 0; i2 < yuangongList.size(); i2++) {
+//									if (Objects.equals(yuangongList.get(i2).getId(), bean.getId())) {
+//										a = 1;
+//									}
+//								}
 
-							int b = 0;
-							for (int i2 = 0; i2 < lingdaoList.size(); i2++) {
-								if (Objects.equals(lingdaoList.get(i2).getId(), bean.getId())) {
-									b = 1;
-								}
-							}
 
-								if (a==0) {
+
 
 									int mbtype = 1;
 									String hyy = "";
 
 
-									yuangongList.add(bean);
-									Log.d(TAG, "yuangongList:" + yuangongList.size());
-//									if (bean.getBumen()!=null){
-//										for (BenDiMBbean mm:mbLeiXingBeanList){
-//												if (bean.getBumen().equals(mm.getSubType())){
-//													Log.d(TAG, "mm.getPhoto_index():" + mm.getPhoto_index());
-//													hyy=mm.getWelcomeSpeak();
-//													mbtype=mm.getPhoto_index();
-//												}
-//										}
-//									}
 
 									switch (mbtype) {
 										case 1: {
@@ -344,7 +394,8 @@ public class BoAoHengActivity extends Activity {
 
 											view1.setX(dw);
 											rootLayout.addView(view1);
-											viewList.add(view1);
+											bean.setView(view1);
+
 
 											LinearLayout.LayoutParams params1 = (LinearLayout.LayoutParams) root_rl1.getLayoutParams();
 											params1.leftMargin = 40;
@@ -352,10 +403,108 @@ public class BoAoHengActivity extends Activity {
 											root_rl1.setLayoutParams(params1);
 											root_rl1.invalidate();
 
-											if (viewList.size()>1){
+											//启动定时器或重置定时器
+											if (task!=null ){
+												task.cancel();
+												//timer.cancel();
+												task = new TimerTask() {
+													@Override
+													public void run() {
+
+														Message message = new Message();
+														message.what = 999;
+														handler.sendMessage(message);
+														Log.d(TAG, "gggggggggggg");
+
+													}
+												};
+												timer.schedule(task, 9000);
+											}else {
+												task = new TimerTask() {
+													@Override
+													public void run() {
+
+														Message message = new Message();
+														message.what = 999;
+														handler.sendMessage(message);
+														Log.d(TAG, "gggggggggggg");
+
+													}
+												};
+												timer.schedule(task, 9000);
+											}
+
+
+											yuangongList.add(bean);
+											lingshiList.add(bean);
+
+											//入场动画(从右往左)
+											ValueAnimator anim = ValueAnimator.ofInt(dw, 0);
+											anim.setDuration(1000);
+											anim.setRepeatMode(ValueAnimator.RESTART);
+											Interpolator interpolator=new DecelerateInterpolator(2f);
+											anim.setInterpolator(interpolator);
+											anim.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+												@Override
+												public void onAnimationUpdate(ValueAnimator animation) {
+
+													int currentValue = (Integer) animation.getAnimatedValue();
+													// 获得改变后的值
+
+//													System.out.println(currentValue);
+													// 输出改变后的值
+
+													// 步骤4：将改变后的值赋给对象的属性值，下面会详细说明
+													view1.setX(currentValue);
+													// 步骤5：刷新视图，即重新绘制，从而实现动画效果
+													view1.requestLayout();
+
+												}
+											});
+											anim.addListener(new Animator.AnimatorListener() {
+												@Override
+												public void onAnimationStart(Animator animation) {
+
+												}
+
+												@Override
+												public void onAnimationEnd(Animator animation) {
+													try {
+														ShiBieBean.PersonBeanSB beanSB=linkedBlockingQueue.poll(10, TimeUnit.MILLISECONDS);
+														if (beanSB==null){
+															isOne=true;
+															Log.d(TAG, "fffffff");
+														}else {
+															Log.d(TAG, "拿到的id"+beanSB.getId());
+															Message message2 = Message.obtain();
+															message2.arg1 = 1;
+															message2.obj = beanSB;
+															handler.sendMessage(message2);
+
+														}
+
+													} catch (InterruptedException e) {
+														e.printStackTrace();
+													}
+
+												}
+												@Override
+												public void onAnimationCancel(Animator animation) {
+												}
+												@Override
+												public void onAnimationRepeat(Animator animation) {
+
+												}
+											});
+											anim.start();
+
+											Log.d(TAG, "ttttttyuangongList:" + yuangongList.size());
+
+											if (lingshiList.size()>1){
+
 												//将被覆盖的view 执行移动到下面的动画
 												//设置一个是否执行移动过的动画 的标志  然后隐藏view  然后8秒后通知统一删除
-											final View view=viewList.get(0);
+											final View view=yuangongList.get(0).getView();
 												view.setTag("123");
 												//动画
 //												AnimatorPath path= new AnimatorPath();
@@ -410,10 +559,8 @@ public class BoAoHengActivity extends Activity {
 													@Override
 													public void onAnimationEnd(Animator animation) {
 														view.setVisibility(View.GONE);
-														viewList.remove(0);
-														if (viewList.size()>10){
-															viewList.clear();
-														}
+
+
 
 													}
 
@@ -439,91 +586,7 @@ public class BoAoHengActivity extends Activity {
 
 											}
 
-											//动画
-											// 步骤1：设置动画属性的初始值 & 结束值
-											ValueAnimator anim = ValueAnimator.ofInt(dw, 0);
-											// ofInt（）作用有两个
-											// 1. 创建动画实例
-											// 2. 将传入的多个Int参数进行平滑过渡:此处传入0和1,表示将值从0平滑过渡到1
-											// 如果传入了3个Int参数 a,b,c ,则是先从a平滑过渡到b,再从b平滑过渡到C，以此类推
-											// ValueAnimator.ofInt()内置了整型估值器,直接采用默认的.不需要设置，即默认设置了如何从初始值 过渡到 结束值
-											// 关于自定义插值器我将在下节进行讲解
-											// 下面看看ofInt()的源码分析 ->>关注1
-											// 步骤2：设置动画的播放各种属性
-											anim.setDuration(1000);
-											// 设置动画运行的时长
-										//	anim.setStartDelay(0);
-											// 设置动画延迟播放时间
-										//	anim.setRepeatCount(0);
-											// 设置动画重复播放次数 = 重放次数+1
-											// 动画播放次数 = infinite时,动画无限重复
-											anim.setRepeatMode(ValueAnimator.RESTART);
-											// 设置重复播放动画模式
-											// ValueAnimator.RESTART(默认):正序重放
-											// ValueAnimator.REVERSE:倒序回放
-											Interpolator interpolator=new DecelerateInterpolator(2f);
-											anim.setInterpolator(interpolator);
-											// 步骤3：将改变的值手动赋值给对象的属性值：通过动画的更新监听器
-											// 设置 值的更新监听器
-											// 即：值每次改变、变化一次,该方法就会被调用一次
-											anim.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-												@Override
-												public void onAnimationUpdate(ValueAnimator animation) {
 
-													int currentValue = (Integer) animation.getAnimatedValue();
-													// 获得改变后的值
-
-//													System.out.println(currentValue);
-													// 输出改变后的值
-
-													// 步骤4：将改变后的值赋给对象的属性值，下面会详细说明
-													view1.setX(currentValue);
-													// 步骤5：刷新视图，即重新绘制，从而实现动画效果
-													view1.requestLayout();
-
-												}
-											});
-											anim.addListener(new Animator.AnimatorListener() {
-												@Override
-												public void onAnimationStart(Animator animation) {
-
-												}
-
-												@Override
-												public void onAnimationEnd(Animator animation) {
-													try {
-													ShiBieBean.PersonBeanSB beanSB=linkedBlockingQueue.poll(10, TimeUnit.MILLISECONDS);
-														if (beanSB==null){
-															isOne=true;
-															Log.d(TAG, "fffffff");
-														}else {
-															Log.d(TAG, "拿到的id"+beanSB.getId());
-															Message message2 = Message.obtain();
-															message2.arg1 = 1;
-															message2.obj = beanSB;
-															handler.sendMessage(message2);
-
-														}
-
-													} catch (InterruptedException e) {
-														e.printStackTrace();
-													}
-
-
-
-												}
-
-												@Override
-												public void onAnimationCancel(Animator animation) {
-
-												}
-
-												@Override
-												public void onAnimationRepeat(Animator animation) {
-
-												}
-											});
-											anim.start();
 											// 启动动画
 
 
@@ -562,33 +625,11 @@ public class BoAoHengActivity extends Activity {
 									}
 
 //**************************************************************************************************************
-									//底部列表的
-									if (b==0){
-										lingdaoList.add(0,bean);
-										adapter.notifyItemInserted(0);
-										gridLayoutManager.scrollToPosition(0);
-									}
-
-									new Thread(new Runnable() {
-										@Override
-										public void run() {
-
-											try {
-
-												SystemClock.sleep(18000);
-												Message message = Message.obtain();
-												message.what = 999;
-												handler.sendMessage(message);
-
-											} catch (Exception e) {
-												e.printStackTrace();
-											}
 
 
-										}
-									}).start();
 
-					}
+
+
 							break;
 
 //						case 1: //普通访客
@@ -736,6 +777,9 @@ public class BoAoHengActivity extends Activity {
 
 		yuangongList = new Vector<>();
 		lingdaoList=new Vector<>();
+		lingshiList=new Vector<>();
+
+
 
 		setContentView(R.layout.boaoheng);
 		//ScreenAdapterTools.getInstance().reset(this);//如果希望android7.0分屏也适配的话,加上这句
@@ -824,16 +868,16 @@ public class BoAoHengActivity extends Activity {
 		//Utils.initPermission(YiDongNianHuiActivity.this);
 		initialTts();
 
-//		RelativeLayout.LayoutParams  params= (RelativeLayout.LayoutParams) recyclerView2.getLayoutParams();
-//		params.height=dh/10;
-//		recyclerView2.setLayoutParams(params);
-//		recyclerView2.invalidate();
-
 
 		RelativeLayout.LayoutParams  params2= (RelativeLayout.LayoutParams) rootLayout.getLayoutParams();
 		params2.height=dh/3+100;
 		rootLayout.setLayoutParams(params2);
 		rootLayout.invalidate();
+
+//		RelativeLayout.LayoutParams  params= (RelativeLayout.LayoutParams) recyclerView.getLayoutParams();
+//		params.bottomMargin=dh/7;
+//		recyclerView.setLayoutParams(params);
+//		recyclerView.invalidate();
 
 	//	link_login();
 
@@ -1113,52 +1157,52 @@ public class BoAoHengActivity extends Activity {
 	@Override
 	protected void onResume() {
 
-		new Thread(new Runnable() {
-			@Override
-			public void run() {
-				try {
-					Thread.sleep(800);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-
-				for ( int i=0;i<15;i++){
-					try {
-						Thread.sleep(200);
-					} catch (InterruptedException e) {
-						e.printStackTrace();
-					}
-					ShiBieBean.PersonBeanSB sb=new ShiBieBean.PersonBeanSB();
-					sb.setId(1234567L+i);
-					sb.setDepartment("观众");
-					sb.setName("测试");
-					linkedBlockingQueue.offer(sb);
-					if (isOne){
-						isOne=false;
-
-						Message message2 = Message.obtain();
-						message2.arg1 = 1;
-						message2.obj = sb;
-						handler.sendMessage(message2);
-						ShiBieBean.PersonBeanSB beanSB= null;
-						try {
-							beanSB = linkedBlockingQueue.poll(10, TimeUnit.MILLISECONDS);
-						} catch (InterruptedException e) {
-							e.printStackTrace();
-						}
-						Log.d(TAG, "移出的id:" + beanSB.getId());
-					}
-
-//					Message message3 = Message.obtain();
-//					message3.arg1 = 1;
-//					message3.obj = sb;
-//					handler.sendMessage(message3);
-
-				}
-
-
-			}
-		}).start();
+//		new Thread(new Runnable() {
+//			@Override
+//			public void run() {
+//				try {
+//					Thread.sleep(800);
+//				} catch (InterruptedException e) {
+//					e.printStackTrace();
+//				}
+//
+//				for ( int i=0;i<15;i++){
+//					try {
+//						Thread.sleep(4000);
+//					} catch (InterruptedException e) {
+//						e.printStackTrace();
+//					}
+//					ShiBieBean.PersonBeanSB sb=new ShiBieBean.PersonBeanSB();
+//					sb.setId(1234567L+i);
+//					sb.setDepartment("观众");
+//					sb.setName("测试");
+//					linkedBlockingQueue.offer(sb);
+//					if (isOne){
+//						isOne=false;
+//
+//						Message message2 = Message.obtain();
+//						message2.arg1 = 1;
+//						message2.obj = sb;
+//						handler.sendMessage(message2);
+//						ShiBieBean.PersonBeanSB beanSB= null;
+//						try {
+//							beanSB = linkedBlockingQueue.poll(10, TimeUnit.MILLISECONDS);
+//						} catch (InterruptedException e) {
+//							e.printStackTrace();
+//						}
+//						Log.d(TAG, "移出的id:" + beanSB.getId());
+//					}
+//
+////					Message message3 = Message.obtain();
+////					message3.arg1 = 1;
+////					message3.obj = sb;
+////					handler.sendMessage(message3);
+//
+//				}
+//
+//
+//			}
+//		}).start();
 
 		if (netWorkStateReceiver == null) {
 			netWorkStateReceiver = new NetWorkStateReceiver();
@@ -1225,15 +1269,6 @@ public class BoAoHengActivity extends Activity {
 
 	}
 
-	/**
-	 * 设置View的属性通过ObjectAnimator.ofObject()的反射机制来调用
-	 * @param newLoc
-	 */
-	public void setFab(PathPoint newLoc) {
-		Log.d(TAG, "newLoc:" + newLoc);
-		dongHauView.setTranslationX(newLoc.mX);
-		dongHauView.setTranslationY(newLoc.mY);
-	}
 
 
 
@@ -1353,7 +1388,7 @@ public class BoAoHengActivity extends Activity {
 
 											int po=1;
 											String bm[]= dataBean.getPerson().getDescription().split(",");
-											Log.d("WebsocketPushMsg", "bm.length:" + bm.length);
+										//	Log.d("WebsocketPushMsg", "bm.length:" + bm.length);
 
 											for (String s:bm){
 												try {
@@ -1366,10 +1401,10 @@ public class BoAoHengActivity extends Activity {
 															}
 														});
 													}
-													Log.d("WebsocketPushMsg", baoCunBean.getZhanhuiBianMa()+"编码");
-													Log.d("WebsocketPushMsg", s+"编码2");
-													Log.d("WebsocketPushMsg", "huiyi.getStartTime():" + DateUtils.time(huiyi.getStartTime()+""));
-													Log.d("WebsocketPushMsg", "huiyi.getEndTime():" + DateUtils.time(huiyi.getEndTime()+""));
+												//	Log.d("WebsocketPushMsg", baoCunBean.getZhanhuiBianMa()+"编码");
+												//	Log.d("WebsocketPushMsg", s+"编码2");
+												//	Log.d("WebsocketPushMsg", "huiyi.getStartTime():" + DateUtils.time(huiyi.getStartTime()+""));
+													//Log.d("WebsocketPushMsg", "huiyi.getEndTime():" + DateUtils.time(huiyi.getEndTime()+""));
 													if (baoCunBean.getZhanhuiBianMa().contains(s)
 															&& (huiyi.getStartTime()<System.currentTimeMillis())
 															&& (huiyi.getEndTime()>System.currentTimeMillis())){
@@ -1381,6 +1416,15 @@ public class BoAoHengActivity extends Activity {
 															message2.arg1 = 1;
 															message2.obj = dataBean.getPerson();
 															handler.sendMessage(message2);
+
+															ShiBieBean.PersonBeanSB beanSB= null;
+															try {
+																beanSB= linkedBlockingQueue.poll(10, TimeUnit.MILLISECONDS);
+																Log.d("WebsocketPushMsg", "111111消费掉的:" + beanSB.getId());
+															} catch (InterruptedException e) {
+																e.printStackTrace();
+															}
+															//Log.d(TAG, "移出的id:" + beanSB.getId());
 														}
 
 														link_fasong(dataBean.getData().getTimestamp(),dataBean.getPerson().getJob_number(),huiyi.getId());
@@ -1390,7 +1434,7 @@ public class BoAoHengActivity extends Activity {
 
 													}else {
 														po=2;
-														Log.d("WebsocketPushMsg", "33333333333333");
+														//Log.d("WebsocketPushMsg", "33333333333333");
 													}
 												}catch (Exception e){
 													Log.d("WebsocketPushMsg", e.getMessage()+"666666666666666");

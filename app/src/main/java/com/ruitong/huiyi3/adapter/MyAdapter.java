@@ -22,6 +22,7 @@ import com.ruitong.huiyi3.beans.TanChuangBean;
 import com.ruitong.huiyi3.beans.ZhuJiBeanHDao;
 import com.ruitong.huiyi3.ui.BoAoHengActivity;
 import com.ruitong.huiyi3.view.GlideCircleTransform;
+import com.ruitong.huiyi3.view.GlideRoundTransform;
 import com.yatoooon.screenadaptation.ScreenAdapterTools;
 
 import java.util.List;
@@ -67,14 +68,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder>{
             holder.gongsi.setText(list.get(position).getGonghao());
             holder.zuoweihao.setText(list.get(position).getRemark());
 
-        Glide.with(context)
-                //	.load(R.drawable.vvv)
-                .load(BoAoHengActivity.touxiangPath+list.get(position).getTouxiang())
-                .error(R.drawable.erroy_bg)
-                //.apply(myOptions)
-                //.transform(new GlideRoundTransform(MyApplication.getAppContext(), 20))
-                .transform(new GlideCircleTransform(MyApplication.getAppContext(),2, Color.parseColor("#ffffffff")))
-                .into(holder.touxiang);
+
 
         RelativeLayout.LayoutParams params1 = (RelativeLayout.LayoutParams)holder.touxiang.getLayoutParams();
         params1.height=dh/13;
@@ -90,6 +84,14 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder>{
         holder. root_rl.setLayoutParams(params2);
         holder. root_rl.invalidate();
 
+        Glide.with(context)
+                //	.load(R.drawable.vvv)
+                .load(BoAoHengActivity.touxiangPath+list.get(position).getTouxiang())
+                .error(R.drawable.erroy_bg)
+                //.apply(myOptions)
+                .transform(new GlideRoundTransform(MyApplication.getAppContext(), 20))
+                // .transform(new GlideCircleTransform(MyApplication.getAppContext(),2, Color.parseColor("#ffffffff")))
+                .into(holder.touxiang);
             }
 
     @Override
