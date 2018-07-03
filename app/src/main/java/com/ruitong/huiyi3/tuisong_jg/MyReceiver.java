@@ -1,8 +1,6 @@
 package com.ruitong.huiyi3.tuisong_jg;
 
-import android.app.Notification;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
+
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -11,7 +9,6 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.SystemClock;
 
-import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import android.util.Xml;
 
@@ -21,7 +18,7 @@ import com.liulishuo.filedownloader.BaseDownloadTask;
 import com.liulishuo.filedownloader.FileDownloadListener;
 import com.liulishuo.filedownloader.FileDownloader;
 import com.ruitong.huiyi3.MyApplication;
-import com.ruitong.huiyi3.R;
+
 import com.ruitong.huiyi3.beans.BaoCunBean;
 import com.ruitong.huiyi3.beans.BaoCunBeanDao;
 import com.ruitong.huiyi3.beans.BenDiMBbean;
@@ -593,14 +590,14 @@ public class MyReceiver extends BroadcastReceiver {
 							Log.d(TAG, "i:" + j);
 							while (true){
 								try {
-									Thread.sleep(50);
+									Thread.sleep(100);
 									t++;
 									// 获取后缀名
 									//String sname = name.substring(name.lastIindexOf("."));
 									filePath=trg+File.separator+subjectList.get(j).getId()+(subjectList.get(j).getPhoto().
 											substring(subjectList.get(j).getPhoto().lastIndexOf(".")));
 									File file=new File(filePath);
-									if (file.isFile()|| t==200){
+									if ((file.isFile() && file.length()>0)|| t==4000){
 										t=0;
 										Log.d(TAG, "file.length():" + file.length()+"   t:"+t);
 										break;

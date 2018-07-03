@@ -55,7 +55,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ui.YiDongNianHuiActivity"
+            android:name=".ui.BoAoHengActivity"
             android:screenOrientation="portrait" />
         <activity android:name=".ui.SheZhiActivity" />
 

@@ -1410,10 +1410,9 @@ public class YiDongNianHuiActivity extends Activity implements RecytviewCash {
 			ddd.setYShi(0);
 			ddd.setYTeyao(0);
 			benDiRenShuBeanDao.insert(ddd);
-
-
 			benDiRenShuBean=benDiRenShuBeanDao.load(123456L);
 		}
+
 		benDiQianDaoDao=MyApplication.myApplication.getDaoSession().getBenDiQianDaoDao();
 		qianDaoIdDao=MyApplication.myApplication.getDaoSession().getQianDaoIdDao();
 		//tanChuangBeanDao=MyApplication.myApplication.getDaoSession().getTanChuangBeanDao();

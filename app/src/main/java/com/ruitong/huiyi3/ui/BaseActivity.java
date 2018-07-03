@@ -33,7 +33,7 @@ public class BaseActivity extends Activity {
 
             case 1:
 
-                startActivity(new Intent(BaseActivity.this,YiDongNianHuiActivity.class));
+                startActivity(new Intent(BaseActivity.this,BoAoHengActivity.class));
                 finish();
                 break;
             case 2:

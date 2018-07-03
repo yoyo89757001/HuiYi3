@@ -10,8 +10,10 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 
+import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 
 /**
@@ -27,6 +29,8 @@ public class FileUtils {
     private FileOperateCallback callback;
     private volatile boolean isSuccess;
     private String errorStr;
+
+
 
     public static FileUtils getInstance(Context context) {
         if (instance == null)

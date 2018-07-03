@@ -250,7 +250,7 @@ public class SheZhiActivity extends Activity implements View.OnClickListener, Vi
         //  Log.d("SheZhiActivity", "baoCunBean.getMoban():" + baoCunBean.getMoban());
         switch (baoCunBean.getMoban()){
             case 1:
-                startActivity(new Intent(SheZhiActivity.this,YiDongNianHuiActivity.class));
+                startActivity(new Intent(SheZhiActivity.this,BoAoHengActivity.class));
                 SystemClock.sleep(1600);
 
                 break;
@@ -638,7 +638,7 @@ public class SheZhiActivity extends Activity implements View.OnClickListener, Vi
                         //弹窗
                         final XiuGaiHouTaiDialog dialog=new XiuGaiHouTaiDialog(SheZhiActivity.this);
                         if (baoCunBean.getHoutaiDiZhi()==null && baoCunBean.getGuanggaojiMing()==null){
-                            dialog.setContents("http://47.106.200.182","广告机1","10000038");
+                            dialog.setContents("http://111.230.177.130","广告机1","10000038");
                         }else {
                             dialog.setContents(baoCunBean.getHoutaiDiZhi(),baoCunBean.getGuanggaojiMing(),baoCunBean.getZhanghuId());
                         }
@@ -1589,12 +1589,12 @@ public class SheZhiActivity extends Activity implements View.OnClickListener, Vi
                            // Log.d(TAG, "i:" + j);
                             while (true){
                                 try {
-                                    Thread.sleep(80);
+                                    Thread.sleep(100);
                                     t++;
                                     filePath=trg+File.separator+subjectList.get(j).getId()+(subjectList.get(j).getPhoto().
                                             substring(subjectList.get(j).getPhoto().lastIndexOf(".")));
                                     File file=new File(filePath);
-                                    if (file.isFile()|| t==10000){
+                                    if ((file.isFile()&& file.length()>0)|| t==4000){
                                         t=0;
                                         Log.d(TAG, "file.length():" + file.length()+"   t:"+t);
                                         break;
