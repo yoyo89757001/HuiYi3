@@ -186,10 +186,15 @@ public class BoAoHengActivity extends Activity {
 			switch (msg.what) {
 
 				case 999:
-					Log.d(TAG, "ddddddddddddddddddddddd");
+
 					//定义一个零时的数组，在最后一个view执行消失动画之前清掉数据，然后用这个零时的view来判断 是不是被覆盖。(在执行动画的时候 会有数据加进来，所以要用一个零时数组)
 
 					//判断下面数组有没有这个人
+					if (yuangongList.size()==0){
+
+						break;
+					}
+
 					int b = 0;
 					for (int i2 = 0; i2 < lingdaoList.size(); i2++) {
 						if (Objects.equals(lingdaoList.get(i2).getId(), yuangongList.get(0).getId())) {
@@ -197,18 +202,20 @@ public class BoAoHengActivity extends Activity {
 						}
 					}
 					lingshiList.remove(0);
+					final View view=yuangongList.get(0).getView();
+
 					if (b==0){
 						//不存在
-						final View view=yuangongList.get(0).getView();
+
 						List<Animator> animators =new ArrayList<>();//设置一个装动画的集合
 						ObjectAnimator alphaAnim0 = ObjectAnimator.ofFloat(view,"translationY",0,560f);//设置透明度改变
 						alphaAnim0.setDuration(1000);//设置持续时间
 						ObjectAnimator alphaAnim1 = ObjectAnimator.ofFloat(view,"translationX",0,-250f);//设置透明度改变
 						alphaAnim1.setDuration(1000);//设置持续时间
-						ObjectAnimator alphaAnim = ObjectAnimator.ofFloat(view,"scaleX",1f,0.1f);//设置透明度改变
+						ObjectAnimator alphaAnim = ObjectAnimator.ofFloat(view,"scaleX",1f,0.4f);//设置透明度改变
 						alphaAnim.setDuration(1000);//设置持续时间
 						//alphaAnim.start();
-						ObjectAnimator alphaAnim2 = ObjectAnimator.ofFloat(view,"scaleY",1f,0.1f);//设置透明度改变
+						ObjectAnimator alphaAnim2 = ObjectAnimator.ofFloat(view,"scaleY",1f,0.3f);//设置透明度改变
 						alphaAnim2.setDuration(1000);//设置持续时间
 						alphaAnim2.addListener(new Animator.AnimatorListener() {
 							@Override
@@ -224,9 +231,7 @@ public class BoAoHengActivity extends Activity {
 //										viewList.clear();
 //									}
 								rootLayout.removeViewAt(0);
-
 								//底部列表的
-
 								lingdaoList.add(0,yuangongList.get(0));
 								adapter.notifyItemInserted(0);
 								gridLayoutManager.scrollToPosition(0);
@@ -240,7 +245,13 @@ public class BoAoHengActivity extends Activity {
 									gridLayoutManager.scrollToPosition(0);
 								}
 
-								yuangongList.remove(0);
+								try {
+									yuangongList.remove(0);
+								}catch (Exception e){
+									Log.d(TAG, e.getMessage()+"");
+								}
+
+
 								isOne=true;
 
 //									Log.d(TAG, "yuangongList.size(2):" + yuangongList.size());
@@ -269,16 +280,16 @@ public class BoAoHengActivity extends Activity {
 						btnSexAnimatorSet.start();//开始播放
 					}else {
 						//存在
-						final View view=yuangongList.get(0).getView();
+
 						List<Animator> animators =new ArrayList<>();//设置一个装动画的集合
 //							ObjectAnimator alphaAnim0 = ObjectAnimator.ofFloat(view,"translationY",0,560f);//设置透明度改变
 //							alphaAnim0.setDuration(1000);//设置持续时间
 //							ObjectAnimator alphaAnim1 = ObjectAnimator.ofFloat(view,"translationX",0,-250f);//设置透明度改变
 //							alphaAnim1.setDuration(1000);//设置持续时间
-						ObjectAnimator alphaAnim = ObjectAnimator.ofFloat(view,"scaleX",1f,0.1f);//设置透明度改变
+						ObjectAnimator alphaAnim = ObjectAnimator.ofFloat(view,"scaleX",1f,0.05f);//设置透明度改变
 						alphaAnim.setDuration(1000);//设置持续时间
 						//alphaAnim.start();
-						ObjectAnimator alphaAnim2 = ObjectAnimator.ofFloat(view,"scaleY",1f,0.1f);//设置透明度改变
+						ObjectAnimator alphaAnim2 = ObjectAnimator.ofFloat(view,"scaleY",1f,0.05f);//设置透明度改变
 						alphaAnim2.setDuration(1000);//设置持续时间
 						alphaAnim2.addListener(new Animator.AnimatorListener() {
 							@Override
@@ -293,8 +304,13 @@ public class BoAoHengActivity extends Activity {
 //									if (viewList.size()>10){
 //										viewList.clear();
 //									}
-								rootLayout.removeViewAt(0);
-								yuangongList.remove(0);
+								try {
+									rootLayout.removeViewAt(0);
+									yuangongList.remove(0);
+								}catch (Exception e){
+									Log.d(TAG, e.getMessage()+"");
+								}
+
 								isOne=true;
 
 //									Log.d(TAG, "yuangongList.size(2):" + yuangongList.size());
@@ -365,8 +381,15 @@ public class BoAoHengActivity extends Activity {
 
 									int mbtype = 1;
 									String hyy = "";
-
-
+									if (bean.getBumen()!=null){
+										for (BenDiMBbean mm:mbLeiXingBeanList){
+											if (bean.getBumen().equals(mm.getSubType())){
+												Log.d(TAG, "mm.getPhoto_index():" + mm.getPhoto_index());
+												hyy=mm.getWelcomeSpeak();
+											//	mbtype=mm.getPhoto_index();
+											}
+										}
+									}
 
 									switch (mbtype) {
 										case 1: {
@@ -427,7 +450,7 @@ public class BoAoHengActivity extends Activity {
 														Message message = new Message();
 														message.what = 999;
 														handler.sendMessage(message);
-														Log.d(TAG, "gggggggggggg");
+														Log.d(TAG, "gggggggggggg2222");
 
 													}
 												};
@@ -440,7 +463,7 @@ public class BoAoHengActivity extends Activity {
 
 											//入场动画(从右往左)
 											ValueAnimator anim = ValueAnimator.ofInt(dw, 0);
-											anim.setDuration(1000);
+											anim.setDuration(1100);
 											anim.setRepeatMode(ValueAnimator.RESTART);
 											Interpolator interpolator=new DecelerateInterpolator(2f);
 											anim.setInterpolator(interpolator);
@@ -502,86 +525,141 @@ public class BoAoHengActivity extends Activity {
 
 											if (lingshiList.size()>1){
 
-												//将被覆盖的view 执行移动到下面的动画
-												//设置一个是否执行移动过的动画 的标志  然后隐藏view  然后8秒后通知统一删除
-											final View view=yuangongList.get(0).getView();
-												view.setTag("123");
-												//动画
-//												AnimatorPath path= new AnimatorPath();
-//												path.moveTo(0,0);
-//												path.lineTo(400,400);
-//											//	path.secondBesselCurveTo(600, 200, 800, 400); //订单
-//												path.thirdBesselCurveTo(100,600,900,1000,200,1600);
-//
-//												ObjectAnimator 	anim = ObjectAnimator.ofObject(BoAoHengActivity.this, "fab", new PathEvaluator(), path.getPoints().toArray());
-//												anim.setInterpolator(new DecelerateInterpolator());//动画插值器
-//												anim.setDuration(1000);
-//												anim.addListener(new Animator.AnimatorListener() {
-//													@Override
-//													public void onAnimationStart(Animator animation) {
-//
-//													}
-//
-//													@Override
-//													public void onAnimationEnd(Animator animation) {
-//														view.setVisibility(View.GONE);
-//														viewList.remove(0);
-//
-//													}
-//
-//													@Override
-//													public void onAnimationCancel(Animator animation) {
-//
-//													}
-//
-//													@Override
-//													public void onAnimationRepeat(Animator animation) {
-//
-//													}
-//												});
-//												//anim.start();
-												List<Animator> animators =new ArrayList<>();//设置一个装动画的集合
-												ObjectAnimator alphaAnim0 = ObjectAnimator.ofFloat(view,"translationY",0,560f);//设置透明度改变
-												alphaAnim0.setDuration(1000);//设置持续时间
-												ObjectAnimator alphaAnim1 = ObjectAnimator.ofFloat(view,"translationX",0,-250f);//设置透明度改变
-												alphaAnim1.setDuration(1000);//设置持续时间
-												ObjectAnimator alphaAnim = ObjectAnimator.ofFloat(view,"scaleX",1f,0.4f);//设置透明度改变
-												alphaAnim.setDuration(1000);//设置持续时间
-												//alphaAnim.start();
-												ObjectAnimator alphaAnim2 = ObjectAnimator.ofFloat(view,"scaleY",1f,0.3f);//设置透明度改变
-												alphaAnim2.setDuration(1000);//设置持续时间
-												alphaAnim2.addListener(new Animator.AnimatorListener() {
-													@Override
-													public void onAnimationStart(Animator animation) {
-
+												int b = 0;
+												for (int i2 = 0; i2 < lingdaoList.size(); i2++) {
+													if (Objects.equals(lingdaoList.get(i2).getId(), yuangongList.get(0).getId())) {
+														b = 1;
 													}
+												}
+												lingshiList.remove(0);
+												final View view=yuangongList.get(0).getView();
+												if (b==0){
+													//不存在
 
-													@Override
-													public void onAnimationEnd(Animator animation) {
-														view.setVisibility(View.GONE);
+													List<Animator> animators =new ArrayList<>();//设置一个装动画的集合
+													ObjectAnimator alphaAnim0 = ObjectAnimator.ofFloat(view,"translationY",0,560f);//设置透明度改变
+													alphaAnim0.setDuration(1000);//设置持续时间
+													ObjectAnimator alphaAnim1 = ObjectAnimator.ofFloat(view,"translationX",0,-250f);//设置透明度改变
+													alphaAnim1.setDuration(1000);//设置持续时间
+													ObjectAnimator alphaAnim = ObjectAnimator.ofFloat(view,"scaleX",1f,0.4f);//设置透明度改变
+													alphaAnim.setDuration(1000);//设置持续时间
+													//alphaAnim.start();
+													ObjectAnimator alphaAnim2 = ObjectAnimator.ofFloat(view,"scaleY",1f,0.3f);//设置透明度改变
+													alphaAnim2.setDuration(1000);//设置持续时间
+													alphaAnim2.addListener(new Animator.AnimatorListener() {
+														@Override
+														public void onAnimationStart(Animator animation) {
+
+														}
+
+														@Override
+														public void onAnimationEnd(Animator animation) {
+															view.setVisibility(View.GONE);
+															rootLayout.removeViewAt(0);
+
+															//底部列表的
+															lingdaoList.add(0,yuangongList.get(0));
+															adapter.notifyItemInserted(0);
+															gridLayoutManager.scrollToPosition(0);
+															if (lingdaoList.size()>6){
+																int si=lingdaoList.size()-1;
+																lingdaoList.remove(si);
+																adapter.notifyItemRemoved(si);
+																//adapter.notifyItemChanged(1);
+																//adapter.notifyItemRangeChanged(1,tanchuangList.size());
+																//adapter.notifyDataSetChanged();
+																gridLayoutManager.scrollToPosition(0);
+															}
+
+															try {
+																yuangongList.remove(0);
+															}catch (Exception e){
+																Log.d(TAG, e.getMessage()+"");
+															}
 
 
+															isOne=true;
 
-													}
 
-													@Override
-													public void onAnimationCancel(Animator animation) {
+														}
 
-													}
+														@Override
+														public void onAnimationCancel(Animator animation) {
 
-													@Override
-													public void onAnimationRepeat(Animator animation) {
+														}
 
-													}
-												});
-												//alphaAnim.start();
-												animators.add(alphaAnim);
-												animators.add(alphaAnim1);
-												animators.add(alphaAnim0);
-												animators.add(alphaAnim2);
-												AnimatorSet btnSexAnimatorSet =new AnimatorSet();//动画集
-												btnSexAnimatorSet.playTogether(animators);//设置一起播放
-												btnSexAnimatorSet.start();//开始播放
+														@Override
+														public void onAnimationRepeat(Animator animation) {
+
+														}
+													});
+													//alphaAnim.start();\
+													animators.add(alphaAnim0);
+													animators.add(alphaAnim1);
+													animators.add(alphaAnim);
+													animators.add(alphaAnim2);
+													AnimatorSet btnSexAnimatorSet =new AnimatorSet();//动画集
+													btnSexAnimatorSet.playTogether(animators);//设置一起播放
+													btnSexAnimatorSet.start();//开始播放
+												}else {
+													//存在
+													List<Animator> animators =new ArrayList<>();//设置一个装动画的集合
+//							ObjectAnimator alphaAnim0 = ObjectAnimator.ofFloat(view,"translationY",0,560f);//设置透明度改变
+//							alphaAnim0.setDuration(1000);//设置持续时间
+//							ObjectAnimator alphaAnim1 = ObjectAnimator.ofFloat(view,"translationX",0,-250f);//设置透明度改变
+//							alphaAnim1.setDuration(1000);//设置持续时间
+													ObjectAnimator alphaAnim = ObjectAnimator.ofFloat(view,"scaleX",1f,0.05f);//设置透明度改变
+													alphaAnim.setDuration(1000);//设置持续时间
+													//alphaAnim.start();
+													ObjectAnimator alphaAnim2 = ObjectAnimator.ofFloat(view,"scaleY",1f,0.05f);//设置透明度改变
+													alphaAnim2.setDuration(1000);//设置持续时间
+													alphaAnim2.addListener(new Animator.AnimatorListener() {
+														@Override
+														public void onAnimationStart(Animator animation) {
+
+														}
+
+														@Override
+														public void onAnimationEnd(Animator animation) {
+															view.setVisibility(View.GONE);
+//									viewList.remove(0);
+//									if (viewList.size()>10){
+//										viewList.clear();
+//									}
+															try {
+																rootLayout.removeViewAt(0);
+																yuangongList.remove(0);
+															}catch (Exception e){
+																Log.d(TAG, e.getMessage()+"");
+															}
+
+															isOne=true;
+
+
+														}
+
+														@Override
+														public void onAnimationCancel(Animator animation) {
+
+														}
+
+														@Override
+														public void onAnimationRepeat(Animator animation) {
+
+														}
+													});
+													//alphaAnim.start();
+													animators.add(alphaAnim);
+													animators.add(alphaAnim2);
+													AnimatorSet btnSexAnimatorSet =new AnimatorSet();//动画集
+													btnSexAnimatorSet.playTogether(animators);//设置一起播放
+													btnSexAnimatorSet.start();//开始播放
+												}
+
+												Log.d(TAG, "yuangongList.size():" + yuangongList.size());
+												Log.d(TAG, "viewList.size():" + viewList.size());
+												Log.d(TAG, "lingdaoList.size():" + lingdaoList.size());
+
 
 
 											}
