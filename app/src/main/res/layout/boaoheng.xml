@@ -6,7 +6,7 @@
 
 
     <ImageView
-        android:background="@drawable/boao_dbg"
+        android:background="@drawable/dabgbg"
         android:layout_width="match_parent"
         android:id="@+id/dabg"
         android:scaleType="fitXY"

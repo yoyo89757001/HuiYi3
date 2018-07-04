@@ -206,17 +206,41 @@ public class BoAoHengActivity extends Activity {
 
 					if (b==0){
 						//不存在
-
+						final boolean[] kk = {true};
 						List<Animator> animators =new ArrayList<>();//设置一个装动画的集合
 						ObjectAnimator alphaAnim0 = ObjectAnimator.ofFloat(view,"translationY",0,560f);//设置透明度改变
 						alphaAnim0.setDuration(1000);//设置持续时间
 						ObjectAnimator alphaAnim1 = ObjectAnimator.ofFloat(view,"translationX",0,-250f);//设置透明度改变
 						alphaAnim1.setDuration(1000);//设置持续时间
-						ObjectAnimator alphaAnim = ObjectAnimator.ofFloat(view,"scaleX",1f,0.4f);//设置透明度改变
+						final ObjectAnimator alphaAnim = ObjectAnimator.ofFloat(view,"scaleX",1f,0.4f);//设置透明度改变
 						alphaAnim.setDuration(1000);//设置持续时间
 						//alphaAnim.start();
 						ObjectAnimator alphaAnim2 = ObjectAnimator.ofFloat(view,"scaleY",1f,0.3f);//设置透明度改变
 						alphaAnim2.setDuration(1000);//设置持续时间
+						alphaAnim2.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+							@Override
+							public void onAnimationUpdate(ValueAnimator animation) {
+								Log.d(TAG, "animation.getCurrentPlayTime():" + animation.getCurrentPlayTime());
+
+								if (animation.getCurrentPlayTime()>=600 && kk[0]){
+									kk[0] =false;
+
+									//底部列表的
+									lingdaoList.add(0,yuangongList.get(0));
+									adapter.notifyItemInserted(0);
+									gridLayoutManager.scrollToPosition(0);
+									if (lingdaoList.size()>6){
+										int si=lingdaoList.size()-1;
+										lingdaoList.remove(si);
+										adapter.notifyItemRemoved(si);
+										//adapter.notifyItemChanged(1);
+										//adapter.notifyItemRangeChanged(1,tanchuangList.size());
+										//adapter.notifyDataSetChanged();
+										gridLayoutManager.scrollToPosition(0);
+									}
+								}
+							}
+						});
 						alphaAnim2.addListener(new Animator.AnimatorListener() {
 							@Override
 							public void onAnimationStart(Animator animation) {
@@ -225,32 +249,13 @@ public class BoAoHengActivity extends Activity {
 
 							@Override
 							public void onAnimationEnd(Animator animation) {
-								view.setVisibility(View.GONE);
-//									viewList.remove(0);
-//									if (viewList.size()>10){
-//										viewList.clear();
-//									}
-								rootLayout.removeViewAt(0);
-								//底部列表的
-								lingdaoList.add(0,yuangongList.get(0));
-								adapter.notifyItemInserted(0);
-								gridLayoutManager.scrollToPosition(0);
-								if (lingdaoList.size()>6){
-									int si=lingdaoList.size()-1;
-									lingdaoList.remove(si);
-									adapter.notifyItemRemoved(si);
-									//adapter.notifyItemChanged(1);
-									//adapter.notifyItemRangeChanged(1,tanchuangList.size());
-									//adapter.notifyDataSetChanged();
-									gridLayoutManager.scrollToPosition(0);
-								}
-
 								try {
-									yuangongList.remove(0);
-								}catch (Exception e){
-									Log.d(TAG, e.getMessage()+"");
-								}
-
+									view.setVisibility(View.GONE);
+									rootLayout.removeViewAt(0);
+								    yuangongList.remove(0);
+							}catch (Exception e){
+								Log.d(TAG, e.getMessage()+"");
+							}
 
 								isOne=true;
 
@@ -269,6 +274,7 @@ public class BoAoHengActivity extends Activity {
 							public void onAnimationRepeat(Animator animation) {
 
 							}
+
 						});
 						//alphaAnim.start();\
 						animators.add(alphaAnim0);
@@ -535,7 +541,7 @@ public class BoAoHengActivity extends Activity {
 												final View view=yuangongList.get(0).getView();
 												if (b==0){
 													//不存在
-
+													final boolean[] kk = {true};
 													List<Animator> animators =new ArrayList<>();//设置一个装动画的集合
 													ObjectAnimator alphaAnim0 = ObjectAnimator.ofFloat(view,"translationY",0,560f);//设置透明度改变
 													alphaAnim0.setDuration(1000);//设置持续时间
@@ -546,6 +552,29 @@ public class BoAoHengActivity extends Activity {
 													//alphaAnim.start();
 													ObjectAnimator alphaAnim2 = ObjectAnimator.ofFloat(view,"scaleY",1f,0.3f);//设置透明度改变
 													alphaAnim2.setDuration(1000);//设置持续时间
+													alphaAnim2.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+														@Override
+														public void onAnimationUpdate(ValueAnimator animation) {
+
+															if (animation.getCurrentPlayTime()>=600 && kk[0]){
+																kk[0] =false;
+																//底部列表的
+																lingdaoList.add(0,yuangongList.get(0));
+																adapter.notifyItemInserted(0);
+																gridLayoutManager.scrollToPosition(0);
+																if (lingdaoList.size()>6){
+																	int si=lingdaoList.size()-1;
+																	lingdaoList.remove(si);
+																	adapter.notifyItemRemoved(si);
+																	//adapter.notifyItemChanged(1);
+																	//adapter.notifyItemRangeChanged(1,tanchuangList.size());
+																	//adapter.notifyDataSetChanged();
+																	gridLayoutManager.scrollToPosition(0);
+																}
+															}
+
+														}
+													});
 													alphaAnim2.addListener(new Animator.AnimatorListener() {
 														@Override
 														public void onAnimationStart(Animator animation) {
@@ -554,29 +583,14 @@ public class BoAoHengActivity extends Activity {
 
 														@Override
 														public void onAnimationEnd(Animator animation) {
-															view.setVisibility(View.GONE);
-															rootLayout.removeViewAt(0);
-
-															//底部列表的
-															lingdaoList.add(0,yuangongList.get(0));
-															adapter.notifyItemInserted(0);
-															gridLayoutManager.scrollToPosition(0);
-															if (lingdaoList.size()>6){
-																int si=lingdaoList.size()-1;
-																lingdaoList.remove(si);
-																adapter.notifyItemRemoved(si);
-																//adapter.notifyItemChanged(1);
-																//adapter.notifyItemRangeChanged(1,tanchuangList.size());
-																//adapter.notifyDataSetChanged();
-																gridLayoutManager.scrollToPosition(0);
-															}
 
 															try {
+																view.setVisibility(View.GONE);
+																rootLayout.removeViewAt(0);
 																yuangongList.remove(0);
 															}catch (Exception e){
 																Log.d(TAG, e.getMessage()+"");
 															}
-
 
 															isOne=true;
 
@@ -1235,52 +1249,52 @@ public class BoAoHengActivity extends Activity {
 	@Override
 	protected void onResume() {
 
-//		new Thread(new Runnable() {
-//			@Override
-//			public void run() {
-//				try {
-//					Thread.sleep(800);
-//				} catch (InterruptedException e) {
-//					e.printStackTrace();
-//				}
-//
-//				for ( int i=0;i<15;i++){
-//					try {
-//						Thread.sleep(4000);
-//					} catch (InterruptedException e) {
-//						e.printStackTrace();
-//					}
-//					ShiBieBean.PersonBeanSB sb=new ShiBieBean.PersonBeanSB();
-//					sb.setId(1234567L+i);
-//					sb.setDepartment("观众");
-//					sb.setName("测试");
-//					linkedBlockingQueue.offer(sb);
-//					if (isOne){
-//						isOne=false;
-//
-//						Message message2 = Message.obtain();
-//						message2.arg1 = 1;
-//						message2.obj = sb;
-//						handler.sendMessage(message2);
-//						ShiBieBean.PersonBeanSB beanSB= null;
-//						try {
-//							beanSB = linkedBlockingQueue.poll(10, TimeUnit.MILLISECONDS);
-//						} catch (InterruptedException e) {
-//							e.printStackTrace();
-//						}
-//						Log.d(TAG, "移出的id:" + beanSB.getId());
-//					}
-//
-////					Message message3 = Message.obtain();
-////					message3.arg1 = 1;
-////					message3.obj = sb;
-////					handler.sendMessage(message3);
-//
-//				}
-//
-//
-//			}
-//		}).start();
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				try {
+					Thread.sleep(800);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+
+				for ( int i=0;i<15;i++){
+					try {
+						Thread.sleep(4000);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+					ShiBieBean.PersonBeanSB sb=new ShiBieBean.PersonBeanSB();
+					sb.setId(1234567L+i);
+					sb.setDepartment("观众");
+					sb.setName("测试");
+					linkedBlockingQueue.offer(sb);
+					if (isOne){
+						isOne=false;
+
+						Message message2 = Message.obtain();
+						message2.arg1 = 1;
+						message2.obj = sb;
+						handler.sendMessage(message2);
+						ShiBieBean.PersonBeanSB beanSB= null;
+						try {
+							beanSB = linkedBlockingQueue.poll(10, TimeUnit.MILLISECONDS);
+						} catch (InterruptedException e) {
+							e.printStackTrace();
+						}
+						Log.d(TAG, "移出的id:" + beanSB.getId());
+					}
+
+//					Message message3 = Message.obtain();
+//					message3.arg1 = 1;
+//					message3.obj = sb;
+//					handler.sendMessage(message3);
+
+				}
+
+
+			}
+		}).start();
 
 		if (netWorkStateReceiver == null) {
 			netWorkStateReceiver = new NetWorkStateReceiver();
