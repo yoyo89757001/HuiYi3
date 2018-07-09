@@ -75,6 +75,7 @@ import com.ruitong.huiyi3.tts.util.OfflineResource;
 import com.ruitong.huiyi3.utils.DateUtils;
 import com.ruitong.huiyi3.utils.GsonUtil;
 import com.ruitong.huiyi3.utils.Utils;
+import com.ruitong.huiyi3.view.DiBuView;
 import com.ruitong.huiyi3.view.GlideCircleTransform;
 import com.sdsmdg.tastytoast.TastyToast;
 import com.yatoooon.screenadaptation.ScreenAdapterTools;
@@ -177,6 +178,7 @@ public class BoAoHengActivity extends Activity {
 	private static int isDS=0;
 	private final Timer timer = new Timer();
 	private TimerTask task;
+	private LinearLayout diBuView;
 
 
 	public  Handler handler=new Handler(new Handler.Callback() {
@@ -208,7 +210,7 @@ public class BoAoHengActivity extends Activity {
 						//不存在
 						final boolean[] kk = {true};
 						List<Animator> animators =new ArrayList<>();//设置一个装动画的集合
-						ObjectAnimator alphaAnim0 = ObjectAnimator.ofFloat(view,"translationY",0,560f);//设置透明度改变
+						ObjectAnimator alphaAnim0 = ObjectAnimator.ofFloat(view,"translationY",0,320f);//设置透明度改变
 						alphaAnim0.setDuration(1000);//设置持续时间
 						ObjectAnimator alphaAnim1 = ObjectAnimator.ofFloat(view,"translationX",0,-250f);//设置透明度改变
 						alphaAnim1.setDuration(1000);//设置持续时间
@@ -220,7 +222,7 @@ public class BoAoHengActivity extends Activity {
 						alphaAnim2.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
 							@Override
 							public void onAnimationUpdate(ValueAnimator animation) {
-								Log.d(TAG, "animation.getCurrentPlayTime():" + animation.getCurrentPlayTime());
+								//Log.d(TAG, "animation.getCurrentPlayTime():" + animation.getCurrentPlayTime());
 
 								if (animation.getCurrentPlayTime()>=600 && kk[0]){
 									kk[0] =false;
@@ -229,7 +231,7 @@ public class BoAoHengActivity extends Activity {
 									lingdaoList.add(0,yuangongList.get(0));
 									adapter.notifyItemInserted(0);
 									gridLayoutManager.scrollToPosition(0);
-									if (lingdaoList.size()>6){
+									if (lingdaoList.size()>3){
 										int si=lingdaoList.size()-1;
 										lingdaoList.remove(si);
 										adapter.notifyItemRemoved(si);
@@ -259,9 +261,6 @@ public class BoAoHengActivity extends Activity {
 
 								isOne=true;
 
-//									Log.d(TAG, "yuangongList.size(2):" + yuangongList.size());
-//									Log.d(TAG, "viewList.size(2):" + viewList.size());
-//									Log.d(TAG, "lingdaoList.size(2):" + lingdaoList.size());
 
 							}
 
@@ -306,10 +305,7 @@ public class BoAoHengActivity extends Activity {
 							@Override
 							public void onAnimationEnd(Animator animation) {
 								view.setVisibility(View.GONE);
-//									viewList.remove(0);
-//									if (viewList.size()>10){
-//										viewList.clear();
-//									}
+
 								try {
 									rootLayout.removeViewAt(0);
 									yuangongList.remove(0);
@@ -318,10 +314,6 @@ public class BoAoHengActivity extends Activity {
 								}
 
 								isOne=true;
-
-//									Log.d(TAG, "yuangongList.size(2):" + yuangongList.size());
-//									Log.d(TAG, "viewList.size(2):" + viewList.size());
-//									Log.d(TAG, "lingdaoList.size(2):" + lingdaoList.size());
 
 							}
 
@@ -343,10 +335,6 @@ public class BoAoHengActivity extends Activity {
 						btnSexAnimatorSet.start();//开始播放
 					}
 
-						Log.d(TAG, "yuangongList.size():" + yuangongList.size());
-						Log.d(TAG, "viewList.size():" + viewList.size());
-						Log.d(TAG, "lingdaoList.size():" + lingdaoList.size());
-
 
 					break;
 
@@ -355,10 +343,8 @@ public class BoAoHengActivity extends Activity {
 
 			if (msg.arg1==1){
 
-				//view1.setVisibility(View.GONE);
-
 				ShiBieBean.PersonBeanSB dataBean= (ShiBieBean.PersonBeanSB) msg.obj;
-				Log.d(TAG, "dataBean.getId():" + dataBean.getId());
+
 				try {
 
 					final TanChuangBean bean=new TanChuangBean();
@@ -375,22 +361,12 @@ public class BoAoHengActivity extends Activity {
 					switch (dataBean.getSubject_type()) {
 						case 0: //员工
 
-//								int a = 0;
-//								for (int i2 = 0; i2 < yuangongList.size(); i2++) {
-//									if (Objects.equals(yuangongList.get(i2).getId(), bean.getId())) {
-//										a = 1;
-//									}
-//								}
-
-
-
-
 									int mbtype = 1;
 									String hyy = "";
 									if (bean.getBumen()!=null){
 										for (BenDiMBbean mm:mbLeiXingBeanList){
 											if (bean.getBumen().equals(mm.getSubType())){
-												Log.d(TAG, "mm.getPhoto_index():" + mm.getPhoto_index());
+											//	Log.d(TAG, "mm.getPhoto_index():" + mm.getPhoto_index());
 												hyy=mm.getWelcomeSpeak();
 											//	mbtype=mm.getPhoto_index();
 											}
@@ -426,7 +402,8 @@ public class BoAoHengActivity extends Activity {
 											bean.setView(view1);
 
 
-											LinearLayout.LayoutParams params1 = (LinearLayout.LayoutParams) root_rl1.getLayoutParams();
+											RelativeLayout.LayoutParams params1 = (RelativeLayout.LayoutParams) root_rl1.getLayoutParams();
+											params1.height=dh/4+30;
 											params1.leftMargin = 40;
 											params1.rightMargin = 40;
 											root_rl1.setLayoutParams(params1);
@@ -443,7 +420,7 @@ public class BoAoHengActivity extends Activity {
 														Message message = new Message();
 														message.what = 999;
 														handler.sendMessage(message);
-														Log.d(TAG, "gggggggggggg");
+													//	Log.d(TAG, "gggggggggggg");
 
 													}
 												};
@@ -456,7 +433,7 @@ public class BoAoHengActivity extends Activity {
 														Message message = new Message();
 														message.what = 999;
 														handler.sendMessage(message);
-														Log.d(TAG, "gggggggggggg2222");
+													//	Log.d(TAG, "gggggggggggg2222");
 
 													}
 												};
@@ -468,7 +445,7 @@ public class BoAoHengActivity extends Activity {
 											lingshiList.add(bean);
 
 											//入场动画(从右往左)
-											ValueAnimator anim = ValueAnimator.ofInt(dw, 0);
+											ValueAnimator anim = ValueAnimator.ofInt(dw, 40);
 											anim.setDuration(1100);
 											anim.setRepeatMode(ValueAnimator.RESTART);
 											Interpolator interpolator=new DecelerateInterpolator(2f);
@@ -502,9 +479,8 @@ public class BoAoHengActivity extends Activity {
 														ShiBieBean.PersonBeanSB beanSB=linkedBlockingQueue.poll(10, TimeUnit.MILLISECONDS);
 														if (beanSB==null){
 															isOne=true;
-															Log.d(TAG, "fffffff");
 														}else {
-															Log.d(TAG, "拿到的id"+beanSB.getId());
+														//	Log.d(TAG, "拿到的id"+beanSB.getId());
 															Message message2 = Message.obtain();
 															message2.arg1 = 1;
 															message2.obj = beanSB;
@@ -527,7 +503,7 @@ public class BoAoHengActivity extends Activity {
 											});
 											anim.start();
 
-											Log.d(TAG, "ttttttyuangongList:" + yuangongList.size());
+										//	Log.d(TAG, "ttttttyuangongList:" + yuangongList.size());
 
 											if (lingshiList.size()>1){
 
@@ -543,7 +519,7 @@ public class BoAoHengActivity extends Activity {
 													//不存在
 													final boolean[] kk = {true};
 													List<Animator> animators =new ArrayList<>();//设置一个装动画的集合
-													ObjectAnimator alphaAnim0 = ObjectAnimator.ofFloat(view,"translationY",0,560f);//设置透明度改变
+													ObjectAnimator alphaAnim0 = ObjectAnimator.ofFloat(view,"translationY",0,320f);//设置透明度改变
 													alphaAnim0.setDuration(1000);//设置持续时间
 													ObjectAnimator alphaAnim1 = ObjectAnimator.ofFloat(view,"translationX",0,-250f);//设置透明度改变
 													alphaAnim1.setDuration(1000);//设置持续时间
@@ -562,7 +538,7 @@ public class BoAoHengActivity extends Activity {
 																lingdaoList.add(0,yuangongList.get(0));
 																adapter.notifyItemInserted(0);
 																gridLayoutManager.scrollToPosition(0);
-																if (lingdaoList.size()>6){
+																if (lingdaoList.size()>3){
 																	int si=lingdaoList.size()-1;
 																	lingdaoList.remove(si);
 																	adapter.notifyItemRemoved(si);
@@ -670,9 +646,9 @@ public class BoAoHengActivity extends Activity {
 													btnSexAnimatorSet.start();//开始播放
 												}
 
-												Log.d(TAG, "yuangongList.size():" + yuangongList.size());
-												Log.d(TAG, "viewList.size():" + viewList.size());
-												Log.d(TAG, "lingdaoList.size():" + lingdaoList.size());
+//												Log.d(TAG, "yuangongList.size():" + yuangongList.size());
+//												Log.d(TAG, "viewList.size():" + viewList.size());
+//												Log.d(TAG, "lingdaoList.size():" + lingdaoList.size());
 
 
 
@@ -874,6 +850,7 @@ public class BoAoHengActivity extends Activity {
 
 
 		setContentView(R.layout.boaoheng);
+
 		//ScreenAdapterTools.getInstance().reset(this);//如果希望android7.0分屏也适配的话,加上这句
 		//在setContentView();后面加上适配语句
 		ScreenAdapterTools.getInstance().loadView(getWindow().getDecorView());
@@ -957,19 +934,31 @@ public class BoAoHengActivity extends Activity {
 
 		};
 
+		diBuView= (LinearLayout) findViewById(R.id.dibuview);
+
 		//Utils.initPermission(YiDongNianHuiActivity.this);
 		initialTts();
 
 
 		RelativeLayout.LayoutParams  params2= (RelativeLayout.LayoutParams) rootLayout.getLayoutParams();
-		params2.height=dh/3+100;
+		params2.topMargin=dh/6+40;
+		params2.height=dh/4+30;
 		rootLayout.setLayoutParams(params2);
 		rootLayout.invalidate();
 
-//		RelativeLayout.LayoutParams  params= (RelativeLayout.LayoutParams) recyclerView.getLayoutParams();
-//		params.bottomMargin=dh/7;
-//		recyclerView.setLayoutParams(params);
-//		recyclerView.invalidate();
+		RelativeLayout.LayoutParams  params= (RelativeLayout.LayoutParams) recyclerView.getLayoutParams();
+		params.topMargin=40;
+		params.height=dh/8;
+		recyclerView.setLayoutParams(params);
+		recyclerView.invalidate();
+
+		RelativeLayout.LayoutParams  params3= (RelativeLayout.LayoutParams) diBuView.getLayoutParams();
+		params3.topMargin=40;
+		params3.leftMargin=40;
+		params3.rightMargin=40;
+		params3.bottomMargin=40;
+		diBuView.setLayoutParams(params3);
+		diBuView.invalidate();
 
 	//	link_login();
 

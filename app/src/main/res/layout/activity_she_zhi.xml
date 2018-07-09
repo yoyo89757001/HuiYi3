@@ -39,6 +39,7 @@
             <Button
                 android:id="@+id/bt3"
                 android:textSize="16sp"
+                android:visibility="gone"
                 android:layout_marginTop="20dp"
                 android:text="预览摄像头"
                 android:textColor="@color/lanse33"

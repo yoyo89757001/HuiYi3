@@ -1,0 +1,405 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:background="@drawable/zidonghuoqu10"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!--最大的框-->
+    <LinearLayout
+        android:layout_marginLeft="30dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="60dp"
+        android:layout_width="0dp"
+        android:orientation="horizontal"
+        android:background="@drawable/zhongkong_tuhuang"
+        android:layout_weight="6"
+        android:layout_height="match_parent">
+        <!--分两个-->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_weight="8"
+            android:layout_height="match_parent">
+
+
+
+        </LinearLayout>
+
+        <!--最右边不一样的两排开始四排的父布局-->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:orientation="horizontal"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:layout_height="match_parent">
+                <View
+                    android:layout_weight="4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"/>
+                <!--点-->
+                <ImageView
+                    android:src="@drawable/shixingyuan"
+                    android:layout_width="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_height="0dp" />
+                <ImageView
+                    android:src="@drawable/shixingyuan"
+                    android:layout_width="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_height="0dp" />
+                <ImageView
+                    android:src="@drawable/shixingyuan"
+                    android:layout_width="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_height="0dp" />
+                <ImageView
+                    android:src="@drawable/shixingyuan"
+                    android:layout_width="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_height="0dp" />
+                <ImageView
+                    android:src="@drawable/shixingyuan"
+                    android:layout_width="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_height="0dp" />
+                <ImageView
+                    android:src="@drawable/shixingyuan"
+                    android:layout_width="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_height="0dp" />
+                <ImageView
+                    android:src="@drawable/shixingyuan"
+                    android:layout_width="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_height="0dp" />
+                <ImageView
+                    android:src="@drawable/shixingyuan"
+                    android:layout_width="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_height="0dp" />
+                <ImageView
+                    android:src="@drawable/shixingyuan"
+                    android:layout_width="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_height="0dp" />
+                <ImageView
+                    android:src="@drawable/shixingyuan"
+                    android:layout_width="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_height="0dp" />
+                <ImageView
+                    android:src="@drawable/shixingyuan"
+                    android:layout_width="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_height="0dp" />
+                <ImageView
+                    android:src="@drawable/shixingyuan"
+                    android:layout_width="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_height="0dp" />
+                <ImageView
+                    android:src="@drawable/shixingyuan"
+                    android:layout_width="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_height="0dp" />
+                <ImageView
+                    android:src="@drawable/shixingyuan"
+                    android:layout_width="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_height="0dp" />
+                <ImageView
+                    android:src="@drawable/shixingyuan"
+                    android:layout_width="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_height="0dp" />
+                <ImageView
+                    android:src="@drawable/shixingyuan"
+                    android:layout_width="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_height="0dp" />
+                <ImageView
+                    android:src="@drawable/shixingyuan"
+                    android:layout_width="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_height="0dp" />
+                <ImageView
+                    android:src="@drawable/shixingyuan"
+                    android:layout_width="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_height="0dp" />
+
+                <View
+                    android:layout_weight="4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"/>
+
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:layout_height="match_parent">
+                <View
+                    android:layout_weight="2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"/>
+                <ImageView
+                    android:src="@drawable/zk_lanse"
+                    android:layout_width="match_parent"
+                    android:layout_weight="1"
+                    android:layout_height="0dp" />
+                <ImageView
+                    android:src="@drawable/zk_lanse"
+                    android:layout_width="match_parent"
+                    android:layout_weight="1"
+                    android:layout_height="0dp" />
+                <ImageView
+                    android:src="@drawable/zk_lanse"
+                    android:layout_width="match_parent"
+                    android:layout_weight="1"
+                    android:layout_height="0dp" />
+                <ImageView
+                    android:src="@drawable/zk_lanse"
+                    android:layout_width="match_parent"
+                    android:layout_weight="1"
+                    android:layout_height="0dp" />
+                <ImageView
+                    android:src="@drawable/zk_lanse"
+                    android:layout_width="match_parent"
+                    android:layout_weight="1"
+                    android:layout_height="0dp" />
+                <ImageView
+                    android:src="@drawable/zk_lanse"
+                    android:layout_width="match_parent"
+                    android:layout_weight="1"
+                    android:layout_height="0dp" />
+                <ImageView
+                    android:src="@drawable/zk_lanse"
+                    android:layout_width="match_parent"
+                    android:layout_weight="1"
+                    android:layout_height="0dp" />
+                <ImageView
+                    android:src="@drawable/zk_lanse"
+                    android:layout_width="match_parent"
+                    android:layout_weight="1"
+                    android:layout_height="0dp" />
+                <ImageView
+                    android:src="@drawable/zk_lanse"
+                    android:layout_width="match_parent"
+                    android:layout_weight="1"
+                    android:layout_height="0dp" />
+                <View
+                    android:layout_weight="2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"/>
+
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:layout_height="match_parent">
+                <View
+                    android:layout_weight="4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"/>
+                <!--点-->
+                <ImageView
+                    android:src="@drawable/shixingyuan"
+                    android:layout_width="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_height="0dp" />
+                <ImageView
+                    android:src="@drawable/shixingyuan"
+                    android:layout_width="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_height="0dp" />
+                <ImageView
+                    android:src="@drawable/shixingyuan"
+                    android:layout_width="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_height="0dp" />
+                <ImageView
+                    android:src="@drawable/shixingyuan"
+                    android:layout_width="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_height="0dp" />
+                <ImageView
+                    android:src="@drawable/shixingyuan"
+                    android:layout_width="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_height="0dp" />
+                <ImageView
+                    android:src="@drawable/shixingyuan"
+                    android:layout_width="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_height="0dp" />
+                <ImageView
+                    android:src="@drawable/shixingyuan"
+                    android:layout_width="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_height="0dp" />
+                <ImageView
+                    android:src="@drawable/shixingyuan"
+                    android:layout_width="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_height="0dp" />
+                <ImageView
+                    android:src="@drawable/shixingyuan"
+                    android:layout_width="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_height="0dp" />
+                <ImageView
+                    android:src="@drawable/shixingyuan"
+                    android:layout_width="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_height="0dp" />
+                <ImageView
+                    android:src="@drawable/shixingyuan"
+                    android:layout_width="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_height="0dp" />
+                <ImageView
+                    android:src="@drawable/shixingyuan"
+                    android:layout_width="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_height="0dp" />
+                <ImageView
+                    android:src="@drawable/shixingyuan"
+                    android:layout_width="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_height="0dp" />
+                <ImageView
+                    android:src="@drawable/shixingyuan"
+                    android:layout_width="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_height="0dp" />
+                <ImageView
+                    android:src="@drawable/shixingyuan"
+                    android:layout_width="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_height="0dp" />
+                <ImageView
+                    android:src="@drawable/shixingyuan"
+                    android:layout_width="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_height="0dp" />
+                <ImageView
+                    android:src="@drawable/shixingyuan"
+                    android:layout_width="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_height="0dp" />
+                <ImageView
+                    android:src="@drawable/shixingyuan"
+                    android:layout_width="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_height="0dp" />
+
+                <View
+                    android:layout_weight="4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:orientation="vertical"
+                android:layout_weight="1"
+                android:layout_height="match_parent">
+                <!--框-->
+                <View
+                    android:layout_weight="2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"/>
+                <ImageView
+                    android:src="@drawable/zk_lanse"
+                    android:layout_width="match_parent"
+                    android:layout_weight="1"
+                    android:layout_height="0dp" />
+                <ImageView
+                    android:src="@drawable/zk_lanse"
+                    android:layout_width="match_parent"
+                    android:layout_weight="1"
+                    android:layout_height="0dp" />
+                <ImageView
+                    android:src="@drawable/zk_lanse"
+                    android:layout_width="match_parent"
+                    android:layout_weight="1"
+                    android:layout_height="0dp" />
+                <ImageView
+                    android:src="@drawable/zk_lanse"
+                    android:layout_width="match_parent"
+                    android:layout_weight="1"
+                    android:layout_height="0dp" />
+                <ImageView
+                    android:src="@drawable/zk_lanse"
+                    android:layout_width="match_parent"
+                    android:layout_weight="1"
+                    android:layout_height="0dp" />
+                <ImageView
+                    android:src="@drawable/zk_lanse"
+                    android:layout_width="match_parent"
+                    android:layout_weight="1"
+                    android:layout_height="0dp" />
+                <ImageView
+                    android:src="@drawable/zk_lanse"
+                    android:layout_width="match_parent"
+                    android:layout_weight="1"
+                    android:layout_height="0dp" />
+                <ImageView
+                    android:src="@drawable/zk_lanse"
+                    android:layout_width="match_parent"
+                    android:layout_weight="1"
+                    android:layout_height="0dp" />
+                <ImageView
+                    android:src="@drawable/zk_lanse"
+                    android:layout_width="match_parent"
+                    android:layout_weight="1"
+                    android:layout_height="0dp" />
+                <View
+                    android:layout_weight="2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"/>
+
+            </LinearLayout>
+
+            <View
+                android:layout_weight="0.4"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:gravity="center"
+       android:layout_marginLeft="60dp"
+        android:background="#7490D6"
+        android:layout_marginTop="80dp"
+        android:layout_marginBottom="80dp"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:textSize="20sp"
+            android:ems="1"
+            android:text="舞台"
+            android:textColor="@color/colorBar_bg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+
+
+    </LinearLayout>
+
+</LinearLayout>

@@ -92,7 +92,7 @@
         android:layout_marginRight="50px"
         android:layout_below="@+id/root_layout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="wrap_content"/>
 
     <!--<LinearLayout-->
         <!--android:orientation="horizontal"-->
@@ -150,10 +150,17 @@
         android:gravity="center"
         android:clipChildren="false"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content">
 
 
     </RelativeLayout>
+
+    <include
+        android:layout_below="@+id/recyclerView2"
+        android:id="@+id/dibuview"
+        layout="@layout/bibuviews"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
 
     <Button

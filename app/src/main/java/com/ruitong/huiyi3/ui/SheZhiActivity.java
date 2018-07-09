@@ -37,7 +37,7 @@ import com.ruitong.huiyi3.dialog.ShanChuKuDialog;
 import com.ruitong.huiyi3.dialog.XiuGaiHouTaiDialog;
 
 import com.ruitong.huiyi3.dialog.XiuGaiXinXiDialog;
-import com.ruitong.huiyi3.dialog.YuLanDialog;
+
 import com.ruitong.huiyi3.dialog.YuYingDialog;
 import com.ruitong.huiyi3.utils.DateUtils;
 import com.ruitong.huiyi3.utils.FileUtil;
@@ -403,8 +403,8 @@ public class SheZhiActivity extends Activity implements View.OnClickListener, Vi
 //                            }
 //                        });
 //                        dialog.show();
-                        YuLanDialog yuLanDialog=new YuLanDialog(SheZhiActivity.this);
-                            yuLanDialog.show();
+//                        YuLanDialog yuLanDialog=new YuLanDialog(SheZhiActivity.this);
+//                            yuLanDialog.show();
                     }
                 });
                 animatorSet3.start();
