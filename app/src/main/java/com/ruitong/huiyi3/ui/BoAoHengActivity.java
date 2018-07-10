@@ -168,7 +168,7 @@ public class BoAoHengActivity extends Activity {
 	private RelativeLayout diBuView;
 	private ImageView k1,k2,k3,k4,k5,k6,k7,k8,k9,k10,k11,k12,k13,k14,k15,k16,k17,k18,
 			k19,k20,k21,k22,k23,k24,k25,k26,k27,k28,k29,k30,k31,k32,k33,k34,k35,k36,
-			k37,k38,k39,k40,k41,k42,k43,k44,k45,dian,dian2,vipDian,jiabingdian,meitidian;
+			k37,k38,k39,k40,k41,k42,k43,k44,k45,dian,dian2,vipDian,jiabingdian,meitidian,jbv1,jbv2;
 
 
 
@@ -974,22 +974,99 @@ public class BoAoHengActivity extends Activity {
 
 				//vipbuttpn
 				RelativeLayout.LayoutParams  params6= (RelativeLayout.LayoutParams) vipBT.getLayoutParams();
-				params6.topMargin=locationVip[1]-location[1]+50;
+				params6.topMargin=locationVip[1]-location[1]+40;
 				params6.leftMargin=locationVip[0]-30;
+				params6.width=100;
+				params6.height=60;
 				vipBT.setLayoutParams(params6);
 				vipBT.invalidate();
 
 				RelativeLayout.LayoutParams  params7= (RelativeLayout.LayoutParams) jiabingBT.getLayoutParams();
-				params7.topMargin=locationjiabing[1]-location[1]+50;
+				params7.topMargin=locationjiabing[1]-location[1]+40;
 				params7.leftMargin=locationjiabing[0]-30;
+				params7.width=100;
+				params7.height=60;
 				jiabingBT.setLayoutParams(params7);
 				jiabingBT.invalidate();
 
 				RelativeLayout.LayoutParams  params8= (RelativeLayout.LayoutParams) meitiBT.getLayoutParams();
-				params8.topMargin=locationmeiti[1]-location[1]+50;
+				params8.topMargin=locationmeiti[1]-location[1]+40;
 				params8.leftMargin=locationmeiti[0]-10;
+				params8.width=100;
+				params8.height=60;
 				meitiBT.setLayoutParams(params8);
 				meitiBT.invalidate();
+				//嘉宾闪光区域
+				RelativeLayout.LayoutParams  params9= (RelativeLayout.LayoutParams) jbv1.getLayoutParams();
+				params9.topMargin=10;
+				params9.leftMargin=30;
+				params9.width=locationDian[0]-location[0]-10;
+				params9.height=d_k1.getHeight()/2;
+				jbv1.setLayoutParams(params9);
+				jbv1.invalidate();
+
+				RelativeLayout.LayoutParams  params10= (RelativeLayout.LayoutParams) jbv2.getLayoutParams();
+				params10.topMargin=(d_k1.getHeight()/2)+10;
+				params10.leftMargin=30;
+				params10.width=locationDian2[0]-location[0]-4;
+				params10.height=d_k1.getHeight()/2;
+				jbv2.setLayoutParams(params10);
+				jbv2.invalidate();
+
+					final View vv=diBuView.findViewWithTag("1l1");
+					ObjectAnimator alphaAnim = ObjectAnimator.ofFloat(vv,"alpha",0.2f,0.8f,0.2f,0.8f,0.2f,0.8f);//设置透明度改变
+					alphaAnim.setDuration(1020);//设置持续时间
+					alphaAnim.addListener(new Animator.AnimatorListener() {
+						@Override
+						public void onAnimationStart(Animator animation) {
+							vv.setBackgroundResource(R.color.huangse);
+						}
+-
+						@Override
+						public void onAnimationEnd(Animator animation) {
+							vv.setBackgroundResource(R.color.img_full_opaque);
+
+
+						}
+
+						@Override
+						public void onAnimationCancel(Animator animation) {
+
+						}
+
+						@Override
+						public void onAnimationRepeat(Animator animation) {
+
+						}
+					});
+					alphaAnim.setRepeatCount(100000);
+
+					ObjectAnimator alphaAnim2 = ObjectAnimator.ofFloat(jbv2,"alpha",0.2f,0.8f,0.2f,0.8f,0.2f,0.8f);//设置透明度改变
+					alphaAnim2.setDuration(1020);//设置持续时间
+					alphaAnim2.addListener(new Animator.AnimatorListener() {
+						@Override
+						public void onAnimationStart(Animator animation) {
+							jbv2.setBackgroundResource(R.color.huangse);
+						}
+
+						@Override
+						public void onAnimationEnd(Animator animation) {
+							jbv2.setBackgroundResource(R.color.img_full_opaque);
+						}
+
+						@Override
+						public void onAnimationCancel(Animator animation) {
+
+						}
+
+						@Override
+						public void onAnimationRepeat(Animator animation) {
+
+						}
+					});
+					alphaAnim2.setRepeatCount(100000);
+					alphaAnim2.start();
+					alphaAnim.start();
 
 
 
@@ -1927,10 +2004,10 @@ public class BoAoHengActivity extends Activity {
 
 
 	private void initview(){
-		d_k1=findViewById(R.id.d_k1);
-		k1=findViewById(R.id.k1);k16=findViewById(R.id.k16);k31=findViewById(R.id.k31);
-		k2=findViewById(R.id.k2);k17=findViewById(R.id.k17);k32=findViewById(R.id.k32);
-		k3=findViewById(R.id.k3);k18=findViewById(R.id.k18);k33=findViewById(R.id.k33);
+		d_k1=findViewById(R.id.d_k1);k2=findViewById(R.id.k2);k3=findViewById(R.id.k3);
+		k16=findViewById(R.id.k16);k31=findViewById(R.id.k31);k1=findViewById(R.id.k1);
+		k17=findViewById(R.id.k17);k32=findViewById(R.id.k32);
+		k18=findViewById(R.id.k18);k33=findViewById(R.id.k33);
 		k4=findViewById(R.id.k4);k19=findViewById(R.id.k19);k34=findViewById(R.id.k34);
 		k5=findViewById(R.id.k5);k20=findViewById(R.id.k20);k35=findViewById(R.id.k35);
 		k6=findViewById(R.id.k6);k21=findViewById(R.id.k21);k36=findViewById(R.id.k36);
@@ -1947,8 +2024,11 @@ public class BoAoHengActivity extends Activity {
 		vipBT=findViewById(R.id.vipbutton);meitiBT=findViewById(R.id.meitibutton);
 		jiabingBT=findViewById(R.id.jiabingbutton);vipDian=findViewById(R.id.vipdian);
 		jiabingdian=findViewById(R.id.jiabingdian);meitidian=findViewById(R.id.meitidian);
+		jbv1=findViewById(R.id.jbv1);jbv2=findViewById(R.id.jbv2);
 		hongsek=findViewById(R.id.hongsek);lvsek=findViewById(R.id.lvsek);
-
+		k1.setTag("1l1");k2.setTag("1l2");k3.setTag("1l3");
+		k4.setTag("1c1");k5.setTag("1c2");k6.setTag("1c3");
+		k7.setTag("1r1");k8.setTag("1r2");k9.setTag("1r3");
 	}
 
 

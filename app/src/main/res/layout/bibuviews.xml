@@ -2960,14 +2960,14 @@
         android:layout_width="0dp"
         android:layout_weight="1"
         android:gravity="center"
-       android:layout_marginLeft="60dp"
+        android:layout_marginLeft="60px"
         android:background="#7490D6"
-        android:layout_marginTop="80dp"
-        android:layout_marginBottom="80dp"
+        android:layout_marginTop="80px"
+        android:layout_marginBottom="80px"
         android:layout_height="match_parent">
 
         <TextView
-            android:textSize="26sp"
+            android:textSize="32px"
             android:ems="1"
             android:text="舞台"
             android:textColor="@color/colorBar_bg"
@@ -2987,10 +2987,10 @@
         <ImageView
             android:src="@drawable/xiaxia"
             android:layout_width="wrap_content"
-            android:layout_marginRight="60dp"
+            android:layout_marginRight="80px"
             android:layout_height="wrap_content" />
         <ImageView
-            android:layout_marginLeft="60dp"
+            android:layout_marginLeft="80px"
             android:src="@drawable/xiaxia"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
@@ -3039,6 +3039,16 @@
         android:background="@drawable/hongseyuanjiao"
         android:layout_width="wrap_content"
         android:id="@+id/vipbutton"
+        android:layout_height="wrap_content" />
+
+    <ImageView
+        android:id="@+id/jbv1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <ImageView
+        android:id="@+id/jbv2"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
 </RelativeLayout>
