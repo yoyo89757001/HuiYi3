@@ -113,7 +113,7 @@ linear 线性渐变，这是默认设置,radial 放射性渐变，以开始色�
     -->
     <stroke
 
-        android:width="1dp"
-        android:color="#7490D6"
+        android:width="4dp"
+        android:color="#ff0000"
         />
 </shape>

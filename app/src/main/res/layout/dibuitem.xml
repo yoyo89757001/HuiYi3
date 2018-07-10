@@ -9,7 +9,7 @@
         <RelativeLayout
             android:id="@+id/root_rl2"
             android:layout_gravity="center_horizontal"
-            android:background="@drawable/xia_tc_bg"
+            android:background="@drawable/zidonghuoqu10"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
@@ -32,7 +32,7 @@
         <TextView
             android:id="@+id/test2"
             android:textSize="28px"
-            android:textColor="@color/write"
+            android:textColor="@color/colorBar_bg"
             android:layout_marginLeft="2px"
             android:layout_marginRight="2px"
             android:layout_marginTop="8px"

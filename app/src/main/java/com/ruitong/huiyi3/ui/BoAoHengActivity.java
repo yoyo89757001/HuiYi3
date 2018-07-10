@@ -6,8 +6,6 @@ import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.app.Activity;
-import android.app.AlarmManager;
-import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -27,6 +25,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.ViewTreeObserver;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.animation.DecelerateInterpolator;
@@ -34,10 +33,13 @@ import android.view.animation.Interpolator;
 import android.view.animation.OvershootInterpolator;
 import android.widget.Button;
 import android.widget.ImageView;
+
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.airbnb.lottie.L;
 import com.airbnb.lottie.LottieAnimationView;
 import com.baidu.tts.client.SpeechSynthesizer;
 import com.baidu.tts.client.SpeechSynthesizerListener;
@@ -48,7 +50,7 @@ import com.google.gson.JsonObject;
 import com.robinhood.ticker.TickerUtils;
 import com.robinhood.ticker.TickerView;
 import com.ruitong.huiyi3.MyApplication;
-import com.ruitong.huiyi3.PathAnimater.PathPoint;
+
 import com.ruitong.huiyi3.R;
 import com.ruitong.huiyi3.adapter.MyAdapter;
 import com.ruitong.huiyi3.beans.BaoCunBean;
@@ -75,7 +77,7 @@ import com.ruitong.huiyi3.tts.util.OfflineResource;
 import com.ruitong.huiyi3.utils.DateUtils;
 import com.ruitong.huiyi3.utils.GsonUtil;
 import com.ruitong.huiyi3.utils.Utils;
-import com.ruitong.huiyi3.view.DiBuView;
+
 import com.ruitong.huiyi3.view.GlideCircleTransform;
 import com.sdsmdg.tastytoast.TastyToast;
 import com.yatoooon.screenadaptation.ScreenAdapterTools;
@@ -112,32 +114,20 @@ import sun.misc.BASE64Decoder;
 public class BoAoHengActivity extends Activity {
 	private final static String TAG = "WebsocketPushMsg";
 	public static String touxiangPath;
-	//	private IjkVideoView ijkVideoView;
 	private MyReceiver myReceiver=null;
-	//private SurfaceView surfaceview;
 	private RecyclerView recyclerView;
 	private MyAdapter adapter=null;
-	//private ScrollView recyclerView2;
-	//private ScrollView recyclerView3;
-	//private MyAdapter2 adapter2=null;
+	private ImageView hongsek,lvsek;
 	private MoShengRenBeanDao daoSession=null;
 	private static boolean isOne=true;
 	//private SpeechSynthesizer mSpeechSynthesizer;
 	//private WrapContentLinearLayoutManager manager;
 	//private WrapContentLinearLayoutManager manager2;
 	private static  WebSocketClient webSocketClient=null;
-//	private MediaPlayer mediaPlayer=null;
-//	private IVLCVout vlcVout=null;
-//	private IVLCVout.Callback callback;
-//	private LibVLC libvlc;
-//	private Media media;
-//	private SurfaceHolder mSurfaceHolder;
-//	private String zhuji=null;
-//	private static final String zhuji2="http://121.46.3.20";
 	private static Vector<TanChuangBean> yuangongList=null;//上面的弹窗
 	private static Vector<TanChuangBean> lingdaoList=null;//下面的弹窗
 	private static Vector<TanChuangBean> lingshiList=null;//下面的弹窗
-	private static Vector<View> viewList=new Vector<>();
+	//private static Vector<View> viewList=new Vector<>();
 	private int dw,dh;
 	private ImageView dabg;
 	private BaoCunBeanDao baoCunBeanDao=null;
@@ -145,11 +135,8 @@ public class BoAoHengActivity extends Activity {
 	private NetWorkStateReceiver netWorkStateReceiver=null;
 	private LottieAnimationView wangluo;
 	private boolean isLianJie=false;
-	//private List<AllUserBean.DataBean> dataBeanList=new ArrayList<>();
-	//private RelativeLayout top_rl;
-//	private TanChuangBeanDao tanChuangBeanDao=null;
 	private Typeface typeFace1;
-	private TickerView y1;
+	//private TickerView y1;
 	private LinkedBlockingQueue<ShiBieBean.PersonBeanSB> linkedBlockingQueue;
 
 	private String zhanghuID=null,huiyiID=null;
@@ -166,19 +153,23 @@ public class BoAoHengActivity extends Activity {
 	private MySyntherizer synthesizer;
 	//private View dongHauView;
 	private GridLayoutManager gridLayoutManager;
-
+	private static boolean isWC=true;
 	private List<BenDiMBbean> mbLeiXingBeanList=null;
 	private BenDiMBbeanDao benDiMBbeanDao=null;
 	private RelativeLayout rootLayout;
-	//private LinearLayout rootLayout2;
-	//private LinearLayout rootLayout3;
-//	protected String touxiangPath=null;
 	private ZhuJiBeanHDao zhuJiBeanHDao=null;
 	private HuiYiIDDao huiYiIDDao=null;
-	private static int isDS=0;
+	//private static int isDS=0;
 	private final Timer timer = new Timer();
 	private TimerTask task;
-	private LinearLayout diBuView;
+	private Button vipBT,jiabingBT,meitiBT;
+	private int k1_x,k1_y;
+	private LinearLayout d_k1;
+	private RelativeLayout diBuView;
+	private ImageView k1,k2,k3,k4,k5,k6,k7,k8,k9,k10,k11,k12,k13,k14,k15,k16,k17,k18,
+			k19,k20,k21,k22,k23,k24,k25,k26,k27,k28,k29,k30,k31,k32,k33,k34,k35,k36,
+			k37,k38,k39,k40,k41,k42,k43,k44,k45,dian,dian2,vipDian,jiabingdian,meitidian;
+
 
 
 	public  Handler handler=new Handler(new Handler.Callback() {
@@ -210,7 +201,7 @@ public class BoAoHengActivity extends Activity {
 						//不存在
 						final boolean[] kk = {true};
 						List<Animator> animators =new ArrayList<>();//设置一个装动画的集合
-						ObjectAnimator alphaAnim0 = ObjectAnimator.ofFloat(view,"translationY",0,320f);//设置透明度改变
+						ObjectAnimator alphaAnim0 = ObjectAnimator.ofFloat(view,"translationY",0,400f);//设置透明度改变
 						alphaAnim0.setDuration(1000);//设置持续时间
 						ObjectAnimator alphaAnim1 = ObjectAnimator.ofFloat(view,"translationX",0,-250f);//设置透明度改变
 						alphaAnim1.setDuration(1000);//设置持续时间
@@ -519,7 +510,7 @@ public class BoAoHengActivity extends Activity {
 													//不存在
 													final boolean[] kk = {true};
 													List<Animator> animators =new ArrayList<>();//设置一个装动画的集合
-													ObjectAnimator alphaAnim0 = ObjectAnimator.ofFloat(view,"translationY",0,320f);//设置透明度改变
+													ObjectAnimator alphaAnim0 = ObjectAnimator.ofFloat(view,"translationY",0,400f);//设置透明度改变
 													alphaAnim0.setDuration(1000);//设置持续时间
 													ObjectAnimator alphaAnim1 = ObjectAnimator.ofFloat(view,"translationX",0,-250f);//设置透明度改变
 													alphaAnim1.setDuration(1000);//设置持续时间
@@ -646,14 +637,7 @@ public class BoAoHengActivity extends Activity {
 													btnSexAnimatorSet.start();//开始播放
 												}
 
-//												Log.d(TAG, "yuangongList.size():" + yuangongList.size());
-//												Log.d(TAG, "viewList.size():" + viewList.size());
-//												Log.d(TAG, "lingdaoList.size():" + lingdaoList.size());
-
-
-
 											}
-
 
 											// 启动动画
 
@@ -693,10 +677,6 @@ public class BoAoHengActivity extends Activity {
 									}
 
 //**************************************************************************************************************
-
-
-
-
 
 							break;
 
@@ -847,10 +827,9 @@ public class BoAoHengActivity extends Activity {
 		lingdaoList=new Vector<>();
 		lingshiList=new Vector<>();
 
-
-
 		setContentView(R.layout.boaoheng);
 
+		initview();
 		//ScreenAdapterTools.getInstance().reset(this);//如果希望android7.0分屏也适配的话,加上这句
 		//在setContentView();后面加上适配语句
 		ScreenAdapterTools.getInstance().loadView(getWindow().getDecorView());
@@ -869,20 +848,19 @@ public class BoAoHengActivity extends Activity {
 		wangluo.setSpeed(1.8f);
 		typeFace1 = Typeface.createFromAsset(getAssets(), "fonts/xk.TTF");
 
-
-		y1= findViewById(R.id.y1);
-		y1.setCharacterLists(TickerUtils.provideNumberList());
-		y1.setAnimationDuration(1500);
-		y1.setAnimationInterpolator(new OvershootInterpolator());
-
-		String str = String.format("%04d", 0);
-		char s1[]=str.toCharArray();
-		StringBuilder cc=new StringBuilder();
-		cc.append(" ");
-		for (char c:s1){
-			cc.append(String.valueOf(c)).append(" ");
-		}
-		y1.setText(cc.toString());
+//
+//		y1= findViewById(R.id.y1);
+//		y1.setCharacterLists(TickerUtils.provideNumberList());
+//		y1.setAnimationDuration(1500);
+//		y1.setAnimationInterpolator(new OvershootInterpolator());
+//		String str = String.format("%04d", 0);
+//		char s1[]=str.toCharArray();
+//		StringBuilder cc=new StringBuilder();
+//		cc.append(" ");
+//		for (char c:s1){
+//			cc.append(String.valueOf(c)).append(" ");
+//		}
+//		y1.setText(cc.toString());
 
 
 
@@ -934,7 +912,7 @@ public class BoAoHengActivity extends Activity {
 
 		};
 
-		diBuView= (LinearLayout) findViewById(R.id.dibuview);
+		diBuView= (RelativeLayout) findViewById(R.id.dibuview);
 
 		//Utils.initPermission(YiDongNianHuiActivity.this);
 		initialTts();
@@ -952,6 +930,75 @@ public class BoAoHengActivity extends Activity {
 		recyclerView.setLayoutParams(params);
 		recyclerView.invalidate();
 
+		//view重绘时回调
+		diBuView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+			@Override
+			public void onGlobalLayout() {
+
+				if (isWC){
+					isWC=false;
+
+				int[] location = new  int[2] ;
+				int[] locationDian = new  int[2] ;
+				int[] locationDian2 = new  int[2] ;
+				int[] locationVip = new  int[2] ;
+				int[] locationjiabing = new  int[2] ;
+				int[] locationmeiti = new  int[2] ;
+				d_k1.getLocationInWindow(location);
+				dian.getLocationInWindow(locationDian);
+				dian2.getLocationInWindow(locationDian2);
+				vipDian.getLocationInWindow(locationVip);
+				jiabingdian.getLocationInWindow(locationjiabing);
+				meitidian.getLocationInWindow(locationmeiti);
+
+				k1_x=location[0];
+				k1_y=location[1];
+
+
+
+				RelativeLayout.LayoutParams  params4= (RelativeLayout.LayoutParams) hongsek.getLayoutParams();
+				params4.topMargin=10;
+				params4.leftMargin=locationDian[0]-50;
+				params4.width=((k1_x+d_k1.getWidth())-locationDian[0])+10;
+				params4.height=d_k1.getHeight();
+				hongsek.setLayoutParams(params4);
+				hongsek.invalidate();
+
+				RelativeLayout.LayoutParams  params5= (RelativeLayout.LayoutParams) lvsek.getLayoutParams();
+				params5.topMargin=(d_k1.getHeight()/2)+10;
+				params5.leftMargin=locationDian2[0]-46;
+				params5.width=locationDian[0]-locationDian2[0];
+				params5.height=d_k1.getHeight()/2;
+				lvsek.setLayoutParams(params5);
+				lvsek.invalidate();
+
+				//vipbuttpn
+				RelativeLayout.LayoutParams  params6= (RelativeLayout.LayoutParams) vipBT.getLayoutParams();
+				params6.topMargin=locationVip[1]-location[1]+50;
+				params6.leftMargin=locationVip[0]-30;
+				vipBT.setLayoutParams(params6);
+				vipBT.invalidate();
+
+				RelativeLayout.LayoutParams  params7= (RelativeLayout.LayoutParams) jiabingBT.getLayoutParams();
+				params7.topMargin=locationjiabing[1]-location[1]+50;
+				params7.leftMargin=locationjiabing[0]-30;
+				jiabingBT.setLayoutParams(params7);
+				jiabingBT.invalidate();
+
+				RelativeLayout.LayoutParams  params8= (RelativeLayout.LayoutParams) meitiBT.getLayoutParams();
+				params8.topMargin=locationmeiti[1]-location[1]+50;
+				params8.leftMargin=locationmeiti[0]-10;
+				meitiBT.setLayoutParams(params8);
+				meitiBT.invalidate();
+
+
+
+				}
+
+			}
+
+		});
+
 		RelativeLayout.LayoutParams  params3= (RelativeLayout.LayoutParams) diBuView.getLayoutParams();
 		params3.topMargin=40;
 		params3.leftMargin=40;
@@ -959,6 +1006,9 @@ public class BoAoHengActivity extends Activity {
 		params3.bottomMargin=40;
 		diBuView.setLayoutParams(params3);
 		diBuView.invalidate();
+
+
+
 
 	//	link_login();
 
@@ -1370,6 +1420,7 @@ public class BoAoHengActivity extends Activity {
 
 	@Override
 	protected void onDestroy() {
+		isWC=true;
 		if (webSocketClient!=null){
 			webSocketClient.close();
 			webSocketClient=null;
@@ -1841,14 +1892,14 @@ public class BoAoHengActivity extends Activity {
 						@Override
 						public void run() {
 							try {
-								String str = String.format("%04d",jsonArray.get("dtoDesc").getAsInt());
-								char s1[]=str.toCharArray();
-								StringBuilder cc=new StringBuilder();
-								cc.append(" ");
-								for (char c:s1){
-									cc.append(String.valueOf(c)).append(" ");
-								}
-								y1.setText(cc.toString());
+//								String str = String.format("%04d",jsonArray.get("dtoDesc").getAsInt());
+//								char s1[]=str.toCharArray();
+//								StringBuilder cc=new StringBuilder();
+//								cc.append(" ");
+//								for (char c:s1){
+//									cc.append(String.valueOf(c)).append(" ");
+//								}
+								//y1.setText(cc.toString());
 
 							}catch (Exception e){
 								Log.d("YiDongNianHuiActivity", e.getMessage()+"获取实时人数异常");
@@ -1874,6 +1925,31 @@ public class BoAoHengActivity extends Activity {
 		});
 	}
 
+
+	private void initview(){
+		d_k1=findViewById(R.id.d_k1);
+		k1=findViewById(R.id.k1);k16=findViewById(R.id.k16);k31=findViewById(R.id.k31);
+		k2=findViewById(R.id.k2);k17=findViewById(R.id.k17);k32=findViewById(R.id.k32);
+		k3=findViewById(R.id.k3);k18=findViewById(R.id.k18);k33=findViewById(R.id.k33);
+		k4=findViewById(R.id.k4);k19=findViewById(R.id.k19);k34=findViewById(R.id.k34);
+		k5=findViewById(R.id.k5);k20=findViewById(R.id.k20);k35=findViewById(R.id.k35);
+		k6=findViewById(R.id.k6);k21=findViewById(R.id.k21);k36=findViewById(R.id.k36);
+		k7=findViewById(R.id.k7);k22=findViewById(R.id.k22);k37=findViewById(R.id.k37);
+		k8=findViewById(R.id.k8);k23=findViewById(R.id.k23);k38=findViewById(R.id.k38);
+		k9=findViewById(R.id.k9);k24=findViewById(R.id.k24);k39=findViewById(R.id.k39);
+		k10=findViewById(R.id.k10);k25=findViewById(R.id.k25);k40=findViewById(R.id.k40);
+		k11=findViewById(R.id.k11);k26=findViewById(R.id.k26);k41=findViewById(R.id.k41);
+		k12=findViewById(R.id.k12);k27=findViewById(R.id.k27);k42=findViewById(R.id.k42);
+		k13=findViewById(R.id.k13);k28=findViewById(R.id.k28);k43=findViewById(R.id.k43);
+		k14=findViewById(R.id.k14);k29=findViewById(R.id.k29);k44=findViewById(R.id.k44);
+		k15=findViewById(R.id.k15);k30=findViewById(R.id.k30);k45=findViewById(R.id.k45);
+		dian=findViewById(R.id.dian);dian2=findViewById(R.id.dian2);
+		vipBT=findViewById(R.id.vipbutton);meitiBT=findViewById(R.id.meitibutton);
+		jiabingBT=findViewById(R.id.jiabingbutton);vipDian=findViewById(R.id.vipdian);
+		jiabingdian=findViewById(R.id.jiabingdian);meitidian=findViewById(R.id.meitidian);
+		hongsek=findViewById(R.id.hongsek);lvsek=findViewById(R.id.lvsek);
+
+	}
 
 
 }

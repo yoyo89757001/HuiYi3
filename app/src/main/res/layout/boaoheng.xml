@@ -94,54 +94,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
 
-    <!--<LinearLayout-->
-        <!--android:orientation="horizontal"-->
-        <!--android:layout_marginTop="40px"-->
-        <!--android:layout_below="@+id/root_layout"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="match_parent"-->
-        <!--android:baselineAligned="false">-->
-
-        <!--<ScrollView-->
-            <!--android:layout_width="0dp"-->
-            <!--android:layout_weight="1"-->
-            <!--android:scrollbars="none"-->
-            <!--android:layout_marginLeft="40px"-->
-            <!--android:id="@+id/recyclerView2"-->
-            <!--android:layout_height="match_parent">-->
-
-            <!--<LinearLayout-->
-                <!--android:orientation="vertical"-->
-                <!--android:id="@+id/root_layout2"-->
-                <!--android:gravity="center_horizontal"-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="wrap_content">-->
-
-
-            <!--</LinearLayout>-->
-        <!--</ScrollView>-->
-
-        <!--<ScrollView-->
-            <!--android:layout_width="0dp"-->
-            <!--android:layout_weight="1"-->
-            <!--android:layout_marginRight="40px"-->
-            <!--android:scrollbars="none"-->
-            <!--android:id="@+id/recyclerView3"-->
-            <!--android:layout_height="match_parent">-->
-
-            <!--<LinearLayout-->
-                <!--android:orientation="vertical"-->
-                <!--android:id="@+id/root_layout3"-->
-                <!--android:gravity="center_horizontal"-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="wrap_content">-->
-
-
-            <!--</LinearLayout>-->
-        <!--</ScrollView>-->
-
-
-    <!--</LinearLayout>-->
 
 
     <RelativeLayout
