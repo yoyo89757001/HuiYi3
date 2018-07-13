@@ -18,6 +18,8 @@
             android:id="@+id/touxiang"
             android:elevation="8px"
             android:layout_centerVertical="true"
+
+
             android:layout_width="wrap_content"
             android:scaleType="fitXY"
             android:layout_height="wrap_content" />
