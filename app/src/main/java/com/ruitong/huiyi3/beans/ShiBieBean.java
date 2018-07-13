@@ -497,6 +497,15 @@ public class ShiBieBean {
         private int end_time;
         private Long id;
         private String name;
+        private byte[] image;
+
+        public byte[] getImage() {
+            return image;
+        }
+
+        public void setImage(byte[] image) {
+            this.image = image;
+        }
 
         public String getSrc() {
             return src;

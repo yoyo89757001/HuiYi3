@@ -68,14 +68,26 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder>{
             holder.gongsi.setText(list.get(position).getGonghao());
             holder.zuoweihao.setText(list.get(position).getRemark());
 
-        Glide.with(context)
-                //	.load(R.drawable.vvv)
-                .load(BoAoHengActivity.touxiangPath+list.get(position).getTouxiang())
-                .error(R.drawable.erroy_bg)
-                //.apply(myOptions)
-                .transform(new GlideRoundTransform(MyApplication.getAppContext(), 20))
-                // .transform(new GlideCircleTransform(MyApplication.getAppContext(),2, Color.parseColor("#ffffffff")))
-                .into(holder.touxiang);
+            if (list.get(position).getTouxiang()!=null){
+                Glide.with(context)
+                        //	.load(R.drawable.vvv)
+                        .load(BoAoHengActivity.touxiangPath+list.get(position).getTouxiang())
+                        .error(R.drawable.erroy_bg)
+                        //.apply(myOptions)
+                        .transform(new GlideRoundTransform(MyApplication.getAppContext(), 20))
+                        // .transform(new GlideCircleTransform(MyApplication.getAppContext(),2, Color.parseColor("#ffffffff")))
+                        .into(holder.touxiang);
+            }else {
+                Glide.with(context)
+                        //	.load(R.drawable.vvv)
+                        .load(list.get(position).getBytes())
+                        .error(R.drawable.erroy_bg)
+                        //.apply(myOptions)
+                        .transform(new GlideRoundTransform(MyApplication.getAppContext(), 20))
+                        // .transform(new GlideCircleTransform(MyApplication.getAppContext(),2, Color.parseColor("#ffffffff")))
+                        .into(holder.touxiang);
+            }
+
 
 
         RelativeLayout.LayoutParams params1 = (RelativeLayout.LayoutParams)holder.touxiang.getLayoutParams();
@@ -86,6 +98,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder>{
         holder.touxiang.invalidate();
 
         LinearLayout.LayoutParams params2 = (LinearLayout.LayoutParams) holder.root_rl.getLayoutParams();
+        params2.topMargin=60;
         params2.width=dw*2/5;
         params2.height=dh/8;
         holder. root_rl.setLayoutParams(params2);

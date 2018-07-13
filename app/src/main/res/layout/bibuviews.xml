@@ -2967,7 +2967,7 @@
         android:layout_height="match_parent">
 
         <TextView
-            android:textSize="32px"
+            android:textSize="34px"
             android:ems="1"
             android:text="舞台"
             android:textColor="@color/colorBar_bg"

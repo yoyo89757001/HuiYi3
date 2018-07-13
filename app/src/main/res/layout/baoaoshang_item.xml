@@ -54,7 +54,7 @@
 
                 <TextView
                     android:textSize="50px"
-                    android:textColor="@color/write"
+                    android:textColor="@color/colorBar_bg"
                     android:id="@+id/name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
@@ -63,14 +63,14 @@
                     android:id="@+id/zhiwei"
                     android:textSize="40px"
                     android:layout_marginTop="6px"
-                    android:textColor="@color/write"
+                    android:textColor="@color/colorBar_bg2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
 
                 <TextView
                     android:textSize="40px"
                     android:layout_marginTop="6px"
-                    android:textColor="@color/write"
+                    android:textColor="@color/colorBar_bg2"
                     android:id="@+id/huanyinyu"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />

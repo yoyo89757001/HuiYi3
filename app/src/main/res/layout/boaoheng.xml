@@ -64,7 +64,7 @@
 
         <com.robinhood.ticker.TickerView
             android:textSize="80px"
-            android:id="@+id/y1"
+            android:id="@+id/y1111"
             android:gravity="center"
             android:background="@drawable/shuzi_bg"
             android:textColor="@color/write"
@@ -111,6 +111,15 @@
         android:layout_below="@+id/recyclerView2"
         android:id="@+id/dibuview"
         layout="@layout/bibuviews"
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <include
+        android:layout_below="@+id/recyclerView2"
+        android:id="@+id/yanhuitu"
+        android:visibility="gone"
+        layout="@layout/yanhuitu"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
