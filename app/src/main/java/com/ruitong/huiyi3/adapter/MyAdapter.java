@@ -8,6 +8,7 @@ import android.content.Context;
 import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -64,9 +65,15 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder>{
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-            holder.name.setText(list.get(position).getName());
-            holder.gongsi.setText(list.get(position).getGonghao());
-            holder.zuoweihao.setText(list.get(position).getRemark());
+
+                if (!list.get(position).getName().equals("")){
+                    holder.name.setText( Html.fromHtml("<font color='#0d2cf9'><big>"+list.get(position).getName()+"</big></font>"+" <font color='#111111'>嘉宾</font>"));
+                }else {
+                    holder.name.setText(  Html.fromHtml("<font color='#0d2cf9'><big>嘉宾您好</big></font>"));
+                }
+
+            holder.gongsi.setText(Html.fromHtml("<font color='#111111'>欢迎您光临博鳌会议</font>"));
+          //  holder.zuoweihao.setText(list.get(position).getRemark());
 
             if (list.get(position).getTouxiang()!=null){
                 Glide.with(context)

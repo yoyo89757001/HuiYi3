@@ -22,6 +22,7 @@ import android.os.Message;
 import android.os.SystemClock;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Html;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -71,6 +72,7 @@ import com.ruitong.huiyi3.utils.DateUtils;
 import com.ruitong.huiyi3.utils.GsonUtil;
 import com.ruitong.huiyi3.utils.Utils;
 import com.ruitong.huiyi3.view.GlideCircleTransform;
+import com.ruitong.huiyi3.view.GlideRoundTransform;
 import com.sdsmdg.tastytoast.TastyToast;
 import com.yatoooon.screenadaptation.ScreenAdapterTools;
 
@@ -348,7 +350,7 @@ public class BoAoHengActivity extends Activity {
                 try {
 
                     final TanChuangBean bean = new TanChuangBean();
-                    bean.setBytes(null);
+                    bean.setBytes(dataBean.getImage());
                     bean.setBumen(dataBean.getDepartment() == null ? "0" : dataBean.getDepartment());
                     bean.setId(dataBean.getId());
                     bean.setType(dataBean.getSubject_type());
@@ -386,30 +388,42 @@ public class BoAoHengActivity extends Activity {
                                     TextView name1 = (TextView) view1.findViewById(R.id.name);
                                     ImageView touxiang1 = (ImageView) view1.findViewById(R.id.touxiang);
                                     final RelativeLayout root_rl1 = (RelativeLayout) view1.findViewById(R.id.root_rl);
-                                    name1.setText(bean.getName());
+                                    if (bean.getName().equals("")){
+                                        name1.setText(Html.fromHtml("<font color='#0d2cf9'><big>"+"嘉宾您好"+"</big></font>"));
+
+                                    }else {
+                                        name1.setText(Html.fromHtml("<font color='#0d2cf9'><big>"+bean.getName()+"</big></font>"+" <font color='#111111'>嘉宾</font>"));
+
+                                    }
                                     TextView zhiwei = (TextView) view1.findViewById(R.id.zhiwei);
-                                    zhiwei.setText(bean.getBumen());
+                                 //   zhiwei.setText(Html.fromHtml("<font color='#111111'>欢迎您光临博鳌会议</font>"));
                                     TextView huanyinyu = (TextView) view1.findViewById(R.id.huanyinyu);
-                                    huanyinyu.setText(hyy);
-                                    synthesizer.speak(hyy);
+                                    if (hyy.equals("")){
+                                        huanyinyu.setText(Html.fromHtml("<font color='#111111'>欢迎您光临博鳌会议</font>"));
+                                        synthesizer.speak("欢迎您光临博鳌会议");
+                                    }else {
+                                        huanyinyu.setText(hyy);
+                                        synthesizer.speak(hyy);
+                                    }
+
                                     if (bean.getTouxiang()!=null) {
                                         Glide.with(BoAoHengActivity.this)
                                                 //	.load(R.drawable.vvv)
                                                 .load(touxiangPath + bean.getTouxiang())
                                                 .error(R.drawable.erroy_bg)
                                                 //.apply(myOptions)
-                                                //.transform(new GlideRoundTransform(MyApplication.getAppContext(), 20))
-                                                .transform(new GlideCircleTransform(MyApplication.getAppContext(), 2, Color.parseColor("#ffffffff")))
+                                                .transform(new GlideRoundTransform(MyApplication.getAppContext(), 20))
+                                               // .transform(new GlideCircleTransform(MyApplication.getAppContext(), 2, Color.parseColor("#ffffffff")))
                                                 .into(touxiang1);
                                     }else {
-
+                                        Log.d(TAG, "SSSSSSSSSSSSS");
                                         Glide.with(BoAoHengActivity.this)
                                                 //	.load(R.drawable.vvv)
                                                 .load(bean.getBytes())
                                                 .error(R.drawable.erroy_bg)
                                                 //.apply(myOptions)
-                                                //.transform(new GlideRoundTransform(MyApplication.getAppContext(), 20))
-                                                .transform(new GlideCircleTransform(MyApplication.getAppContext(), 2, Color.parseColor("#ffffffff")))
+                                                .transform(new GlideRoundTransform(MyApplication.getAppContext(), 20))
+                                              //  .transform(new GlideCircleTransform(MyApplication.getAppContext(), 2, Color.parseColor("#ffffffff")))
                                                 .into(touxiang1);
                                     }
 
@@ -1399,54 +1413,54 @@ public class BoAoHengActivity extends Activity {
 
     @Override
     protected void onResume() {
-
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    Thread.sleep(800);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-
-                for (int i = 0; i < 55555; i++) {
-                    try {
-                        Thread.sleep(200);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                    ShiBieBean.PersonBeanSB sb = new ShiBieBean.PersonBeanSB();
-                    sb.setId(1234567L + i);
-                    sb.setDepartment("观众");
-                    sb.setName("测试");
-                    linkedBlockingQueue.offer(sb);
-                    if (isOne) {
-                        isOne = false;
-                        Log.d(TAG, "进来了");
-                        Message message2 = Message.obtain();
-                        message2.arg1 = 1;
-                        message2.obj = sb;
-                        handler.sendMessage(message2);
-                        ShiBieBean.PersonBeanSB beanSB = null;
-
-                        try {
-                            beanSB = linkedBlockingQueue.poll(10, TimeUnit.MILLISECONDS);
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
-                        Log.d(TAG, "移出的id:" + beanSB.getId());
-                    }
+//
+//        new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+//                try {
+//                    Thread.sleep(800);
+//                } catch (InterruptedException e) {
+//                    e.printStackTrace();
+//                }
+//
+//                for (int i = 0; i < 55555; i++) {
+//                    try {
+//                        Thread.sleep(200);
+//                    } catch (InterruptedException e) {
+//                        e.printStackTrace();
+//                    }
+//                    ShiBieBean.PersonBeanSB sb = new ShiBieBean.PersonBeanSB();
+//                    sb.setId(1234567L + i);
+//                    sb.setDepartment("观众");
+//                    sb.setName("测试");
+//                    linkedBlockingQueue.offer(sb);
+//                    if (isOne) {
+//                        isOne = false;
+//                        Log.d(TAG, "进来了");
+//                        Message message2 = Message.obtain();
+//                        message2.arg1 = 1;
+//                        message2.obj = sb;
+//                        handler.sendMessage(message2);
+//                        ShiBieBean.PersonBeanSB beanSB = null;
+//
+//                        try {
+//                            beanSB = linkedBlockingQueue.poll(10, TimeUnit.MILLISECONDS);
+//                        } catch (InterruptedException e) {
+//                            e.printStackTrace();
+//                        }
+//                        Log.d(TAG, "移出的id:" + beanSB.getId());
+//                    }
 
 //					Message message3 = Message.obtain();
 //					message3.arg1 = 1;
 //					message3.obj = sb;
 //					handler.sendMessage(message3);
 
-                }
+    //            }
 
 
-            }
-        }).start();
+//            }
+//        }).start();
 
         if (netWorkStateReceiver == null) {
             netWorkStateReceiver = new NetWorkStateReceiver();
