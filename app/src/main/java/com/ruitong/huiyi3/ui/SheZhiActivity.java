@@ -99,57 +99,7 @@ public class SheZhiActivity extends Activity implements View.OnClickListener, Vi
     //private UnzipFileListener mUnzipFileListener;
     private int curpercent = 0;
 
-//    private Handler zipHandler = new Handler() {
-//
-//        @Override
-//        public void handleMessage(Message msg) {
-//
-//            Bundle bundle = msg.getData();
-//
-//            switch (msg.what) {
-//                case UnZipfile.CompressStatus.START:
-//                    Log.d(TAG, "unzip start");
-//
-//                    curpercent = 0;
-//
-//                    break;
-//                case UnZipfile.CompressStatus.HANDLING: {
-//                    if (bundle != null) {
-//                        int percnt = bundle.getInt(UnZipfile.CompressStatus.PERCENT);
-//                        if (curpercent != percnt) {
-//                            curpercent = percnt;
-//                            if (duQuDialog!=null){
-//                                duQuDialog.setProgressBar(percnt);
-//                            }
-//
-//                            Log.d(TAG, "unzip persent =" + percnt);
-//                        }
-//                    }
-//                    break;
-//                }
-//                case UnZipfile.CompressStatus.COMPLETED: {
-//
-//                    Log.d(TAG, "unzip completed");
-//
-//                    break;
-//                }
-//                case UnZipfile.CompressStatus.ERROR: {
-//                    if (bundle != null) {
-//
-//                        Log.d(TAG, "unzip error msg =" + bundle.getString(UnZipfile.CompressStatus.ERROR_COM));
-//                    }
-//                    curpercent = 0;
-//
-//                    break;
-//                }
-//                default:
-//                    break;
-//            }
-//
-//            super.handleMessage(msg);
-//        }
-//
-//    };
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -47,7 +47,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.ruitong.huiyi3.MyApplication;
 import com.ruitong.huiyi3.R;
-import com.ruitong.huiyi3.adapter.MyAdapter;
+import com.ruitong.huiyi3.adapter.MyAdapter2;
 import com.ruitong.huiyi3.beans.BaoCunBean;
 import com.ruitong.huiyi3.beans.BaoCunBeanDao;
 import com.ruitong.huiyi3.beans.BenDiMBbean;
@@ -72,7 +72,6 @@ import com.ruitong.huiyi3.utils.DateUtils;
 import com.ruitong.huiyi3.utils.GsonUtil;
 import com.ruitong.huiyi3.utils.Utils;
 import com.ruitong.huiyi3.view.GlideCircleTransform;
-import com.ruitong.huiyi3.view.GlideRoundTransform;
 import com.sdsmdg.tastytoast.TastyToast;
 import com.yatoooon.screenadaptation.ScreenAdapterTools;
 
@@ -110,7 +109,7 @@ import okhttp3.ResponseBody;
 import sun.misc.BASE64Decoder;
 
 
-public class BoAoHengActivity extends Activity {
+public class BoAoHengActivity2 extends Activity {
     private final static String TAG = "WebsocketPushMsg";
     public static String touxiangPath;
     @BindView(R.id.y37) TextView y37;@BindView(R.id.y36) TextView y36;@BindView(R.id.y38) TextView y38;@BindView(R.id.y34) TextView y34;
@@ -124,7 +123,7 @@ public class BoAoHengActivity extends Activity {
     @BindView(R.id.y4) TextView y4;@BindView(R.id.y2) TextView y2;@BindView(R.id.y1) TextView y1;@BindView(R.id.y3) TextView y3;@BindView(R.id.y5) TextView y5;
     private MyReceiver myReceiver = null;
     private RecyclerView recyclerView;
-    private MyAdapter adapter = null;
+    private MyAdapter2 adapter = null;
     private ImageView hongsek, lvsek;
     private MoShengRenBeanDao daoSession = null;
     private static boolean isOne = true;
@@ -209,28 +208,28 @@ public class BoAoHengActivity extends Activity {
                         //不存在
                         final boolean[] kk = {true};
                         List<Animator> animators = new ArrayList<>();//设置一个装动画的集合
-                        ObjectAnimator alphaAnim0 = ObjectAnimator.ofFloat(view, "translationY", 0, 480f);//设置透明度改变
-                        alphaAnim0.setDuration(1000);//设置持续时间
+                        ObjectAnimator alphaAnim0 = ObjectAnimator.ofFloat(view, "translationY", 0, 600f);//设置透明度改变
+                        alphaAnim0.setDuration(720);//设置持续时间
                         ObjectAnimator alphaAnim1 = ObjectAnimator.ofFloat(view, "translationX", 0, -250f);//设置透明度改变
-                        alphaAnim1.setDuration(1000);//设置持续时间
+                        alphaAnim1.setDuration(720);//设置持续时间
                         final ObjectAnimator alphaAnim = ObjectAnimator.ofFloat(view, "scaleX", 1f, 0.4f);//设置透明度改变
-                        alphaAnim.setDuration(1000);//设置持续时间
+                        alphaAnim.setDuration(720);//设置持续时间
                         //alphaAnim.start();
                         ObjectAnimator alphaAnim2 = ObjectAnimator.ofFloat(view, "scaleY", 1f, 0.3f);//设置透明度改变
-                        alphaAnim2.setDuration(1000);//设置持续时间
+                        alphaAnim2.setDuration(720);//设置持续时间
                         alphaAnim2.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
                             @Override
                             public void onAnimationUpdate(ValueAnimator animation) {
                                 //Log.d(TAG, "animation.getCurrentPlayTime():" + animation.getCurrentPlayTime());
 
-                                if (animation.getCurrentPlayTime() >= 600 && kk[0]) {
+                                if (animation.getCurrentPlayTime() >= 500 && kk[0]) {
                                     kk[0] = false;
 
                                     //底部列表的
                                     lingdaoList.add(0, yuangongList.get(0));
                                     adapter.notifyItemInserted(0);
                                     gridLayoutManager.scrollToPosition(0);
-                                    if (lingdaoList.size() > 6) {
+                                    if (lingdaoList.size() > 4) {
                                         int si = lingdaoList.size() - 1;
                                         lingdaoList.remove(si);
                                         adapter.notifyItemRemoved(si);
@@ -294,10 +293,10 @@ public class BoAoHengActivity extends Activity {
 //							ObjectAnimator alphaAnim1 = ObjectAnimator.ofFloat(view,"translationX",0,-250f);//设置透明度改变
 //							alphaAnim1.setDuration(1000);//设置持续时间
                         ObjectAnimator alphaAnim = ObjectAnimator.ofFloat(view, "scaleX", 1f, 0.05f);//设置透明度改变
-                        alphaAnim.setDuration(1000);//设置持续时间
+                        alphaAnim.setDuration(720);//设置持续时间
                         //alphaAnim.start();
                         ObjectAnimator alphaAnim2 = ObjectAnimator.ofFloat(view, "scaleY", 1f, 0.05f);//设置透明度改变
-                        alphaAnim2.setDuration(1000);//设置持续时间
+                        alphaAnim2.setDuration(720);//设置持续时间
                         alphaAnim2.addListener(new Animator.AnimatorListener() {
                             @Override
                             public void onAnimationStart(Animator animation) {
@@ -383,23 +382,25 @@ public class BoAoHengActivity extends Activity {
                             switch (mbtype) {
                                 case 1: {
 
-                                    final View view1 = View.inflate(BoAoHengActivity.this, R.layout.baoaoshang_item, null);
+                                    final View view1 = View.inflate(BoAoHengActivity2.this, R.layout.baoaoshang_item2, null);
                                     ScreenAdapterTools.getInstance().loadView(view1);
                                     TextView name1 = (TextView) view1.findViewById(R.id.name);
+                                    TextView ddd=view1.findViewById(R.id.ddd1);
+                                    ddd.setTypeface(typeFace1);
                                     ImageView touxiang1 = (ImageView) view1.findViewById(R.id.touxiang);
                                     final RelativeLayout root_rl1 = (RelativeLayout) view1.findViewById(R.id.root_rl);
                                     if (bean.getName().equals("")){
-                                        name1.setText(Html.fromHtml("<font color='#0d2cf9'><big>"+"嘉宾您好"+"</big></font>"));
+                                        name1.setText(Html.fromHtml("<font color='#ffffff'><big>"+"嘉宾您好"+"</big></font>"));
 
                                     }else {
-                                        name1.setText(Html.fromHtml("<font color='#0d2cf9'><big>"+bean.getName()+"</big></font>"+" <font color='#111111'>嘉宾</font>"));
+                                        name1.setText(Html.fromHtml("<font color='#ffffff'><big>"+bean.getName()+"</big></font>"+" <font color='#ffffff'>嘉宾</font>"));
 
                                     }
                                     TextView zhiwei = (TextView) view1.findViewById(R.id.zhiwei);
                                  //   zhiwei.setText(Html.fromHtml("<font color='#111111'>欢迎您光临博鳌会议</font>"));
                                     TextView huanyinyu = (TextView) view1.findViewById(R.id.huanyinyu);
                                     if (hyy.equals("")){
-                                        huanyinyu.setText(Html.fromHtml("<font color='#111111'>欢迎您光临博鳌会议</font>"));
+                                        huanyinyu.setText(Html.fromHtml("<font color='#ffffff'>欢迎您光临博鳌会议</font>"));
                                         synthesizer.speak("欢迎您光临博鳌会议");
                                     }else {
                                         huanyinyu.setText(hyy);
@@ -407,23 +408,23 @@ public class BoAoHengActivity extends Activity {
                                     }
 
                                     if (bean.getTouxiang()!=null) {
-                                        Glide.with(BoAoHengActivity.this)
+                                        Glide.with(BoAoHengActivity2.this)
                                                 //	.load(R.drawable.vvv)
                                                 .load(touxiangPath + bean.getTouxiang())
                                                 .error(R.drawable.erroy_bg)
                                                 //.apply(myOptions)
-                                                .transform(new GlideRoundTransform(MyApplication.getAppContext(), 20))
-                                               // .transform(new GlideCircleTransform(MyApplication.getAppContext(), 2, Color.parseColor("#ffffffff")))
+                                               // .transform(new GlideRoundTransform(MyApplication.getAppContext(), 20))
+                                                .transform(new GlideCircleTransform(MyApplication.getAppContext(), 2, Color.parseColor("#ffffffff")))
                                                 .into(touxiang1);
                                     }else {
-                                        Log.d(TAG, "SSSSSSSSSSSSS");
-                                        Glide.with(BoAoHengActivity.this)
+                                       // Log.d(TAG, "SSSSSSSSSSSSS");
+                                        Glide.with(BoAoHengActivity2.this)
                                                 //	.load(R.drawable.vvv)
                                                 .load(bean.getBytes())
                                                 .error(R.drawable.erroy_bg)
                                                 //.apply(myOptions)
-                                                .transform(new GlideRoundTransform(MyApplication.getAppContext(), 20))
-                                              //  .transform(new GlideCircleTransform(MyApplication.getAppContext(), 2, Color.parseColor("#ffffffff")))
+                                              //  .transform(new GlideRoundTransform(MyApplication.getAppContext(), 20))
+                                                .transform(new GlideCircleTransform(MyApplication.getAppContext(), 2, Color.parseColor("#ffffffff")))
                                                 .into(touxiang1);
                                     }
 
@@ -433,7 +434,7 @@ public class BoAoHengActivity extends Activity {
 
 
                                     RelativeLayout.LayoutParams params1 = (RelativeLayout.LayoutParams) root_rl1.getLayoutParams();
-                                    params1.height = dh / 4 + 30;
+                                    params1.height = dh / 2 -100;
                                     params1.leftMargin = 40;
                                     params1.rightMargin = 40;
                                     root_rl1.setLayoutParams(params1);
@@ -476,7 +477,7 @@ public class BoAoHengActivity extends Activity {
 
                                     //入场动画(从右往左)
                                     ValueAnimator anim = ValueAnimator.ofInt(dw, 40);
-                                    anim.setDuration(1100);
+                                    anim.setDuration(900);
                                     anim.setRepeatMode(ValueAnimator.RESTART);
                                     Interpolator interpolator = new DecelerateInterpolator(2f);
                                     anim.setInterpolator(interpolator);
@@ -551,15 +552,15 @@ public class BoAoHengActivity extends Activity {
                                             //不存在
                                             final boolean[] kk = {true};
                                             List<Animator> animators = new ArrayList<>();//设置一个装动画的集合
-                                            ObjectAnimator alphaAnim0 = ObjectAnimator.ofFloat(view, "translationY", 0, 480f);//设置透明度改变
-                                            alphaAnim0.setDuration(1000);//设置持续时间
+                                            ObjectAnimator alphaAnim0 = ObjectAnimator.ofFloat(view, "translationY", 0, 600f);//设置透明度改变
+                                            alphaAnim0.setDuration(720);//设置持续时间
                                             ObjectAnimator alphaAnim1 = ObjectAnimator.ofFloat(view, "translationX", 0, -250f);//设置透明度改变
-                                            alphaAnim1.setDuration(1000);//设置持续时间
+                                            alphaAnim1.setDuration(720);//设置持续时间
                                             ObjectAnimator alphaAnim = ObjectAnimator.ofFloat(view, "scaleX", 1f, 0.4f);//设置透明度改变
-                                            alphaAnim.setDuration(1000);//设置持续时间
+                                            alphaAnim.setDuration(720);//设置持续时间
                                             //alphaAnim.start();
                                             ObjectAnimator alphaAnim2 = ObjectAnimator.ofFloat(view, "scaleY", 1f, 0.3f);//设置透明度改变
-                                            alphaAnim2.setDuration(1000);//设置持续时间
+                                            alphaAnim2.setDuration(720);//设置持续时间
                                             alphaAnim2.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
                                                 @Override
                                                 public void onAnimationUpdate(ValueAnimator animation) {
@@ -570,7 +571,7 @@ public class BoAoHengActivity extends Activity {
                                                         lingdaoList.add(0, yuangongList.get(0));
                                                         adapter.notifyItemInserted(0);
                                                         gridLayoutManager.scrollToPosition(0);
-                                                        if (lingdaoList.size() > 6) {
+                                                        if (lingdaoList.size() > 4) {
                                                             int si = lingdaoList.size() - 1;
                                                             lingdaoList.remove(si);
                                                             adapter.notifyItemRemoved(si);
@@ -631,10 +632,10 @@ public class BoAoHengActivity extends Activity {
 //							ObjectAnimator alphaAnim1 = ObjectAnimator.ofFloat(view,"translationX",0,-250f);//设置透明度改变
 //							alphaAnim1.setDuration(1000);//设置持续时间
                                             ObjectAnimator alphaAnim = ObjectAnimator.ofFloat(view, "scaleX", 1f, 0.05f);//设置透明度改变
-                                            alphaAnim.setDuration(1000);//设置持续时间
+                                            alphaAnim.setDuration(720);//设置持续时间
                                             //alphaAnim.start();
                                             ObjectAnimator alphaAnim2 = ObjectAnimator.ofFloat(view, "scaleY", 1f, 0.05f);//设置透明度改变
-                                            alphaAnim2.setDuration(1000);//设置持续时间
+                                            alphaAnim2.setDuration(720);//设置持续时间
                                             alphaAnim2.addListener(new Animator.AnimatorListener() {
                                                 @Override
                                                 public void onAnimationStart(Animator animation) {
@@ -858,14 +859,14 @@ public class BoAoHengActivity extends Activity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);//设置全屏
         //DisplayMetrics dm = getResources().getDisplayMetrics();
-        dw = Utils.getDisplaySize(BoAoHengActivity.this).x;
-        dh = Utils.getDisplaySize(BoAoHengActivity.this).y;
+        dw = Utils.getDisplaySize(BoAoHengActivity2.this).x;
+        dh = Utils.getDisplaySize(BoAoHengActivity2.this).y;
 
         yuangongList = new Vector<>();
         lingdaoList = new Vector<>();
         lingshiList = new Vector<>();
 
-        setContentView(R.layout.boaoheng);
+        setContentView(R.layout.boaoheng2);
         ButterKnife.bind(this);
         //ScreenAdapterTools.getInstance().reset(this);//如果希望android7.0分屏也适配的话,加上这句
         //在setContentView();后面加上适配语句
@@ -879,27 +880,13 @@ public class BoAoHengActivity extends Activity {
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView2);
         gridLayoutManager = new GridLayoutManager(this, 2, GridLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(gridLayoutManager);
-        adapter = new MyAdapter(lingdaoList, BoAoHengActivity.this, dw, dh);
+        adapter = new MyAdapter2(lingdaoList, BoAoHengActivity2.this, dw, dh);
         recyclerView.setAdapter(adapter);
 
         dabg = (ImageView) findViewById(R.id.dabg);
         wangluo = (LottieAnimationView) findViewById(R.id.wangluo);
         wangluo.setSpeed(1.8f);
-        typeFace1 = Typeface.createFromAsset(getAssets(), "fonts/xk.TTF");
-
-//
-//		y1= findViewById(R.id.y1);
-//		y1.setCharacterLists(TickerUtils.provideNumberList());
-//		y1.setAnimationDuration(1500);
-//		y1.setAnimationInterpolator(new OvershootInterpolator());
-//		String str = String.format("%04d", 0);
-//		char s1[]=str.toCharArray();
-//		StringBuilder cc=new StringBuilder();
-//		cc.append(" ");
-//		for (char c:s1){
-//			cc.append(String.valueOf(c)).append(" ");
-//		}
-//		y1.setText(cc.toString());
+        typeFace1 = Typeface.createFromAsset(getAssets(), "fonts/FZZYJW.TTF");
 
 
         Button button = (Button) findViewById(R.id.dddk);
@@ -907,7 +894,7 @@ public class BoAoHengActivity extends Activity {
             @Override
             public void onClick(View v) {
 
-                startActivity(new Intent(BoAoHengActivity.this, SheZhiActivity.class));
+                startActivity(new Intent(BoAoHengActivity2.this, SheZhiActivity.class));
                 finish();
             }
         });
@@ -954,16 +941,15 @@ public class BoAoHengActivity extends Activity {
 
 
         RelativeLayout.LayoutParams params2 = (RelativeLayout.LayoutParams) rootLayout.getLayoutParams();
-        params2.topMargin = dh / 6 + 40;
-        params2.height = dh / 4 + 30;
+        params2.topMargin = dh / 6 + 70;
+        params2.height = dh / 2-100 ;
         rootLayout.setLayoutParams(params2);
         rootLayout.invalidate();
 
-        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) recyclerView.getLayoutParams();
-        params.topMargin = 40;
-        params.height = dh / 2;
-        recyclerView.setLayoutParams(params);
-        recyclerView.invalidate();
+//        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) recyclerView.getLayoutParams();
+//        params.topMargin = 40;
+//        recyclerView.setLayoutParams(params);
+//        recyclerView.invalidate();
 
         //view重绘时回调
         diBuView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
@@ -1107,7 +1093,7 @@ public class BoAoHengActivity extends Activity {
             public void run() {
 
                 SystemClock.sleep(10000);
-                sendBroadcast(new Intent(BoAoHengActivity.this, AlarmReceiver.class));
+                sendBroadcast(new Intent(BoAoHengActivity2.this, AlarmReceiver.class));
                 //	synthesizer.speak("吃饭了吗");
 
             }
@@ -1275,7 +1261,7 @@ public class BoAoHengActivity extends Activity {
                     @Override
                     public void run() {
 
-                        Glide.get(BoAoHengActivity.this).clearDiskCache();
+                        Glide.get(BoAoHengActivity2.this).clearDiskCache();
 
                     }
                 }).start();
@@ -1288,7 +1274,7 @@ public class BoAoHengActivity extends Activity {
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
-                    Glide.with(BoAoHengActivity.this)
+                    Glide.with(BoAoHengActivity2.this)
                             //.load(R.drawable.vvv)
                             .load(ss)
                             //	.load(zhuji+item.getTouxiang())
@@ -1311,7 +1297,7 @@ public class BoAoHengActivity extends Activity {
             }
             if (intent.getAction().equals("shoudongshuaxin")) {
 
-                Toast.makeText(BoAoHengActivity.this, "下载后台图片失败", Toast.LENGTH_SHORT).show();
+                Toast.makeText(BoAoHengActivity2.this, "下载后台图片失败", Toast.LENGTH_SHORT).show();
             }
 
             if (intent.getAction().equals("guanbi")) {
@@ -1404,7 +1390,7 @@ public class BoAoHengActivity extends Activity {
         if (KeyEvent.KEYCODE_MENU == keyCode) {  //如果按下的是菜单
             Log.d(TAG, "按下菜单键 ");
 
-            startActivity(new Intent(BoAoHengActivity.this, SheZhiActivity.class));
+            startActivity(new Intent(BoAoHengActivity2.this, SheZhiActivity.class));
             finish();
         }
 
@@ -1423,9 +1409,9 @@ public class BoAoHengActivity extends Activity {
 //                    e.printStackTrace();
 //                }
 //
-//                for (int i = 0; i < 55555; i++) {
+//                for (int i = 0; i < 5; i++) {
 //                    try {
-//                        Thread.sleep(200);
+//                        Thread.sleep(2000);
 //                    } catch (InterruptedException e) {
 //                        e.printStackTrace();
 //                    }
@@ -1506,14 +1492,14 @@ public class BoAoHengActivity extends Activity {
 
             }
         } else {
-            TastyToast.makeText(BoAoHengActivity.this, "没有设置后台地址", TastyToast.LENGTH_SHORT, TastyToast.INFO).show();
+            TastyToast.makeText(BoAoHengActivity2.this, "没有设置后台地址", TastyToast.LENGTH_SHORT, TastyToast.INFO).show();
         }
 
         if (benDiMBbeanDao != null && benDiMBbeanDao.loadAll().size() > 0) {
 
             String ppp = baoCunBean.getWenzi();
             if (ppp != null && !ppp.equals(""))
-                Glide.with(BoAoHengActivity.this)
+                Glide.with(BoAoHengActivity2.this)
                         //	.load(R.drawable.vvv)
                         .load(ppp)
                         //	.load(zhuji+item.getTouxiang())
@@ -1615,7 +1601,7 @@ public class BoAoHengActivity extends Activity {
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                if (!BoAoHengActivity.this.isFinishing())
+                                if (!BoAoHengActivity2.this.isFinishing())
                                     wangluo.setVisibility(View.GONE);
                             }
                         });
@@ -1803,7 +1789,7 @@ public class BoAoHengActivity extends Activity {
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                if (!BoAoHengActivity.this.isFinishing()) {
+                                if (!BoAoHengActivity2.this.isFinishing()) {
                                     wangluo.setVisibility(View.VISIBLE);
                                     //wangluo.setText("连接识别主机失败,重连中...");
                                 }
@@ -1820,7 +1806,7 @@ public class BoAoHengActivity extends Activity {
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                if (!BoAoHengActivity.this.isFinishing()) {
+                                if (!BoAoHengActivity2.this.isFinishing()) {
                                     wangluo.setVisibility(View.VISIBLE);
                                     //wangluo.setText("连接识别主机失败,重连中...");
                                 }
@@ -1973,7 +1959,7 @@ public class BoAoHengActivity extends Activity {
                     StringBuilder stringBuilder = new StringBuilder();
                     for (int i = 0; i < si; i++) {
 
-                        if (gg.get(i).getMachineCode().contains(Utils.getSerialNumber(BoAoHengActivity.this) == null ? Utils.getIMSI() : Utils.getSerialNumber(BoAoHengActivity.this))) {
+                        if (gg.get(i).getMachineCode().contains(Utils.getSerialNumber(BoAoHengActivity2.this) == null ? Utils.getIMSI() : Utils.getSerialNumber(BoAoHengActivity2.this))) {
                             stringBuilder.append(gg.get(i).getSubConferenceCode());
                             stringBuilder.append(",");
                             //所有展会编码已逗号分开保存

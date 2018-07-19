@@ -57,6 +57,11 @@
         <activity
             android:name=".ui.BoAoHengActivity"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.BoAoHengActivity2"
+            android:screenOrientation="portrait" />
+
+
         <activity android:name=".ui.SheZhiActivity" />
 
         <service android:name=".service.HorizonService" />

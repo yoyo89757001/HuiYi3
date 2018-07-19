@@ -5,7 +5,6 @@ package com.ruitong.huiyi3.adapter;
  */
 
 import android.content.Context;
-import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
@@ -16,13 +15,13 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
 import com.bumptech.glide.Glide;
 import com.ruitong.huiyi3.MyApplication;
 import com.ruitong.huiyi3.R;
 import com.ruitong.huiyi3.beans.TanChuangBean;
 import com.ruitong.huiyi3.beans.ZhuJiBeanHDao;
 import com.ruitong.huiyi3.ui.BoAoHengActivity;
-
 import com.ruitong.huiyi3.view.GlideRoundTransform;
 import com.yatoooon.screenadaptation.ScreenAdapterTools;
 
@@ -33,7 +32,7 @@ import java.util.List;
  */
 
 
-public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder>{
+public class MyAdapter2 extends RecyclerView.Adapter<MyAdapter2.ViewHolder>{
 
     private List<TanChuangBean> list;
     private Context context;
@@ -41,7 +40,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder>{
    // private String touxiangPath;
     private ZhuJiBeanHDao zhuJiBeanHDao=null;
 
-    public MyAdapter(List<TanChuangBean> list,Context context,int dw,int dh)
+    public MyAdapter2(List<TanChuangBean> list, Context context, int dw, int dh)
             {
                 zhuJiBeanHDao = MyApplication.myApplication.getDaoSession().getZhuJiBeanHDao();
                 this.list = list;
@@ -56,7 +55,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder>{
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.dibuitem, parent, false);
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.dibuitem2, parent, false);
              ScreenAdapterTools.getInstance().loadView(view);
 
               return new ViewHolder(view);
@@ -67,12 +66,12 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder>{
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
 
                 if (!list.get(position).getName().equals("")){
-                    holder.name.setText( Html.fromHtml("<font color='#0d2cf9'><big>"+list.get(position).getName()+"</big></font>"+" <font color='#111111'>嘉宾</font>"));
+                    holder.name.setText( Html.fromHtml("<font color='#ffffff'><big>"+list.get(position).getName()+"</big></font>"+" <font color='#ffffff'>嘉宾</font>"));
                 }else {
-                    holder.name.setText(  Html.fromHtml("<font color='#0d2cf9'><big>嘉宾您好</big></font>"));
+                    holder.name.setText(  Html.fromHtml("<font color='#ffffff'><big>嘉宾您好</big></font>"));
                 }
 
-            holder.gongsi.setText(Html.fromHtml("<font color='#111111'>欢迎您光临博鳌会议</font>"));
+            holder.gongsi.setText(Html.fromHtml("<font color='#ffffff'>欢迎您光临博鳌会议</font>"));
           //  holder.zuoweihao.setText(list.get(position).getRemark());
 
             if (list.get(position).getTouxiang()!=null){

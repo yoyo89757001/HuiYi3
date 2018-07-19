@@ -12,6 +12,7 @@
         android:scaleType="fitXY"
         android:layout_height="match_parent" />
 
+
     <LinearLayout
         android:orientation="vertical"
         android:gravity="center"
@@ -46,7 +47,6 @@
             android:layout_height="wrap_content" />
 
     </LinearLayout>
-
 
 
 
