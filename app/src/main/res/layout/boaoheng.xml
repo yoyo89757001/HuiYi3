@@ -183,4 +183,15 @@
         <!--android:layout_width="wrap_content"-->
         <!--android:layout_height="wrap_content" />-->
 
+
+    <ImageView
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginRight="4px"
+        android:layout_marginBottom="4px"
+        android:layout_alignParentBottom="true"
+        android:src="@drawable/ruitong_logo"
+        android:layout_width="200px"
+        android:layout_height="60px" />
+
 </RelativeLayout>

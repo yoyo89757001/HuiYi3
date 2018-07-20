@@ -170,8 +170,11 @@ public class BoAoHengActivity extends Activity {
     //private static int isDS=0;
     private final Timer timer = new Timer();
     private TimerTask task;
+    private final Timer timer2 = new Timer();
+    private TimerTask task2;
     private Button vipBT, jiabingBT, meitiBT;
     private int k1_x, k1_y;
+    private static boolean isYY=true;
     private LinearLayout d_k1;
     private RelativeLayout diBuView, yanhuitu;
     private ImageView k1, k2, k3, k4, k5, k6, k7, k8, k9, k10, k11, k12, k13, k14, k15, k16, k17, k18,
@@ -400,10 +403,18 @@ public class BoAoHengActivity extends Activity {
                                     TextView huanyinyu = (TextView) view1.findViewById(R.id.huanyinyu);
                                     if (hyy.equals("")){
                                         huanyinyu.setText(Html.fromHtml("<font color='#111111'>欢迎您光临博鳌会议</font>"));
-                                        synthesizer.speak("欢迎您光临博鳌会议");
+                                        if (isYY){
+                                            isYY=false;
+                                            synthesizer.speak("欢迎您光临博鳌会议");
+                                        }
+
                                     }else {
                                         huanyinyu.setText(hyy);
-                                        synthesizer.speak(hyy);
+                                        if (isYY){
+                                            isYY=false;
+                                            synthesizer.speak(hyy);
+                                        }
+
                                     }
 
                                     if (bean.getTouxiang()!=null) {
@@ -416,7 +427,7 @@ public class BoAoHengActivity extends Activity {
                                                // .transform(new GlideCircleTransform(MyApplication.getAppContext(), 2, Color.parseColor("#ffffffff")))
                                                 .into(touxiang1);
                                     }else {
-                                        Log.d(TAG, "SSSSSSSSSSSSS");
+                                       // Log.d(TAG, "SSSSSSSSSSSSS");
                                         Glide.with(BoAoHengActivity.this)
                                                 //	.load(R.drawable.vvv)
                                                 .load(bean.getBytes())
@@ -1059,8 +1070,6 @@ public class BoAoHengActivity extends Activity {
                         @Override
                         public void onAnimationEnd(Animator animation) {
                             vv.setBackgroundResource(R.color.img_full_opaque);
-
-
                         }
 
                         @Override
@@ -1114,8 +1123,25 @@ public class BoAoHengActivity extends Activity {
         }).start();
 
 
+        dingshi();
     }
 
+
+    private void dingshi(){
+        task2 = new TimerTask() {
+            @Override
+            public void run() {
+                isYY=true;
+             //   Log.d(TAG, "isYY2:" + isYY);
+                if (task2!=null)
+                    task2.cancel();
+                dingshi();
+
+            }
+        };
+        timer2.schedule(task2, 5000);
+
+    }
 
     /**
      * 初始化引擎，需要的参数均在InitConfig类里
